@@ -6,11 +6,14 @@
 Parse.Cloud.define("animal", function(request, response) {
  
 	console.log(request.params);
-    var Company = Parse.Object.extend("GameScore");
+    var Company = Parse.Object.extend("aCompanyStanding");
     var company = new Company();
+	var Price = request.params.price;
+	var UserName = request.params.playerName;
 
-    company.set(request.params.playerName);
-    company.set(request.params.price);
+	company.addUnique("Price",Price);
+	company.addUnique("UserName",UserName);
+    //company.set(request.params.price);
 
     company.save(null, {
   success: function(gameScore) {
@@ -23,6 +26,6 @@ Parse.Cloud.define("animal", function(request, response) {
     alert('Failed to create new object, with error code: ' + error.message);
   }
 });
-  response.success(request.params.price);
+  response.success(request.params.price + 1);
  
 });
