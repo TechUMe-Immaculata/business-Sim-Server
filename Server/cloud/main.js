@@ -10,7 +10,7 @@ Parse.Cloud.define("sendCompanyInfo", function(request, response) {
   var Company = Parse.Object.extend("Company");
   var company = new Company();
 
-  //makes the parameters in the Parse Object a varible
+  //makes the parameters in the Parse Object a variable
 	var price = request.params.price;
 	var userName = request.params.playerName;
 
@@ -30,12 +30,16 @@ Parse.Cloud.define("sendCompanyInfo", function(request, response) {
     // error is a Parse.Error with an error code and message.
     alert('Failed to create new object, with error code: ' + error.message);
   }
-});
 
   response.success(request.params.price + 1);
  
 });
-
+Parse.Cloud.define("sendEmail",function(request,response){
+var query = new parse.query("CompanyName");
+query.equalTo("Price". request.params.Price);
+var pricer = new parse.object("CheckPrice");
+pricer.set("
+}
 
 
 Parse.Cloud.define("getCompanyInfo", function(request, response) {
