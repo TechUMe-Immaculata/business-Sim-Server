@@ -5,19 +5,16 @@
 <script>
 function loadXMLDoc()
 {
-var test = {};
-test.playerName = "Sean Plott";
-test.price = 55;
+//function for making server run event specific
 $.ajax({
   type: "POST",
-  url: "https://api.parse.com/1/functions/animal/",
+  url: "https://api.parse.com/1/functions/getCompanyInfo/",
   headers: {
   "X-Parse-Application-Id": "Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci",
   "X-Parse-REST-API-Key": "GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG",
   "Content-Type": "application/json"
   },
-  data: JSON.stringify(test),
-  dataType: "json"
+  data: {}
 })
   .done(function( msg ) {
   // all code here gets run when the POST was successful
@@ -26,13 +23,6 @@ $.ajax({
   });
 
 
-  
-  //curl -X POST \
- // -H "X-Parse-Application-Id: Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci" \
- // -H "X-Parse-REST-API-Key: GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG" \
- // -H "Content-Type: application/json" \
-//  -d '{"score":1337,"playerName":"Sean Plott","cheatMode":false}' \
- // https://api.parse.com/1/classes/GameScore
 
 
 /*
