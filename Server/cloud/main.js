@@ -1,5 +1,5 @@
 // Use Parse.Cloud.define to define as many cloud functions as you want.
-
+/*
 Parse.Cloud.define("sendCompanyInfo", function(request, response) {
  
 	console.log(request.params);
@@ -31,17 +31,21 @@ Parse.Cloud.define("sendCompanyInfo", function(request, response) {
     alert('Failed to create new object, with error code: ' + error.message);
   }
 
-  response.success(request.params.price + 1);
+  //response.success(request.params.price + 1);
  
 });
+*/
+
 Parse.Cloud.define("sendEmail",function(request,response){
+
 var query = new parse.query("CompanyName");
-query.equalTo("Price". request.params.Price);
+query.equalTo("Price" ,request.params.Price);
 var pricer = new parse.object("CheckPrice");
-pricer.set("
-}
+pricer.set("Price" , price);
+ response.success();
+});
 
-
+/*
 Parse.Cloud.define("getCompanyInfo", function(request, response) {
 var price = 0;
 var username ="";
@@ -63,6 +67,6 @@ console.log("the price "+price);
   response.success("Hello");
  
 });
-
+*/
 
 
