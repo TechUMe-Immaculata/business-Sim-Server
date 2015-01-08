@@ -22,17 +22,19 @@ Parse.Cloud.define("sendCompanyInfo", function(request, response) {
     //company.addUnique("UserName",UserName);
  
     company.save(null, {
-  success: function(company) {
+  success: function(results) {
     // Execute any logic that should take place after the object is saved.
     alert('New object created with objectId: ' + company.id);
+	reponse.success(request.params.price);
   },
-  error: function(company, error) {
+  error: function(error) {
     // Execute any logic that should take place if the save fails.
     // error is a Parse.Error with an error code and message.
     alert('Failed to create new object, with error code: ' + error.message);
+	response.error("shit");
   }
 });
-  response.success(request.params.price + 1);
+  response.success(request.params.price);
  
   
 });
@@ -43,6 +45,8 @@ Parse.Cloud.define("getCompanyInfo", function(request, response) {
 
 var Company = Parse.Object.extend("Company");
 var query = new Parse.Query(Company);
+var price = 0;
+var id = "";
 console.log("before");
 query.equalTo("objectId","zohdi5RJuN");
 query.find({
@@ -51,13 +55,19 @@ query.find({
     // The object was retrieved successfully.
 	var object = results[0];
     console.log(object.id + " - " + object.get("Price"));
+	price = object.get("Price");
+	id = object.id;
+	response.success(price);
   },
   error: function(error){
     // The object was not retrieved successfully.
     // error is a Parse.Error with an error code and message.
     console.log("error    = " + error.code + "    " + error.message );
+	reponse.error("shit");
   }
 });
+
+//response.success(price);
 /*
 console.log("the price "+price);
   
