@@ -66,30 +66,28 @@ query.find({
 	reponse.error("shit");
   }
 });
+});
 
-//response.success(price);
-/*
-console.log("the price "+price);
-  
-//var Company = Parse.Object.extend("Company"); 
-//var company = new Company();
- var myId = "aQ8ozxNevn";
- var query = new Parse.Query("Company");
- console.log(myId);
- console.log(query);
- console.log("before");
-query.get(myId, {
-  success: function(object) {
-    // object is an instance of Parse.Object.
-	console.log("Success");
+Parse.Cloud.define("signUp", function(request, response) {
+
+var user = new Parse.User();
+user.set("username", request.params.usernameClient);
+user.set("password", request.params.passwordClient);
+user.set("email", request.params.emailClient);
+ 
+// other fields can be set just like with Parse.Object
+//user.set("phone", "415-392-0202");
+ 
+user.signUp(null, {
+  success: function(user) {
+    // Hooray! Let them use the app now.
   },
-
-  error: function(object, error) {
-    // error is an instance of Parse.Error.
-	console.log("fail");
+  error: function(user, error) {
+    // Show the error message somewhere and let the user try again.
+    alert("Error: " + error.code + " " + error.message);
   }
 });
-  response.success("shit");
 
-  */
+response.success(request.params.usernameClient);
+
 });
