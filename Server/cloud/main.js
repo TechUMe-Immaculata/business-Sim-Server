@@ -91,3 +91,22 @@ user.signUp(null, {
 response.success(request.params.usernameClient);
 
 });
+
+Parse.Cloud.define("logIn", function(request, response) {
+
+var username = request.params.usernameClient;
+var password = request.params.passwordClient;
+
+ Parse.User.logIn(username,password, 
+ {
+  success: function(user) {
+    // Do stuff after successful login.
+	response.success("yea");
+  },
+  error: function(user, error) {
+    // The login failed. Check error to see why.
+	response.error("meh");
+  }
+});
+
+});

@@ -9,7 +9,7 @@ function loadXMLDoc()
 
 var logInInfo = {};
 logInInfo.usernameClient = "Christopher";
-logInInfo.passwordClient ="1337";
+logInInfo.passwordClient ="13377";
 $.ajax({
   type: "POST",
   url: "https://api.parse.com/1/functions/logIn/",
@@ -22,8 +22,14 @@ $.ajax({
   dataType: "json"
 })
   .done(function( msg ) {
-  // all code here gets run when the POST was successful
-  // you can do things like update the console, display an alert, etc...
+  Parse.Cloud.run("getCompanyInfo" , {} , {
+  succes: function (result){
+  var object = result;
+  alert(object);
+  },
+  error: function (error){
+  }
+  });
    alert(msg.result);
   });
 }
@@ -37,5 +43,4 @@ $.ajax({
  
 </body>
 </html>
-
 
