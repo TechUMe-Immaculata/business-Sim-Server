@@ -25,7 +25,7 @@ Parse.Cloud.define("sendCompanyInfo", function(request, response) {
   success: function(results) {
     // Execute any logic that should take place after the object is saved.
     alert('New object created with objectId: ' + company.id);
-	reponse.success(request.params.price);
+	reponse.success("'"+request.params.price+"'");
   },
   error: function(error) {
     // Execute any logic that should take place if the save fails.
@@ -106,6 +106,34 @@ var password = request.params.passwordClient;
   error: function(user, error) {
     // The login failed. Check error to see why.
 	response.error("meh");
+  }
+});
+
+});
+
+Parse.Cloud.define("sendData", function(request, response) {
+ 
+ var Company = Parse.Object.extend("Company");
+var query = new Parse.Query(Company);
+var price = 0;
+var id = "";
+console.log("before");
+query.equalTo("objectId","zohdi5RJuN");
+query.find({
+  success: function(results) {
+  console.log("after");
+    // The object was retrieved successfully.
+	var object = results[0];
+    console.log(object.id + " - " + object.get("Price"));
+	price = object.get("Price");
+	id = object.id;
+	response.success(JSON.stringify(object));
+  },
+  error: function(error){
+    // The object was not retrieved successfully.
+    // error is a Parse.Error with an error code and message.
+    console.log("error    = " + error.code + "    " + error.message );
+	reponse.error("shit");
   }
 });
 
