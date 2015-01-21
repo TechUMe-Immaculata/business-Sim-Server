@@ -101,11 +101,12 @@ var password = request.params.passwordClient;
  {
   success: function(user) {
     // Do stuff after successful login.
-	response.success("yea");
+	//Parse.User.Current();
+	response.success(true);
   },
   error: function(user, error) {
     // The login failed. Check error to see why.
-	response.error("meh");
+	response.error(false);
   }
 });
 
@@ -113,7 +114,7 @@ var password = request.params.passwordClient;
 
 Parse.Cloud.define("sendData", function(request, response) {
  
- var Company = Parse.Object.extend("Company");
+var Company = Parse.Object.extend("Company");
 var query = new Parse.Query(Company);
 var price = 0;
 var id = "";
@@ -125,9 +126,10 @@ query.find({
     // The object was retrieved successfully.
 	var object = results[0];
     console.log(object.id + " - " + object.get("Price"));
-	price = object.get("Price");
-	id = object.id;
-	response.success(JSON.stringify(object));
+	var data = {};
+	data.price = object.get("Price");
+	
+	response.success(JSON.stringify(data));
   },
   error: function(error){
     // The object was not retrieved successfully.
