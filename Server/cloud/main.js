@@ -146,42 +146,51 @@ query.find({
 Parse.Cloud.define("createMatch", function(request, response) {
   
     console.log(request.params);
- 
+ var Company = Parse.Object.extend("Company");
+ var objectList = new Array();
   //saving data
- 
-  var Company = Parse.Object.extend("Company");
-  var company = new Company();
- 
-  var clientUserName = request.params.playerName;
-  var  matchId = "1";
- 
-  company.set("matchId", matchId);
-  company.set("UserName",clientUserName);
-  
-  company.set("capital",0);
-  company.set("price",0);
-  company.set("production",0);
-  company.set("charity",0);
-  company.set("researchDevelopment",0);
-  
+  alert("before");
+ for (var i = 0; i < 6; i++)
+ {
+	alert("after");
+	console.log(i);
+	var company = new Company();
+	 
+	//var clientUserName = request.params.playerName;
+	var  matchId = "1";
+	 
+	company.set("matchId", matchId);
+	company.set("UserName","bot"+i);
+	  
+	company.set("capital",0);
+	company.set("price",0);
+	company.set("production",0);
+	company.set("charity",0);
+	company.set("researchDevelopment",0);
+	
+	objectList.push(company);
+	  
+	}
+
   //adds unique columns to the data on server
     //company.addUnique("Price",Price);
     //company.addUnique("UserName",UserName);
  
-    company.save(null, {
-  success: function(results) {
+ Parse.Object.saveAll(objectList, {
+  success: function(list) {
     // Execute any logic that should take place after the object is saved.
-    alert('New object created with objectId: ' + company.id);
-	reponse.success("'"+request.params.price+"'");
+    alert('new object lists created');
+	//reponse.success("done");
   },
   error: function(error) {
     // Execute any logic that should take place if the save fails.
     // error is a Parse.Error with an error code and message.
     alert('Failed to create new object, with error code: ' + error.message);
-	response.error("shit");
+	//response.error("shit");
   }
 });
-  response.success(request.params.price);
+
+  response.success("done");
  
   
 });

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript"src="jquery-1.11.1.min.js"language="javascript"> </script>
+<script>
+function loadXMLDoc()
+{
+//function for sending server data and running event listener 
+
+var dataToSend = {};
+//dataToSend.playerName = "Sean Plott";
+//dataToSend.price = Math.floor((Math.random() * 100) + 1);
+$.ajax({
+  type: "POST",
+  url: "https://api.parse.com/1/functions/createMatch/",
+  headers: {
+  "X-Parse-Application-Id": "Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci",
+  "X-Parse-REST-API-Key": "GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG",
+  "Content-Type": "application/json"
+  },
+  //data: JSON.stringify(dataToSend),
+  //dataType: "json"
+})
+  .done(function( data ) {
+  // all code here gets run when the POST was successful
+  // you can do things like update the console, display an alert, etc...
+   alert(data.result);
+  });
+
+
+  
+  //curl -X POST \
+ // -H "X-Parse-Application-Id: Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci" \
+ // -H "X-Parse-REST-API-Key: GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG" \
+ // -H "Content-Type: application/json" \
+//  -d '{"score":1337,"playerName":"Sean Plott","cheatMode":false}' \
+ // https://api.parse.com/1/classes/GameScore
+
+
+/*
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "https://api.parse.com/1/functions/animal", false);
+// Add your code below!
+xhr.send();
+console.log(xhr.status);
+console.log(xhr.statusText);
+*/
+
+//$.ajax({ 
+  //headers : {
+     //"X-Parse-Application-Id" : "Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci",
+    // "X-Parse-REST-API-Key"   : "GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG" 
+  //},
+  //url:"https://api.parse.com/1/functions/animal",
+  //type:"POST",
+  //dataType: "JSONP", 
+  //Content-Type: "application/json",
+  //data:{} 
+  //success: function(jsonResult) {
+   //alert(jsonResult);
+  //}
+//});
+
+
+
+//console.log("hello");
+
+
+
+//curl -X POST \
+  //-H "X-Parse-Application-Id: Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci" \
+  //-H "X-Parse-REST-API-Key: GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG" \
+  //-H "Content-Type: application/json" \
+  //-d '{}' \
+  //https://api.parse.com/1/functions/animal
+  
+}
+</script>
+</head>
+<body>
+
+<h2>AJAX</h2>
+<button type="button" onclick="loadXMLDoc()">Request data</button>
+<div id="myDiv"></div>
+ 
+</body>
+</html>
+
+
