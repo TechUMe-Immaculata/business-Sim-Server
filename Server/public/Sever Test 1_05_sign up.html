@@ -6,11 +6,11 @@
 function loadXMLDoc()
 {
 //function for sending server data and running event listener 
-
 var signupInfo = {};
-signupInfo.usernameClient = "Christopher";
+signupInfo.usernameClient = "botB";
 signupInfo.passwordClient ="1337";
-signupInfo.emailClient = "Seabee14@hotmail.com";
+signupInfo.emailClient = "Mr.Christopher.Blackman@gmail.com";
+signupInfo.clientIsBot = true;
 $.ajax({
   type: "POST",
   url: "https://api.parse.com/1/functions/signUp/",

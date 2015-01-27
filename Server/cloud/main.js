@@ -71,9 +71,12 @@ query.find({
 Parse.Cloud.define("signUp", function(request, response) {
 
 var user = new Parse.User();
+var company = Parse.Object.extend('Company')
+
 user.set("username", request.params.usernameClient);
 user.set("password", request.params.passwordClient);
 user.set("email", request.params.emailClient);
+
  
 // other fields can be set just like with Parse.Object
 //user.set("phone", "415-392-0202");
@@ -81,6 +84,8 @@ user.set("email", request.params.emailClient);
 user.signUp(null, {
   success: function(user) {
     // Hooray! Let them use the app now.
+	company.set('userId', user.id);
+	company.set("name","Apple inc.");
   },
   error: function(user, error) {
     // Show the error message somewhere and let the user try again.
@@ -140,6 +145,8 @@ query.find({
 });
 
 });
+
+
 
 //--------------------------------------------------------------------------------
 
