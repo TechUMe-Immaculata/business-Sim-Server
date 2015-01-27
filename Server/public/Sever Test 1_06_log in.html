@@ -7,18 +7,18 @@ function loadXMLDoc()
 {
 //function for sending server data and running event listener 
 
-var test = {};
-test.playerName = "Sean Plott";
-test.price = Math.floor((Math.random() * 100) + 1);
+var logInInfo = {};
+logInInfo.usernameClient = "Christopher";
+logInInfo.passwordClient ="1337";
 $.ajax({
   type: "POST",
-  url: "https://api.parse.com/1/functions/sendCompanyInfo/",
+  url: "https://api.parse.com/1/functions/logIn/",
   headers: {
   "X-Parse-Application-Id": "Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci",
   "X-Parse-REST-API-Key": "GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG",
   "Content-Type": "application/json"
   },
-  data: JSON.stringify(test),
+  data: JSON.stringify(logInInfo),
   dataType: "json"
 })
   .done(function( msg ) {
@@ -26,54 +26,6 @@ $.ajax({
   // you can do things like update the console, display an alert, etc...
    alert(msg.result);
   });
-
-
-  
-  //curl -X POST \
- // -H "X-Parse-Application-Id: Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci" \
- // -H "X-Parse-REST-API-Key: GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG" \
- // -H "Content-Type: application/json" \
-//  -d '{"score":1337,"playerName":"Sean Plott","cheatMode":false}' \
- // https://api.parse.com/1/classes/GameScore
-
-
-/*
-var xhr = new XMLHttpRequest();
-xhr.open("GET", "https://api.parse.com/1/functions/animal", false);
-// Add your code below!
-xhr.send();
-console.log(xhr.status);
-console.log(xhr.statusText);
-*/
-
-//$.ajax({ 
-  //headers : {
-     //"X-Parse-Application-Id" : "Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci",
-    // "X-Parse-REST-API-Key"   : "GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG" 
-  //},
-  //url:"https://api.parse.com/1/functions/animal",
-  //type:"POST",
-  //dataType: "JSONP", 
-  //Content-Type: "application/json",
-  //data:{} 
-  //success: function(jsonResult) {
-   //alert(jsonResult);
-  //}
-//});
-
-
-
-//console.log("hello");
-
-
-
-//curl -X POST \
-  //-H "X-Parse-Application-Id: Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci" \
-  //-H "X-Parse-REST-API-Key: GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG" \
-  //-H "Content-Type: application/json" \
-  //-d '{}' \
-  //https://api.parse.com/1/functions/animal
-  
 }
 </script>
 </head>

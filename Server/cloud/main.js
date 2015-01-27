@@ -11,11 +11,11 @@ Parse.Cloud.define("sendCompanyInfo", function(request, response) {
   var company = new Company();
  
   //makes the parameters in the Parse Object a variable
-    var price = request.params.price;
-    var userName = request.params.playerName;
+    var clientPrice = request.params.price;
+    var ClientUserName = request.params.playerName;
  
-  company.set("Price", price);
-  company.set("Username",userName);
+  company.set("price", clientPrice);
+  company.set("UserName",ClientUserName);
   
   //adds unique columns to the data on server
     //company.addUnique("Price",Price);
@@ -25,7 +25,7 @@ Parse.Cloud.define("sendCompanyInfo", function(request, response) {
   success: function(results) {
     // Execute any logic that should take place after the object is saved.
     alert('New object created with objectId: ' + company.id);
-	reponse.success(request.params.price);
+	reponse.success("'"+request.params.price+"'");
   },
   error: function(error) {
     // Execute any logic that should take place if the save fails.
@@ -45,17 +45,17 @@ Parse.Cloud.define("getCompanyInfo", function(request, response) {
 
 var Company = Parse.Object.extend("Company");
 var query = new Parse.Query(Company);
-var price = 0;
-var id = "";
+var clientPrice = 0;
+var clientId = "";
 console.log("before");
-query.equalTo("objectId","zohdi5RJuN");
+query.equalTo("objectId","QjFVIkg7p0");
 query.find({
   success: function(results) {
   console.log("after");
     // The object was retrieved successfully.
 	var object = results[0];
-    console.log(object.id + " - " + object.get("Price"));
-	price = object.get("Price");
+    console.log(object.id + " - " + object.get("price"));
+	price = object.get("price");
 	id = object.id;
 	response.success(price);
   },
@@ -92,6 +92,7 @@ response.success(request.params.usernameClient);
 
 });
 
+<<<<<<< HEAD
 Parse.Cloud.define("login", function(request, response) {
 //login
 Parse.User.logIn(requestest.params.usernameClient, request.params.passwordClinet, {
@@ -116,3 +117,107 @@ Parse.User.logIn(requestest.params.usernameClient, request.params.passwordClinet
 
 
 
+=======
+Parse.Cloud.define("logIn", function(request, response) {
+
+var username = request.params.usernameClient;
+var password = request.params.passwordClient;
+
+ Parse.User.logIn(username,password, 
+ {
+  success: function(user) {
+    // Do stuff after successful login.
+	//Parse.User.Current();
+	response.success(true);
+  },
+  error: function(user, error) {
+    // The login failed. Check error to see why.
+	response.error(false);
+  }
+});
+
+});
+
+Parse.Cloud.define("sendData", function(request, response) {
+ 
+var Company = Parse.Object.extend("Company");
+var query = new Parse.Query(Company);
+var clientPrice = 0;
+var clientId = "";
+console.log("before");
+query.equalTo("objectId","QjFVIkg7p0");
+query.find({
+  success: function(results) {
+  console.log("after");
+    // The object was retrieved successfully.
+	var object = results[0];
+    console.log(object.id + " - " + object.get("price"));
+	var data = {};
+	data.price = object.get("price");
+	
+	response.success(JSON.stringify(data));
+  },
+  error: function(error){
+    // The object was not retrieved successfully.
+    // error is a Parse.Error with an error code and message.
+    console.log("error    = " + error.code + "    " + error.message );
+	reponse.error("shit");
+  }
+});
+
+});
+
+//--------------------------------------------------------------------------------
+
+Parse.Cloud.define("createMatch", function(request, response) {
+  
+    console.log(request.params);
+ var Company = Parse.Object.extend("Company");
+ var objectList = new Array();
+  //saving data
+  alert("before");
+ for (var i = 0; i < 6; i++)
+ {
+	alert("after");
+	console.log(i);
+	var company = new Company();
+	 
+	//var clientUserName = request.params.playerName;
+	var  matchId = "1";
+	 
+	company.set("matchId", matchId);
+	company.set("UserName","bot"+i);
+	  
+	company.set("capital",0);
+	company.set("price",0);
+	company.set("production",0);
+	company.set("charity",0);
+	company.set("researchDevelopment",0);
+	
+	objectList.push(company);
+	  
+	}
+
+  //adds unique columns to the data on server
+    //company.addUnique("Price",Price);
+    //company.addUnique("UserName",UserName);
+ 
+ Parse.Object.saveAll(objectList, {
+  success: function(list) {
+    // Execute any logic that should take place after the object is saved.
+    alert('new object lists created');
+	//reponse.success("done");
+  },
+  error: function(error) {
+    // Execute any logic that should take place if the save fails.
+    // error is a Parse.Error with an error code and message.
+    alert('Failed to create new object, with error code: ' + error.message);
+	//response.error("shit");
+  }
+});
+
+  response.success("done");
+ 
+  
+});
+>>>>>>> origin/Christopher-Blackman

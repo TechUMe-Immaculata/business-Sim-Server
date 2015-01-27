@@ -8,18 +8,18 @@ function loadXMLDoc()
 //function for sending server data and running event listener 
 
 var dataToSend = {};
-dataToSend.playerName = "Sean Plott";
-dataToSend.price = Math.floor((Math.random() * 100) + 1);
+//dataToSend.playerName = "Sean Plott";
+//dataToSend.price = Math.floor((Math.random() * 100) + 1);
 $.ajax({
   type: "POST",
-  url: "https://api.parse.com/1/functions/sendCompanyInfo/",
+  url: "https://api.parse.com/1/functions/createMatch/",
   headers: {
   "X-Parse-Application-Id": "Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci",
   "X-Parse-REST-API-Key": "GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG",
   "Content-Type": "application/json"
   },
-  data: JSON.stringify(dataToSend),
-  dataType: "json"
+  //data: JSON.stringify(dataToSend),
+  //dataType: "json"
 })
   .done(function( data ) {
   // all code here gets run when the POST was successful
