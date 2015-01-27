@@ -2,37 +2,52 @@
 <html>
 <head>
 <script type="text/javascript"src="jquery-1.11.1.min.js"language="javascript"> </script>
+<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.3.min.js"></script>
 <script>
 function loadXMLDoc()
 {
-//function for sending server data and running event listener 
+//Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG");
 
-var logInInfo = {};
-logInInfo.usernameClient = "Christopher";
-logInInfo.passwordClient ="13377";
+//$.get( "https://api.parse.com/1/classes/Company/E2tpSAt8uc", function( data ) {
+ //$( ".result" ).html( data );
+  //alert( "Load was performed." );
+//});
+
 $.ajax({
   type: "POST",
-  url: "https://api.parse.com/1/functions/logIn/",
+  url: "https://api.parse.com/1/functions/sendData/",
   headers: {
   "X-Parse-Application-Id": "Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci",
   "X-Parse-REST-API-Key": "GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG",
   "Content-Type": "application/json"
   },
-  data: JSON.stringify(logInInfo),
-  dataType: "json"
 })
   .done(function( msg ) {
-  Parse.Cloud.run("getCompanyInfo" , {} , {
-  succes: function (result){
-  var object = result;
-  alert(object);
-  },
-  error: function (error){
-  }
+  // all code here gets run when the POST was successful
+  // you can do things like update the console, display an alert, etc...
+   //var json = JSON.parse("'"+msg.Username+"'");
+   alert(JSON.parse(msg.result).price);
+   //alert(json.Username);
   });
-   alert(msg.result);
-  });
+
 }
+//curl -X GET \
+//  -H "X-Parse-Application-Id: Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci" \
+//  -H "X-Parse-REST-API-Key: GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG" \
+//  https://api.parse.com/1/classes/GameScore/Ed1nuqPvcm
+
+//{
+//  "score": 1337,
+//  "playerName": "Sean Plott",
+//  "cheatMode": false,
+//  "skills": [
+//    "pwnage",
+//    "flying"
+//  ],
+//  "createdAt": "2011-08-20T02:06:57.931Z",
+//  "updatedAt": "2011-08-20T02:06:57.931Z",
+//  "objectId": "Ed1nuqPvcm"
+//}
 </script>
 </head>
 <body>
