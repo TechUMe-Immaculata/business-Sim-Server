@@ -244,22 +244,40 @@ query.find({
 
 
   
+  },
+  error: function(error){
+    console.log("error with match");
   }
 });
+
 var query = new Parse.Query(bots);
 query.equalTo("bots", "easy");
 query.find({
   success: function(bot) {
     var object = bot;
   for (i =0; i< 5;i++){
+    CompMatch = new parse.object("CompMatch");
+    CompMatch.set("userId",bot[0].id);
+    CompMatch.set("matchId", Match.id);
+    CompMatch.set("capital", 500);
+    CompMatch.set("charity",0);
+    CompMatch.set("price",5);
+    CompMatch.set("production", 50);
+    CompMatch.set("researchDevelopment", 0);
+    CompMatch.set("marketing", 0);
 
 
 
   }  
+  },
+  error: function(error){
+  console.log("error with bot");  
   }
 });
-  
-
+  returndata{};
+  returndata.clientMatchId = Match.id;
+  returndata.clientGameresult = true;
+response.success("done");
 });
 
 
