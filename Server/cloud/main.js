@@ -1,5 +1,5 @@
 // Use Parse.Cloud.define to define as many cloud functions as you want.
- 
+
 Parse.Cloud.define("sendCompanyInfo", function(request, response) {
   
     console.log(request.params);
@@ -25,7 +25,7 @@ Parse.Cloud.define("sendCompanyInfo", function(request, response) {
   success: function(results) {
     // Execute any logic that should take place after the object is saved.
     alert('New object created with objectId: ' + company.id);
-	reponse.success("'"+request.params.price+"'");
+	response.success("'"+request.params.price+"'");
   },
   error: function(error) {
     // Execute any logic that should take place if the save fails.
@@ -63,7 +63,7 @@ query.find({
     // The object was not retrieved successfully.
     // error is a Parse.Error with an error code and message.
     console.log("error    = " + error.code + "    " + error.message );
-	reponse.error("shit");
+	response.error("shit");
   }
 });
 });
@@ -97,7 +97,6 @@ response.success(request.params.usernameClient);
 
 });
 
-<<<<<<< HEAD
 Parse.Cloud.define("login", function(request, response) {
 //login
 Parse.User.logIn(requestest.params.usernameClient, request.params.passwordClinet, {
@@ -110,19 +109,8 @@ Parse.User.logIn(requestest.params.usernameClient, request.params.passwordClinet
 	response.error("You messed up");
   }
 });
+});
 
-
-
-
-
-
-
-
-
-
-
-
-=======
 Parse.Cloud.define("logIn", function(request, response) {
 
 var username = request.params.usernameClient;
@@ -175,9 +163,88 @@ query.find({
 
 
 //--------------------------------------------------------------------------------
-
 Parse.Cloud.define("createMatch", function(request, response) {
-  
+
+var currentUser = Parse.User.current();
+var Match = Parse.Object.extend("Match");
+
+
+Match.addUnique("name","starfox")
+//Add other users before bots.
+
+
+var queryUser = new Parse.Query("Company");
+queryUser.equalTo("userId", currentUser.id);
+
+queryUser.find({
+  success: function(user) {
+    var compMatch = new parse.object("CompMatch");
+    compMatch.set("userId",user[0].id);
+    compMatch.set("matchId", Match.id);
+    compMatch.set("capital", 500);
+    compMatch.set("charity",0);
+    compMatch.set("price",5);
+    compMatch.set("production", 50);
+    compMatch.set("researchDevelopment", 0);
+    compMatch.set("marketing", 0);
+  },
+  error: function(error){
+    console.log("error with match");
+  }
+});
+
+var queryComp = new Parse.Query("Bots");
+queryComp.equalTo("difficulty", "easy");
+
+queryComp.find({
+  success: function(bot) {
+    var object = bot;
+  for (i =0; i< 5;i++){
+    var compMatch = new parse.object("CompMatch");
+    compMatch.set("userId",bot[0].id);
+    compMatch.set("matchId", Match.id);
+    compMatch.set("capital", 500);
+    compMatch.set("charity",0);
+    compMatch.set("price",5);
+    compMatch.set("production", 50);
+    compMatch.set("researchDevelopment", 0);
+    compMatch.set("marketing", 0);
+  }  
+  },
+  error: function(error){
+  console.log("error with bot");  
+  }
+});
+  var returndata = {};
+  returndata.clientMatchId = Match.id;
+  returndata.clientGameresult = true;
+  response.success("done");
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  /*   console.log(request.params);
  var Company = Parse.Object.extend("Company");
  var objectList = new Array();
@@ -225,67 +292,3 @@ Parse.Cloud.define("createMatch", function(request, response) {
 
   response.success("done");
   */
-var currentUser = Parse.User.current();
-var Match = Parse.Object.extend("Match");
-
-//var currentMatch = Parse.object("objectId");
-
-Match.addUnique("name","starfox")
-//Add other users before bots.
-var query = new Parse.Query(Company);
-query.equalTo("userId", currentUser.id);
-query.find({
-  success: function(user) {
-    CompMatch = new parse.object("CompMatch");
-    CompMatch.set("userId",user[0].id);
-    CompMatch.set("matchId", Match.id);
-    CompMatch.set("capital", 500);
-    CompMatch.set("charity",0);
-    CompMatch.set("price",5);
-    CompMatch.set("production", 50);
-    CompMatch.set("researchDevelopment", 0);
-    CompMatch.set("marketing", 0);
-
-  
-
-
-
-  
-  },
-  error: function(error){
-    console.log("error with match");
-  }
-});
-
-var query = new Parse.Query(bots);
-query.equalTo("bots", "easy");
-query.find({
-  success: function(bot) {
-    var object = bot;
-  for (i =0; i< 5;i++){
-    CompMatch = new parse.object("CompMatch");
-    CompMatch.set("userId",bot[0].id);
-    CompMatch.set("matchId", Match.id);
-    CompMatch.set("capital", 500);
-    CompMatch.set("charity",0);
-    CompMatch.set("price",5);
-    CompMatch.set("production", 50);
-    CompMatch.set("researchDevelopment", 0);
-    CompMatch.set("marketing", 0);
-
-
-
-  }  
-  },
-  error: function(error){
-  console.log("error with bot");  
-  }
-});
-  returndata{};
-  returndata.clientMatchId = Match.id;
-  returndata.clientGameresult = true;
-response.success("done");
-});
-
-
->>>>>>> origin/Christopher-Blackman
