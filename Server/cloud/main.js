@@ -167,9 +167,10 @@ Parse.Cloud.define("createMatch", function(request, response) {
 
 var currentUser = Parse.User.current();
 var Match = Parse.Object.extend("Match");
+var match = new Match();
 
-
-Match.addUnique("name","starfox")
+match.set("name","starfox");
+//Match.addUnique("name","starfox");
 //Add other users before bots.
 
 
