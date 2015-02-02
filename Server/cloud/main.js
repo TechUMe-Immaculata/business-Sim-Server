@@ -97,6 +97,32 @@ response.success(request.params.usernameClient);
 
 });
 
+<<<<<<< HEAD
+Parse.Cloud.define("login", function(request, response) {
+//login
+Parse.User.logIn(requestest.params.usernameClient, request.params.passwordClinet, {
+  success: function(user) {
+    // Do stuff after successful login.
+	response.success("Yo it works");
+  },
+  error: function(user, error) {
+    // The login failed. Check error to see why.
+	response.error("You messed up");
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+=======
 Parse.Cloud.define("logIn", function(request, response) {
 
 var username = request.params.usernameClient;
@@ -152,7 +178,7 @@ query.find({
 
 Parse.Cloud.define("createMatch", function(request, response) {
   
-    console.log(request.params);
+ /*   console.log(request.params);
  var Company = Parse.Object.extend("Company");
  var objectList = new Array();
   //saving data
@@ -198,6 +224,68 @@ Parse.Cloud.define("createMatch", function(request, response) {
 });
 
   response.success("done");
- 
+  */
+var currentUser = Parse.User.current();
+var Match = Parse.Object.extend("Match");
+
+//var currentMatch = Parse.object("objectId");
+
+Match.addUnique("name","starfox")
+//Add other users before bots.
+var query = new Parse.Query(Company);
+query.equalTo("userId", currentUser.id);
+query.find({
+  success: function(user) {
+    CompMatch = new parse.object("CompMatch");
+    CompMatch.set("userId",user[0].id);
+    CompMatch.set("matchId", Match.id);
+    CompMatch.set("capital", 500);
+    CompMatch.set("charity",0);
+    CompMatch.set("price",5);
+    CompMatch.set("production", 50);
+    CompMatch.set("researchDevelopment", 0);
+    CompMatch.set("marketing", 0);
+
   
+
+
+
+  
+  },
+  error: function(error){
+    console.log("error with match");
+  }
 });
+
+var query = new Parse.Query(bots);
+query.equalTo("bots", "easy");
+query.find({
+  success: function(bot) {
+    var object = bot;
+  for (i =0; i< 5;i++){
+    CompMatch = new parse.object("CompMatch");
+    CompMatch.set("userId",bot[0].id);
+    CompMatch.set("matchId", Match.id);
+    CompMatch.set("capital", 500);
+    CompMatch.set("charity",0);
+    CompMatch.set("price",5);
+    CompMatch.set("production", 50);
+    CompMatch.set("researchDevelopment", 0);
+    CompMatch.set("marketing", 0);
+
+
+
+  }  
+  },
+  error: function(error){
+  console.log("error with bot");  
+  }
+});
+  returndata{};
+  returndata.clientMatchId = Match.id;
+  returndata.clientGameresult = true;
+response.success("done");
+});
+
+
+>>>>>>> origin/Christopher-Blackman
