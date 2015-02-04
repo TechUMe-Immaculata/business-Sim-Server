@@ -222,10 +222,20 @@ queryComp.find({
 });
 
 
+Parse.Cloud.define("fire", function(request, response) {
+  
+var currentUser = user.current();
+success : function(success){
+alert(currentUser);
+},
 
-
-
-
+error : function(error){
+alert("bad");
+}
+ 
+  
+  
+});
 
 
 
