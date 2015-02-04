@@ -111,25 +111,6 @@ Parse.User.logIn(requestest.params.usernameClient, request.params.passwordClinet
 });
 });
 
-Parse.Cloud.define("logIn", function(request, response) {
-
-var username = request.params.usernameClient;
-var password = request.params.passwordClient;
-
- Parse.User.logIn(username,password, 
- {
-  success: function(user) {
-    // Do stuff after successful login.
-	//Parse.User.Current();
-	response.success(true);
-  },
-  error: function(user, error) {
-    // The login failed. Check error to see why.
-	response.error(false);
-  }
-});
-
-});
 
 Parse.Cloud.define("sendData", function(request, response) {
  
@@ -222,7 +203,41 @@ queryComp.find({
   response.success("done");
 });
 
+Parse.Cloud.define("logIn", function(request, response) {
 
+var username = request.params.usernameClient;
+var password = request.params.passwordClient;
+
+ Parse.User.logIn(username,password, 
+ {
+  success: function(user) {
+    // Do stuff after successful login.
+	//Parse.User.Current();
+	
+	var currentUser = {};
+	var queryUser = new Parse.Query("User");
+	
+queryUser.equalTo("username", username);
+
+queryUser.find({
+  success: function(userData) {
+	currentUser.clientId = userData[0].id;
+	currentUser.clientUsername = username;
+  },
+  error: function(error){
+  console.log("error with bot");  
+  }
+});
+	
+	response.success(JSON.stringify(currentUser));
+  },
+  error: function(user, error) {
+    // The login failed. Check error to see why.
+	response.error(false);
+  }
+});
+
+});
 
 
 

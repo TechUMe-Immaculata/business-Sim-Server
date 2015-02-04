@@ -20,10 +20,21 @@ $.ajax({
   data: JSON.stringify(logInInfo),
   dataType: "json"
 })
-  .done(function( msg ) {
+  .done(function( data ) {
   // all code here gets run when the POST was successful
   // you can do things like update the console, display an alert, etc...
-   alert(msg.result);
+	var currentUser = {};
+	
+	//var currentUser = data.clientUsername;
+	//var currentUserId = data.clientId;
+	var currentUser = "testUser";
+	var currentUserId = "KkUgjgYvit";
+	
+	localStorage.setItem("username",currentUser);
+	localStorage.setItem("userId",currentUserId);
+	
+	console.log(localStorage.getItem("userId"));
+    alert(data);
   });
   
   $.ajax({
