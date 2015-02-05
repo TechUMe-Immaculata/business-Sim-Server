@@ -205,6 +205,7 @@ queryComp.find({
 
 Parse.Cloud.define("logIn", function(request, response) {
 
+console.log("AAAAAA");
 var username = request.params.usernameClient;
 var password = request.params.passwordClient;
 
@@ -212,28 +213,32 @@ var password = request.params.passwordClient;
  {
   success: function(user) {
     // Do stuff after successful login.
-	//Parse.User.Current();
-	
-	var currentUser = {};
+	console.log("CCCCCCCC");
+  },
+  error: function(user, error) {
+    // The login failed. Check error to see why.
+	response.error(false);
+  }
+});
+	var listUser = new Array();
 	var queryUser = new Parse.Query("User");
-	
+	var currentUser = {};
+	console.log("BBBBBBB");
 queryUser.equalTo("username", username);
 
 queryUser.find({
   success: function(userData) {
 	currentUser.clientId = userData[0].id;
 	currentUser.clientUsername = username;
+	listUser.push(currentUser);
+	//console.log(currentUser.clientId);
+	//console.log(currentUser.clientUsename);
+	//console.log(listUser);
+	response.success(listUser);
   },
   error: function(error){
-  console.log("error with bot");  
-  }
-});
-	
-	response.success(JSON.stringify(currentUser));
-  },
-  error: function(user, error) {
-    // The login failed. Check error to see why.
-	response.error(false);
+  console.log("error with bot");
+  respose.error();  
   }
 });
 
