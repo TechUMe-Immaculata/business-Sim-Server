@@ -144,9 +144,12 @@ query.find({
 
 
 //--------------------------------------------------------------------------------
+
+//single player game
 Parse.Cloud.define("createMatch", function(request, response) {
 
-var currentUser = Parse.User.current();
+console.log("part A");
+var currentUser = request.params.objectId;
 var Match = Parse.Object.extend("Match");
 var match = new Match();
 
@@ -157,9 +160,10 @@ match.set("name","starfox");
 
 var queryUser = new Parse.Query("Company");
 queryUser.equalTo("userId", currentUser.id);
-
+console.log("part B");
 queryUser.find({
   success: function(user) {
+  console.log("part C");
     var compMatch = new parse.object("CompMatch");
     compMatch.set("userId",user[0].id);
     compMatch.set("matchId", Match.id);
@@ -175,11 +179,31 @@ queryUser.find({
   }
 });
 
+//Parse.Cloud.run('',{},
+
+/* Parse.Cloud.run('getObjects',{}, {
+      success: function(results) {
+          Parse.Cloud.run('getGifts',{}, {
+            success: function(results) {
+                response.success(results);
+            },
+            error: function(error) {
+                response.error("Some error.");
+            }
+          });
+      },
+      error: function(error) {
+          response.error("Some error.");
+      }
+    });*/
+
+console.log("part D");
 var queryComp = new Parse.Query("Bots");
 queryComp.equalTo("difficulty", "easy");
 
 queryComp.find({
   success: function(bot) {
+  console.log("part E");
     var object = bot;
   for (i =0; i< 5;i++){
     var compMatch = new parse.object("CompMatch");
@@ -197,6 +221,7 @@ queryComp.find({
   console.log("error with bot");  
   }
 });
+console.log("part F");
   var returndata = {};
   returndata.clientMatchId = Match.id;
   returndata.clientGameresult = true;
@@ -241,6 +266,10 @@ queryUser.find({
   respose.error();  
   }
 });
+
+});
+
+Parse.Cloud.define ("createMatchUserSingle",function(request, response){
 
 });
 

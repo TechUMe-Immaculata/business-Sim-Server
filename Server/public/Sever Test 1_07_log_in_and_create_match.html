@@ -6,9 +6,11 @@
 <script>
 function loadXMLDoc()
 {
+
 var logInInfo = {};
 logInInfo.usernameClient = "testUser";
 logInInfo.passwordClient ="1337";
+
 $.ajax({
   type: "POST",
   url: "https://api.parse.com/1/functions/logIn/",
@@ -27,19 +29,21 @@ $.ajax({
 	
 	//var currentUser = data.clientUsername;
 	//var currentUserId = data.clientId;
-	var currentUser = "testUser";
-	var currentUserId = "KkUgjgYvit";
+	var currentUser = data.result[0].clientUsername;
+	var currentUserId = data.result[0].clientId;
 	
 	localStorage.setItem("username",currentUser);
 	localStorage.setItem("userId",currentUserId);
 	
-	//console.log(localStorage.getItem("userId"));
-	//console.log(data);
-	console.log(data);
-	console.log(JSON.stringify(data));
-    //alert(data);
+	console.log(localStorage.getItem("username") +" - " + localStorage.getItem("userId"));
+	alert();
   });
-  /*
+  
+  var clientUser = {};
+  clientUser.objectId = localStorage.getItem("userId");
+  //clientUser.id  = localStorage.getItem("userId");
+  
+  console.log(clientUser.id);
   $.ajax({
   type: "POST",
   url: "https://api.parse.com/1/functions/createMatch/",
@@ -48,15 +52,16 @@ $.ajax({
   "X-Parse-REST-API-Key": "GcLEre3e2D25P14Pno5PbQ11YO0rixhvIoBxv2RG",
   "Content-Type": "application/json"
   },
-  data: JSON.stringify(logInInfo),
+  data: JSON.stringify(clientUser),
   dataType: "json"
+  
 })
   .done(function( msg ) {
   // all code here gets run when the POST was successful
   // you can do things like update the console, display an alert, etc...
    alert(msg.result);
   });
-  */
+  
 }
 
 </script>
