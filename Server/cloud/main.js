@@ -25,13 +25,13 @@ Parse.Cloud.define("sendCompanyInfo", function(request, response) {
   success: function(results) {
     // Execute any logic that should take place after the object is saved.
     alert('New object created with objectId: ' + company.id);
-	response.success("'"+request.params.price+"'");
+	//response.success("'"+request.params.price+"'");
   },
   error: function(error) {
     // Execute any logic that should take place if the save fails.
     // error is a Parse.Error with an error code and message.
     alert('Failed to create new object, with error code: ' + error.message);
-	response.error("shit");
+	//response.error("shit");
   }
 });
   response.success(request.params.price);
@@ -152,10 +152,28 @@ console.log("part A");
 var currentUser = request.params.objectId;
 var Match = Parse.Object.extend("Match");
 var match = new Match();
+var companyIdArray = new Array();
+
+companyIdArray.push("rs6deNsq27");
 
 match.set("name","starfox");
-//Match.addUnique("name","starfox");
-//Add other users before bots.
+match.set("companyIds",companyIdArray);
+
+
+    match.save(null, {
+  success: function(results) {
+    // Execute any logic that should take place after the object is saved.
+    //alert('New object created with objectId: ' + company.id);
+	//response.success("'"+request.params.price+"'");
+  },
+  error: function(error) {
+    // Execute any logic that should take place if the save fails.
+    // error is a Parse.Error with an error code and message.
+    //alert('Failed to create new object, with error code: ' + error.message);
+	//response.error("shit");
+	console.log("nooooo");
+  }
+});
 
 
 var queryUser = new Parse.Query("Company");
@@ -163,8 +181,8 @@ queryUser.equalTo("userId", currentUser.id);
 console.log("part B");
 
 queryUser.find().then(function(user) {
-  console.log("part C");
-    var compMatch = new parse.object("CompMatch");
+    console.log("part C");
+    var compMatch = new Parse.Object("CompMatch");
     compMatch.set("userId",user[0].id);
     compMatch.set("matchId", Match.id);
     compMatch.set("capital", 500);
@@ -174,7 +192,22 @@ queryUser.find().then(function(user) {
     compMatch.set("researchDevelopment", 0);
     compMatch.set("marketing", 0);
 
+	compMatch.save(null, {
+  success: function(results) {
+    // Execute any logic that should take place after the object is saved.
+    //lert('New object created with objectId: ' + company.id);
+	//response.success("'"+request.params.price+"'");
+  },
+  error: function(error) {
+    // Execute any logic that should take place if the save fails.
+    // error is a Parse.Error with an error code and message.
+    //alert('Failed to create new object, with error code: ' + error.message);
+	//response.error("shit");
+  }
+});
+	
 	console.log("part D");
+	
 var queryComp = new Parse.Query("Bots");
 queryComp.equalTo("difficulty", "easy");
 
@@ -183,8 +216,8 @@ return queryComp.find();
   console.log("part E");
     var object = bot;
   for (i =0; i< 5;i++){
-    var compMatch = new parse.object("CompMatch");
-    compMatch.set("userId",bot[0].id);
+    var compMatch = new Parse.Object("CompMatch");
+    compMatch.set("userId",bot[i].id);
     compMatch.set("matchId", Match.id);
     compMatch.set("capital", 500);
     compMatch.set("charity",0);
@@ -192,17 +225,33 @@ return queryComp.find();
     compMatch.set("production", 50);
     compMatch.set("researchDevelopment", 0);
     compMatch.set("marketing", 0);
+	
+	compMatch.save(null, {
+  success: function(results) {
+    // Execute any logic that should take place after the object is saved.
+    //alert('New object created with objectId: ' + company.id);
+	//response.success("'"+request.params.price+"'");
+  },
+  error: function(error) {
+    // Execute any logic that should take place if the save fails.
+    // error is a Parse.Error with an error code and message.
+    //alert('Failed to create new object, with error code: ' + error.message);
+	//response.error("shit");
+  }
+});
   }
   
   var returnData = {};
   returnData.clientMatchId = Match.id;
   returnData.clientGameresult = true;
+  
+  
+  
   response.success("done");
   
   },function(error){
   console.log("error with bot");  
 });
-console.log("part F");
 });
 
 
