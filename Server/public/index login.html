@@ -21,17 +21,14 @@ Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6Y
   var username = this.$("#userName").val();
   var password = this.$("#myPass").val();
 
-  Parse.User.logIn(username ,myPass , {
-  success : function(user) {
-  
-  alert("Your logged in");
-  //do stuff after login 
+  Parse.User.logIn(username, password, {
+  success: function(user) {
+      alert("YOu logged in");
   },
-  error : function ( user, error) {
-		alert("bad monkey");
+  error: function(user, error) {
+      alert("bad monkey");
   }
-  
-  });
+});
  };
 		
 
