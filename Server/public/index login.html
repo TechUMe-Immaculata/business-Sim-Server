@@ -23,7 +23,7 @@ Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6Y
 
   Parse.User.logIn(username, password, {
   success: function(user) {
-      alert("YOu logged in");
+      window.location = "menu.html";
   },
   error: function(user, error) {
       alert("bad monkey");
