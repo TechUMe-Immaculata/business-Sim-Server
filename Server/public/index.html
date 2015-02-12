@@ -35,14 +35,7 @@ Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6Y
     // Hooray! Let them use the app now.
 	//alert("asfdasdfsadf");
 	//make call to create match
-	Parse.Cloud.run('createMatch' , {} , {
-	 success : function(result) {
-	  alert("create match almost working");
-	 } ,
-	error : function(error) {
-	 alert("cloud code not working");
-	}
-	});
+	window.location="company.html";
   },
   error: function(user, error) {
     // Show the error message somewhere and let the user try again.

@@ -1,0 +1,64 @@
+<html>
+<head>
+
+</head>
+
+<body>
+
+<script>
+function GetCompany(){
+Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6YjkuOq9leznJ4UguavX6bdt");
+		// create company 
+		
+		//get userid than save userid as property of a company 
+		
+		var currentUser = Parse.User.current();
+		if (currentUser) { 
+		var query = new Parse.Query("User");
+		query.include('user');
+		query.equalTo('userId' ,currentUser);
+		query.find({   
+			success: function(findUSer){
+			response.success(userId);
+			console.log(userId);
+			},
+			error : function(error){
+			alert("not working comp");
+			}
+		
+		
+		});
+		
+
+		
+		//window.location = "index.html";
+		}
+		else{
+		console.log("nope");
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		//localStorage.setItem("username" , username);
+		//localStorage.setItem("userId" , currentUserId);
+
+};
+
+
+
+</script>
+<li><label for="userName">Choose your company name </label>  
+		<input type="text" id="userCompany" placeholder=" Apple ,Google etc.." required></li> 
+
+		
+	
+		 <button type="button" onclick="GetCompany()">Select Company</button></li>  
+</body>
+
+
+</html>
