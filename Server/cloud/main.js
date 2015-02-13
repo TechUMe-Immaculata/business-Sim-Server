@@ -153,7 +153,7 @@ var currentUser = request.params.objectId;
 var Match = Parse.Object.extend("Match");
 var match = new Match();
 var companyIdArray = new Array();
-
+/*
 companyIdArray.push("rs6deNsq27");
 
 match.set("name","starfox");
@@ -174,16 +174,22 @@ match.set("companyIds",companyIdArray);
 	console.log("nooooo");
   }
 });
+*/
 
 
 var queryUser = new Parse.Query("Company");
 queryUser.equalTo("userId", currentUser.id);
 console.log("part B");
 
-queryUser.find().then(function(user) {
+queryUser.find().then(function(company) {
     console.log("part C");
+	
+
+companyIdArray.push(company[0].id);
+	
+	
     var compMatch = new Parse.Object("CompMatch");
-    compMatch.set("userId",user[0].id);
+    compMatch.set("companyId",company[0].id);
     compMatch.set("matchId", Match.id);
     compMatch.set("capital", 500);
     compMatch.set("charity",0);
@@ -195,21 +201,17 @@ queryUser.find().then(function(user) {
 	compMatch.save(null, {
   success: function(results) {
     // Execute any logic that should take place after the object is saved.
-    //lert('New object created with objectId: ' + company.id);
-	//response.success("'"+request.params.price+"'");
   },
   error: function(error) {
     // Execute any logic that should take place if the save fails.
     // error is a Parse.Error with an error code and message.
-    //alert('Failed to create new object, with error code: ' + error.message);
-	//response.error("shit");
   }
 });
 	
 	console.log("part D");
 	
-var queryComp = new Parse.Query("Bots");
-queryComp.equalTo("difficulty", "easy");
+var queryComp = new Parse.Query("Company");
+queryComp.equalTo("isBot", true);
 
 return queryComp.find();
 }).then(function(bot) {
@@ -217,7 +219,7 @@ return queryComp.find();
     var object = bot;
   for (i =0; i< 5;i++){
     var compMatch = new Parse.Object("CompMatch");
-    compMatch.set("userId",bot[i].id);
+    compMatch.set("companyId",bot[i].id);
     compMatch.set("matchId", Match.id);
     compMatch.set("capital", 500);
     compMatch.set("charity",0);
@@ -239,7 +241,29 @@ return queryComp.find();
 	//response.error("shit");
   }
 });
+
+companyIdArray.push(bot[i].id);
   }
+  
+  match.set("name",request.params.matchName);
+  match.set("gameTime",request.params.matchTime);
+match.set("companyIds",companyIdArray);
+
+
+match.save(null, {
+  success: function(results) {
+    // Execute any logic that should take place after the object is saved.
+    //alert('New object created with objectId: ' + company.id);
+	//response.success("'"+request.params.price+"'");
+  },
+  error: function(error) {
+    // Execute any logic that should take place if the save fails.
+    // error is a Parse.Error with an error code and message.
+    //alert('Failed to create new object, with error code: ' + error.message);
+	//response.error("shit");
+	console.log("nooooo");
+  }
+});
   
   var returnData = {};
   returnData.clientMatchId = Match.id;
