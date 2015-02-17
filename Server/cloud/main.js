@@ -145,47 +145,22 @@ query.find({
 
 //--------------------------------------------------------------------------------
 
-//single player game
+//this function creates a single player match with 5 bots and one user
 Parse.Cloud.define("createMatch", function(request, response) {
-
-console.log("part A");
+console.log("A------------------------------------------------------");
+//define variables
 var currentUser = request.params.objectId;
-console.log("+++++++++++++++++++++++"+currentUser);
 var Match = Parse.Object.extend("Match");
 var match = new Match();
 var companyIdArray = new Array();
-var matchId = "";
-/*
-companyIdArray.push("rs6deNsq27");
 
-match.set("name","starfox");
-match.set("companyIds",companyIdArray);
-
-
-    match.save(null, {
-  success: function(results) {
-    // Execute any logic that should take place after the object is saved.
-    //alert('New object created with objectId: ' + company.id);
-	//response.success("'"+request.params.price+"'");
-  },
-  error: function(error) {
-    // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and message.
-    //alert('Failed to create new object, with error code: ' + error.message);
-	//response.error("shit");
-	console.log("nooooo");
-  }
-});
-*/
-
-
+//create a query to find the user creating the match
 var queryUser = new Parse.Query("Company");
 queryUser.equalTo("userId", currentUser);
-console.log("part B");
 
 queryUser.find().then(function(company) {
-    console.log("part C");
-	
+console.log("B------------------------------------------------------");
+//if the user is found then get the match name and set it to match / get the amount of time needed for the match and set it to match	
   match.set("name",request.params.matchName);
   match.set("gameTime",request.params.matchTime);
   
@@ -193,14 +168,13 @@ queryUser.find().then(function(company) {
 
 match.save(null, {
   success: function(results) {
+  console.log("C------------------------------------------------------");
     // Execute any logic that should take place after the object is saved.
-    //alert('New object created with objectId: ' + company.id);
-	//response.success("'"+request.params.price+"'");
-	matchId = results.id;
-	
+
+	//add the company id to the list
 	companyIdArray.push(company[0].id);
 	
-	console.log("++++++++++++"+company[0].id);
+	//make an instance of comp match and initialize 
     var compMatch = new Parse.Object("CompMatch");
     compMatch.set("companyId",company[0].id);
     compMatch.set("matchId", match.id);
@@ -211,9 +185,11 @@ match.save(null, {
     compMatch.set("researchDevelopment", 0);
     compMatch.set("marketing", 0);
 
+	//save compMatch
 	compMatch.save(null, {
   success: function(results) {
     // Execute any logic that should take place after the object is saved.
+	console.log("D------------------------------------------------------");
   },
   error: function(error) {
     // Execute any logic that should take place if the save fails.
@@ -224,46 +200,20 @@ match.save(null, {
   },
   error: function(error) {
     // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and message.
-    //alert('Failed to create new object, with error code: ' + error.message);
-	//response.error("shit");
-	console.log("nooooo");
   }
 });
 	
-/*companyIdArray.push(company[0].id);
-	
-	console.log("++++++++++++"+company[0].id);
-    var compMatch = new Parse.Object("CompMatch");
-    compMatch.set("companyId",company[0].id);
-    compMatch.set("matchId", match.id);
-    compMatch.set("capital", 500);
-    compMatch.set("charity",0);
-    compMatch.set("price",5);
-    compMatch.set("production", 50);
-    compMatch.set("researchDevelopment", 0);
-    compMatch.set("marketing", 0);
-
-	compMatch.save(null, {
-  success: function(results) {
-    // Execute any logic that should take place after the object is saved.
-  },
-  error: function(error) {
-    // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and message.
-  }
-});*/
-	
-	console.log("part D");
-	
+console.log("E------------------------------------------------------");
+//create a query to find the computer company's
 var queryComp = new Parse.Query("Company");
 queryComp.equalTo("isBot", true);
 
 return queryComp.find();
 }).then(function(bot) {
-  console.log("part E");
-    var object = bot;
+console.log("F------------------------------------------------------");
+//add 5 bots into match
   for (i =0; i< 5;i++){
+  //create a comp match and initialize variables
     var compMatch = new Parse.Object("CompMatch");
     compMatch.set("companyId",bot[i].id);
     compMatch.set("matchId", match.id);
@@ -309,64 +259,18 @@ match.save(null, {
   }
 });
   var returnData = {};
-  returnData.clientMatchId = matchId;
+  returnData.clientMatchId = match.id;
   returnData.clientGameresult = true;
-  console.log(matchId);
+  console.log("+++++++++"+match.id);
   
   
-  response.success(matchId);
+  response.success(match.id);
   
   },function(error){
   console.log("error with bot");  
 });
 });
 
-
-
-
-/*Parse.Cloud.define ("createMatchUserSingle",function(request, response){
-
-console.log("part A");
-var currentUser = request;
-var Match = Parse.Object.extend("Match");
-var match = new Match();
-
-match.set("name","starfox");
-//Match.addUnique("name","starfox");
-//Add other users before bots.
-
-
-var queryUser = new Parse.Query("Company");
-queryUser.equalTo("userId", currentUser.id);
-console.log("part B");
-queryUser.find({
-  success: function(user) {
-  console.log("part C");
-    var compMatch = new parse.object("CompMatch");
-    compMatch.set("userId",user[0].id);
-    compMatch.set("matchId", Match.id);
-    compMatch.set("capital", 500);
-    compMatch.set("charity",0);
-    compMatch.set("price",5);
-    compMatch.set("production", 50);
-    compMatch.set("researchDevelopment", 0);
-    compMatch.set("marketing", 0);
-	
-	response.success();
-  },
-  error: function(error){
-    console.log("error with match");
-	response.error();
-  }
-})
-
-});
-*/
-/* function
-Parse.Cloud.define ("addComputerSingle",function(request, response){
-response.success();
-});
-*/
 
 Parse.Cloud.define("logIn", function(request, response) {
 
