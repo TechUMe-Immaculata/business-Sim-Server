@@ -6,31 +6,27 @@
 </head>
 <body>
 <script>
-function loadProfile(){
+function JoinMatch(){
 Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6YjkuOq9leznJ4UguavX6bdt");
 var currentUser = Parse.User.current();
-var  mycompany = Parse.Object.extend("Company");
-var  mynewcompany = new mycompany();
+Parse.Cloud.define("joinNewMatch", function(request, response) {
+succes : function(result) {
 
-var query = new Parse.Query("Company");
-query.equalTo("userId",currentUser);
-query.find({
-success : function(results){
-var tempuserID = results[0].userId;
-	
+
 },
-error : function(error) {
-
+error : function(error){
+alert("nope");
 }
-});
 
-};
+
+});
 </script
 
 
 <p>Hello </p> 
 
-<button type="button" onclick="loadProfile()">Select Company</button></li>  
+<button type="button" onclick="joinMatch()">Join Match</button></li>  
+
 
 </body>
 
