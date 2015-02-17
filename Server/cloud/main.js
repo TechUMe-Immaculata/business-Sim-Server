@@ -150,10 +150,12 @@ Parse.Cloud.define("createMatch", function(request, response) {
 
 console.log("part A");
 var currentUser = request.params.objectId;
+console.log("+++++++++++++++++++++++"+currentUser);
 var Match = Parse.Object.extend("Match");
 var match = new Match();
 var companyIdArray = new Array();
-
+var matchId = "";
+/*
 companyIdArray.push("rs6deNsq27");
 
 match.set("name","starfox");
@@ -174,17 +176,34 @@ match.set("companyIds",companyIdArray);
 	console.log("nooooo");
   }
 });
+*/
 
 
 var queryUser = new Parse.Query("Company");
-queryUser.equalTo("userId", currentUser.id);
+queryUser.equalTo("userId", currentUser);
 console.log("part B");
 
-queryUser.find().then(function(user) {
+queryUser.find().then(function(company) {
     console.log("part C");
+	
+  match.set("name",request.params.matchName);
+  match.set("gameTime",request.params.matchTime);
+  
+
+
+match.save(null, {
+  success: function(results) {
+    // Execute any logic that should take place after the object is saved.
+    //alert('New object created with objectId: ' + company.id);
+	//response.success("'"+request.params.price+"'");
+	matchId = results.id;
+	
+	companyIdArray.push(company[0].id);
+	
+	console.log("++++++++++++"+company[0].id);
     var compMatch = new Parse.Object("CompMatch");
-    compMatch.set("userId",user[0].id);
-    compMatch.set("matchId", Match.id);
+    compMatch.set("companyId",company[0].id);
+    compMatch.set("matchId", match.id);
     compMatch.set("capital", 500);
     compMatch.set("charity",0);
     compMatch.set("price",5);
@@ -195,21 +214,50 @@ queryUser.find().then(function(user) {
 	compMatch.save(null, {
   success: function(results) {
     // Execute any logic that should take place after the object is saved.
-    //lert('New object created with objectId: ' + company.id);
-	//response.success("'"+request.params.price+"'");
+  },
+  error: function(error) {
+    // Execute any logic that should take place if the save fails.
+    // error is a Parse.Error with an error code and message.
+  }
+});
+
   },
   error: function(error) {
     // Execute any logic that should take place if the save fails.
     // error is a Parse.Error with an error code and message.
     //alert('Failed to create new object, with error code: ' + error.message);
 	//response.error("shit");
+	console.log("nooooo");
   }
 });
 	
+/*companyIdArray.push(company[0].id);
+	
+	console.log("++++++++++++"+company[0].id);
+    var compMatch = new Parse.Object("CompMatch");
+    compMatch.set("companyId",company[0].id);
+    compMatch.set("matchId", match.id);
+    compMatch.set("capital", 500);
+    compMatch.set("charity",0);
+    compMatch.set("price",5);
+    compMatch.set("production", 50);
+    compMatch.set("researchDevelopment", 0);
+    compMatch.set("marketing", 0);
+
+	compMatch.save(null, {
+  success: function(results) {
+    // Execute any logic that should take place after the object is saved.
+  },
+  error: function(error) {
+    // Execute any logic that should take place if the save fails.
+    // error is a Parse.Error with an error code and message.
+  }
+});*/
+	
 	console.log("part D");
 	
-var queryComp = new Parse.Query("Bots");
-queryComp.equalTo("difficulty", "easy");
+var queryComp = new Parse.Query("Company");
+queryComp.equalTo("isBot", true);
 
 return queryComp.find();
 }).then(function(bot) {
@@ -217,8 +265,8 @@ return queryComp.find();
     var object = bot;
   for (i =0; i< 5;i++){
     var compMatch = new Parse.Object("CompMatch");
-    compMatch.set("userId",bot[i].id);
-    compMatch.set("matchId", Match.id);
+    compMatch.set("companyId",bot[i].id);
+    compMatch.set("matchId", match.id);
     compMatch.set("capital", 500);
     compMatch.set("charity",0);
     compMatch.set("price",5);
@@ -239,15 +287,34 @@ return queryComp.find();
 	//response.error("shit");
   }
 });
+
+companyIdArray.push(bot[i].id);
   }
-  
+
+match.set("companyIds",companyIdArray);
+
+
+match.save(null, {
+  success: function(results) {
+    // Execute any logic that should take place after the object is saved.
+    //alert('New object created with objectId: ' + company.id);
+	//response.success("'"+request.params.price+"'");
+  },
+  error: function(error) {
+    // Execute any logic that should take place if the save fails.
+    // error is a Parse.Error with an error code and message.
+    //alert('Failed to create new object, with error code: ' + error.message);
+	//response.error("shit");
+	console.log("nooooo");
+  }
+});
   var returnData = {};
-  returnData.clientMatchId = Match.id;
+  returnData.clientMatchId = matchId;
   returnData.clientGameresult = true;
+  console.log(matchId);
   
   
-  
-  response.success("done");
+  response.success(matchId);
   
   },function(error){
   console.log("error with bot");  
