@@ -272,6 +272,51 @@ queryUser.find({
 
 });
 
+Parse.Cloud.define("oneTurn", function(request, response) {
+//increase population exponetinaly but slowly****
+
+//get user info into varinbles
+//expense save
+
+//find charity MS %
+
+//find marketing Ms %
+
+//find price Ms %
+
+//calculate R&D Ms %
+
+//add all Ms together
+//save their total Ms % to comp match
+
+//find how many products they can sell
+//if amount >= production then sell production
+//else if amount < production then sell the amount
+//save products sold to comp match
+
+//revenue save 
+//net profit save
+
+
+
+
+
+//loop for each bot
+
+//create fake varibles for bots based ( based off last decision )
+
+//find charity MS %
+
+//find marketing Ms %
+
+//find price Ms %
+
+//calculate R&D Ms %
+
+//save their total Ms %
+
+});
+
 
 
 
