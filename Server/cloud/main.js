@@ -147,34 +147,31 @@ query.find({
 
 //this function creates a single player match with 5 bots and one user
 Parse.Cloud.define("createMatch", function(request, response) {
-console.log("A------------------------------------------------------");
+
 //define variables
 var currentUser = request.params.objectId;
 var Match = Parse.Object.extend("Match");
 var match = new Match();
 var companyIdArray = new Array();
 
+  match.set("name",request.params.matchName);
+  match.set("gameTime",request.params.matchTime);
+  match.save().then(function(afterSave)
+  {
+
 //create a query to find the user creating the match
 var queryUser = new Parse.Query("Company");
 queryUser.equalTo("userId", currentUser);
 
-queryUser.find().then(function(company) {
-console.log("B------------------------------------------------------");
-//if the user is found then get the match name and set it to match / get the amount of time needed for the match and set it to match	
-  match.set("name",request.params.matchName);
-  match.set("gameTime",request.params.matchTime);
-  
+    return queryUser.find();
+  }).then(function(company) {
 
 
-match.save(null, {
-  success: function(results) {
-  console.log("C------------------------------------------------------");
-    // Execute any logic that should take place after the object is saved.
+  //add the company id to the list
+  companyIdArray.push(company[0].id);
 
-	//add the company id to the list
-	companyIdArray.push(company[0].id);
-	
-	//make an instance of comp match and initialize 
+      // Execute any logic that should take place after the object is saved.
+  //make an instance of comp match and initialize 
     var compMatch = new Parse.Object("CompMatch");
     compMatch.set("companyId",company[0].id);
     compMatch.set("matchId", match.id);
@@ -185,32 +182,17 @@ match.save(null, {
     compMatch.set("researchDevelopment", 0);
     compMatch.set("marketing", 0);
 
-	//save compMatch
-	compMatch.save(null, {
-  success: function(results) {
-    // Execute any logic that should take place after the object is saved.
-	console.log("D------------------------------------------------------");
-  },
-  error: function(error) {
-    // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and message.
-  }
-});
+  //save compMatch
+  compMatch.save();
 
-  },
-  error: function(error) {
-    // Execute any logic that should take place if the save fails.
-  }
-});
+
 	
-console.log("E------------------------------------------------------");
 //create a query to find the computer company's
 var queryComp = new Parse.Query("Company");
 queryComp.equalTo("isBot", true);
 
 return queryComp.find();
 }).then(function(bot) {
-console.log("F------------------------------------------------------");
 //add 5 bots into match
   for (i =0; i< 5;i++){
   //create a comp match and initialize variables
@@ -224,19 +206,7 @@ console.log("F------------------------------------------------------");
     compMatch.set("researchDevelopment", 0);
     compMatch.set("marketing", 0);
 	
-	compMatch.save(null, {
-  success: function(results) {
-    // Execute any logic that should take place after the object is saved.
-    //alert('New object created with objectId: ' + company.id);
-	//response.success("'"+request.params.price+"'");
-  },
-  error: function(error) {
-    // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and message.
-    //alert('Failed to create new object, with error code: ' + error.message);
-	//response.error("shit");
-  }
-});
+	compMatch.save();
 
 companyIdArray.push(bot[i].id);
   }
@@ -244,20 +214,8 @@ companyIdArray.push(bot[i].id);
 match.set("companyIds",companyIdArray);
 
 
-match.save(null, {
-  success: function(results) {
-    // Execute any logic that should take place after the object is saved.
-    //alert('New object created with objectId: ' + company.id);
-	//response.success("'"+request.params.price+"'");
-  },
-  error: function(error) {
-    // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and message.
-    //alert('Failed to create new object, with error code: ' + error.message);
-	//response.error("shit");
-	console.log("nooooo");
-  }
-});
+match.save();
+
   var returnData = {};
   returnData.clientMatchId = match.id;
   returnData.clientGameresult = true;
@@ -269,6 +227,7 @@ match.save(null, {
   },function(error){
   console.log("error with bot");  
 });
+
 });
 
 
@@ -310,6 +269,51 @@ queryUser.find({
   respose.error();  
   }
 });
+
+});
+
+Parse.Cloud.define("oneTurn", function(request, response) {
+//increase population exponetinaly but slowly****
+
+//get user info into varinbles
+//expense save
+
+//find charity MS %
+
+//find marketing Ms %
+
+//find price Ms %
+
+//calculate R&D Ms %
+
+//add all Ms together
+//save their total Ms % to comp match
+
+//find how many products they can sell
+//if amount >= production then sell production
+//else if amount < production then sell the amount
+//save products sold to comp match
+
+//revenue save 
+//net profit save
+
+
+
+
+
+//loop for each bot
+
+//create fake varibles for bots based ( based off last decision )
+
+//find charity MS %
+
+//find marketing Ms %
+
+//find price Ms %
+
+//calculate R&D Ms %
+
+//save their total Ms %
 
 });
 
