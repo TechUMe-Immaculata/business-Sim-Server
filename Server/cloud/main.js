@@ -156,6 +156,8 @@ var companyIdArray = new Array();
 
   match.set("name",request.params.matchName);
   match.set("gameTime",request.params.matchTime);
+  match.set("turn",0);
+  match.set("population",1000000);
   match.save().then(function(afterSave)
   {
 
@@ -274,8 +276,11 @@ queryUser.find({
 
 Parse.Cloud.define("oneTurn", function(request, response) {
 //increase population exponetinaly but slowly****
+var turn;
 
+var population = Math.round(1 000 000 * Math.Pow(turn,(0.05 + 1.00))); 
 //get user info into varinbles
+var charityAmount, marketingAmount, priceAmount, researchDevelopmentAmount, productionAmount;
 //expense save
 
 //find charity MS %
