@@ -9,23 +9,97 @@
 function JoinMatch(){
 Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6YjkuOq9leznJ4UguavX6bdt");
 var currentUser = Parse.User.current();
-Parse.Cloud.define("joinNewMatch", function(request, response) {
-succes : function(result) {
+// Assume Parse.Object myPost was previously created.
+var company = Parse.Object.extend("Company");
+var query = new Parse.Query(company);
+query.equalTo("userId", currentUser.id);
+console.log(currentUser.id);
+query.find({
+  success: function(results) {
+    // comments now contains the comments for myPost
+    	var usercomp = results[0];
+    	console.log(results.length);
+    	var usercompID = results[0].id;
+
+    	var Match = Parse.Object.extend("Match");
+    	var nquery = new Parse.Query(Match);
+
+    	nquery.equalTo("companyIds" , usercompID);
+    	nquery.find({
+    		success: function(findMatch){
+    			if ( findMatch.length == 0 )
+    			{
+    				console.log('nothing');
+    			}
+    			else{
+    				for(var i = 0; i <= (findMatch.length -1); i++)
+    				{
+    			console.log(findMatch.length);
+    			console.log(findMatch[i].id);
+
+    			var usermatches = findMatch[i].id;
+
+    		
+    			alert("WORKKK" + "Match:" + " " + usermatches);
+    			// work on getting the macth id to confirm it works 
+    		}
+    		}
+    		},
+    		error:function(error){
+    			alert("So close boi");
+    		}
+    	});
 
 
-},
-error : function(error){
+  } ,
+  error:function(error){
+
 alert("nope");
-}
-
-
+  }
 });
-</script
+//do query , if they have previous games , display , you have previous games aviable , if not display create new game.
+// in new game, make a view , have the time? and company names and than usernames of people in your match... needs a timer function to work as well.
 
+
+
+
+};
+</script>
+
+<script>
+
+function CreateMatch(){
+ var username = this.$("#userName").val();
+
+	var  running = {};
+running.objectId = currentUser.id;
+running.matchTime = 5;
+running.matchName = this.$("#myMatch").val();
+
+Parse.Cloud.run('CreateMatch', {running} , {
+
+	success: function(works){
+
+		console.log("yeah bouddy");
+	},
+	error:function(error){
+
+		console.log("Nah boi");
+	}
+});
+
+
+};
+</script>
+
+<script type="text/javascript"></script>
 
 <p>Hello </p> 
 
-<button type="button" onclick="joinMatch()">Join Match</button></li>  
+<button type="button" onclick="JoinMatch()">Join Match</button></li> 
+
+<input type="text" id="myMatch" name="matchname" placeholder="King of Bussiness" required></li> 
+<button type="button" onclick="CreateMatch()">Join Match</button></li>   
 
 
 </body>

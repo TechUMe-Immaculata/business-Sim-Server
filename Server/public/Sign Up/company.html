@@ -19,7 +19,7 @@ Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6Y
 
 		// get user id and company 
 		var currentUser = Parse.User.current();
-
+		mycompany.set("username" , currentUser.get("username"));
 	    var myUserId = currentUser.id;
 		mycompany.set("userId" , myUserId);
 		console.log(myUserId);

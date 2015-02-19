@@ -12,34 +12,38 @@
 
 <body>
   
- <script>
- 
-function loginUser(){ 
+  <script>
+function Register(){ 
 Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6YjkuOq9leznJ4UguavX6bdt");
 		
 
   var username = this.$("#userName").val();
   var password = this.$("#myPass").val();
-
-  Parse.User.logIn(username, password, {
+  var email = this.$("#myemail").val();
+  
+  
+    
+		
+	var user = new Parse.User();
+	user.set("name" , username);
+	user.set("username", username);
+	user.set("password", password);
+	user.set("email", email);
+	
+	user.signUp(null, {
   success: function(user) {
-      window.location = "menu.html";
+    // Hooray! Let them use the app now.
+	//alert("asfdasdfsadf");
+	//make call to create match
+	window.location="company.html";
   },
   error: function(user, error) {
-      alert("bad monkey");
+    // Show the error message somewhere and let the user try again.
+    alert("Error: " + error.code + " " + error.message);
   }
 });
-//do query , if they have previous games , display , you have previous games aviable , if not display create new game.
-// in new game, make a view , have the time? and company names and than usernames of people in your match... needs a timer function to work as well.
-
-
- };
-		
-
 	
-
-	
-		/*
+};		/*
     var TestObject = Parse.Object.extend("TestObject");
     var testObject = new TestObject();
       testObject.save({foo: "bar"}, {
@@ -52,7 +56,7 @@ Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6Y
     });
 	*/
 
- </script>
+  </script>
   
   --
   <div id="main">
@@ -61,10 +65,12 @@ Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6Y
     <ul>  
         <li><label for="userName">Username</label>  
 		<input type="text" id="userName" name="username" placeholder=" E.g. SquriellFoxx" required></li> 
-		<li><label for="password">Password</label>  
+		<li><label for="myemail">Email</label>
+        <input type="email" id="myemail" name="email" placeholder="yourname@email.com" required></li>  
+        <li><label for="password">Password</label>  
         <input type="password" id="myPass" name="password" placeholder="password" required></li>  
         <li>  
-        <button type="button" onclick="loginUser()" >Login Now</button></li>  
+        <button type="button" onclick="Register()">signUp</button></li>  
     </ul>  
 </form>  
 </section>  
