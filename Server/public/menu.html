@@ -27,6 +27,7 @@ query.find({
     	nquery.equalTo("companyIds" , usercompID);
     	nquery.find({
     		success: function(findMatch){
+    			console.log(findMatch);
     			if ( findMatch.length == 0 )
     			{
     				console.log('nothing');
@@ -37,16 +38,18 @@ query.find({
     			console.log(findMatch.length);
     			console.log(findMatch[i].id);
 
-    			var usermatches = findMatch[i].id;
+    			var usermatches = findMatch[i].get("name");
+    			var players= findMatch[i].get("companyIds");
 
-    		
-    			alert("WORKKK" + "Match:" + " " + usermatches);
+    			$("<tr></tr>").append("<td>"+usermatches+"</td>").append("<td><a href='company.html'>"+players+"</a></td>").appendTo("#matchlist");
+
+    			//alert("Match Name :"+ usermatches);
     			// work on getting the macth id to confirm it works 
     		}
     		}
     		},
     		error:function(error){
-    			alert("So close boi");
+    			alert("No matches aviable");
     		}
     	});
 
@@ -69,14 +72,16 @@ alert("nope");
 <script>
 
 function CreateMatch(){
+Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6YjkuOq9leznJ4UguavX6bdt");
  var username = this.$("#userName").val();
+ var currentUser = Parse.User.current();
 
 	var  running = {};
 running.objectId = currentUser.id;
 running.matchTime = 5;
 running.matchName = this.$("#myMatch").val();
 
-Parse.Cloud.run('CreateMatch', {running} , {
+Parse.Cloud.run('createMatch', running, {
 
 	success: function(works){
 
@@ -94,12 +99,23 @@ Parse.Cloud.run('CreateMatch', {running} , {
 
 <script type="text/javascript"></script>
 
-<p>Hello </p> 
+<p>Menu </p> 
 
-<button type="button" onclick="JoinMatch()">Join Match</button></li> 
+<button type="button" onclick="JoinMatch()">View Active Matches</button></li> 
+<table style="width:100%" id="matchlist">
+  <tr>
+    <th>Match Name</th>
+    <th> Users in current Match</th>
+  </tr>
+  
+    
+  
+   
+  
+</table>
 
 <input type="text" id="myMatch" name="matchname" placeholder="King of Bussiness" required></li> 
-<button type="button" onclick="CreateMatch()">Join Match</button></li>   
+<button type="button" onclick="CreateMatch()">Create Match</button></li>   
 
 
 </body>
