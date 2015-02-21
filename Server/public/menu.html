@@ -41,7 +41,7 @@ query.find({
     			var usermatches = findMatch[i].get("name");
     			var players= findMatch[i].get("companyIds");
 
-    			$("<tr></tr>").append("<td>"+usermatches+"</td>").append("<td><a href='company.html'>"+players+"</a></td>").appendTo("#matchlist");
+    			$("<tr></tr>").append("<td>"+usermatches+"</td>").append("<td><a href='game.html'>"+players+"</a></td>").appendTo("#matchlist");
 
     			//alert("Match Name :"+ usermatches);
     			// work on getting the macth id to confirm it works 
@@ -102,7 +102,7 @@ Parse.Cloud.run('createMatch', running, {
 <p>Menu </p> 
 
 <button type="button" onclick="JoinMatch()">View Active Matches</button></li> 
-<table style="width:100%" id="matchlist">
+<table border="1" style="width:100%" id="matchlist">
   <tr>
     <th>Match Name</th>
     <th> Users in current Match</th>
