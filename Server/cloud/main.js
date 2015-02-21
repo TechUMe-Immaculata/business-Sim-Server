@@ -145,46 +145,38 @@ query.find({
 
 //--------------------------------------------------------------------------------
 
-//single player game
+//this function creates a single player match with 5 bots and one user
 Parse.Cloud.define("createMatch", function(request, response) {
 
-console.log("part A");
+//define variables
 var currentUser = request.params.objectId;
 var Match = Parse.Object.extend("Match");
 var match = new Match();
 var companyIdArray = new Array();
 
-companyIdArray.push("rs6deNsq27");
+  match.set("name",request.params.matchName);
+  match.set("gameTime",request.params.matchTime);
+  match.set("turn",0);
+  match.set("population",1000000);
+  match.save().then(function(afterSave)
+  {
 
-match.set("name","starfox");
-match.set("companyIds",companyIdArray);
-
-
-    match.save(null, {
-  success: function(results) {
-    // Execute any logic that should take place after the object is saved.
-    //alert('New object created with objectId: ' + company.id);
-	//response.success("'"+request.params.price+"'");
-  },
-  error: function(error) {
-    // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and message.
-    //alert('Failed to create new object, with error code: ' + error.message);
-	//response.error("shit");
-	console.log("nooooo");
-  }
-});
-
-
+//create a query to find the user creating the match
 var queryUser = new Parse.Query("Company");
-queryUser.equalTo("userId", currentUser.id);
-console.log("part B");
+queryUser.equalTo("userId", currentUser);
 
-queryUser.find().then(function(user) {
-    console.log("part C");
+    return queryUser.find();
+  }).then(function(company) {
+
+
+  //add the company id to the list
+  companyIdArray.push(company[0].id);
+
+      // Execute any logic that should take place after the object is saved.
+  //make an instance of comp match and initialize 
     var compMatch = new Parse.Object("CompMatch");
-    compMatch.set("userId",user[0].id);
-    compMatch.set("matchId", Match.id);
+    compMatch.set("companyId",company[0].id);
+    compMatch.set("matchId", match.id);
     compMatch.set("capital", 500);
     compMatch.set("charity",0);
     compMatch.set("price",5);
@@ -192,33 +184,23 @@ queryUser.find().then(function(user) {
     compMatch.set("researchDevelopment", 0);
     compMatch.set("marketing", 0);
 
-	compMatch.save(null, {
-  success: function(results) {
-    // Execute any logic that should take place after the object is saved.
-    //lert('New object created with objectId: ' + company.id);
-	//response.success("'"+request.params.price+"'");
-  },
-  error: function(error) {
-    // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and message.
-    //alert('Failed to create new object, with error code: ' + error.message);
-	//response.error("shit");
-  }
-});
+  //save compMatch
+  compMatch.save();
+
+
 	
-	console.log("part D");
-	
-var queryComp = new Parse.Query("Bots");
-queryComp.equalTo("difficulty", "easy");
+//create a query to find the computer company's
+var queryComp = new Parse.Query("Company");
+queryComp.equalTo("isBot", true);
 
 return queryComp.find();
 }).then(function(bot) {
-  console.log("part E");
-    var object = bot;
+//add 5 bots into match
   for (i =0; i< 5;i++){
+  //create a comp match and initialize variables
     var compMatch = new Parse.Object("CompMatch");
-    compMatch.set("userId",bot[i].id);
-    compMatch.set("matchId", Match.id);
+    compMatch.set("companyId",bot[i].id);
+    compMatch.set("matchId", match.id);
     compMatch.set("capital", 500);
     compMatch.set("charity",0);
     compMatch.set("price",5);
@@ -226,80 +208,30 @@ return queryComp.find();
     compMatch.set("researchDevelopment", 0);
     compMatch.set("marketing", 0);
 	
-	compMatch.save(null, {
-  success: function(results) {
-    // Execute any logic that should take place after the object is saved.
-    //alert('New object created with objectId: ' + company.id);
-	//response.success("'"+request.params.price+"'");
-  },
-  error: function(error) {
-    // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and message.
-    //alert('Failed to create new object, with error code: ' + error.message);
-	//response.error("shit");
+	compMatch.save();
+
+companyIdArray.push(bot[i].id);
   }
-});
-  }
-  
+
+match.set("companyIds",companyIdArray);
+
+
+match.save();
+
   var returnData = {};
-  returnData.clientMatchId = Match.id;
+  returnData.clientMatchId = match.id;
   returnData.clientGameresult = true;
+  console.log("+++++++++"+match.id);
   
   
-  
-  response.success("done");
+  response.success(match.id);
   
   },function(error){
   console.log("error with bot");  
 });
-});
-
-
-
-
-/*Parse.Cloud.define ("createMatchUserSingle",function(request, response){
-
-console.log("part A");
-var currentUser = request;
-var Match = Parse.Object.extend("Match");
-var match = new Match();
-
-match.set("name","starfox");
-//Match.addUnique("name","starfox");
-//Add other users before bots.
-
-
-var queryUser = new Parse.Query("Company");
-queryUser.equalTo("userId", currentUser.id);
-console.log("part B");
-queryUser.find({
-  success: function(user) {
-  console.log("part C");
-    var compMatch = new parse.object("CompMatch");
-    compMatch.set("userId",user[0].id);
-    compMatch.set("matchId", Match.id);
-    compMatch.set("capital", 500);
-    compMatch.set("charity",0);
-    compMatch.set("price",5);
-    compMatch.set("production", 50);
-    compMatch.set("researchDevelopment", 0);
-    compMatch.set("marketing", 0);
-	
-	response.success();
-  },
-  error: function(error){
-    console.log("error with match");
-	response.error();
-  }
-})
 
 });
-*/
-/* function
-Parse.Cloud.define ("addComputerSingle",function(request, response){
-response.success();
-});
-*/
+
 
 Parse.Cloud.define("logIn", function(request, response) {
 
@@ -339,6 +271,54 @@ queryUser.find({
   respose.error();  
   }
 });
+
+});
+
+Parse.Cloud.define("oneTurn", function(request, response) {
+//increase population exponetinaly but slowly****
+var turn;
+
+var population = Math.round(1 000 000 * Math.Pow(turn,(0.05 + 1.00))); 
+//get user info into varinbles
+var charityAmount, marketingAmount, priceAmount, researchDevelopmentAmount, productionAmount;
+//expense save
+
+//find charity MS %
+
+//find marketing Ms %
+
+//find price Ms %
+
+//calculate R&D Ms %
+
+//add all Ms together
+//save their total Ms % to comp match
+
+//find how many products they can sell
+//if amount >= production then sell production
+//else if amount < production then sell the amount
+//save products sold to comp match
+
+//revenue save 
+//net profit save
+
+
+
+
+
+//loop for each bot
+
+//create fake varibles for bots based ( based off last decision )
+
+//find charity MS %
+
+//find marketing Ms %
+
+//find price Ms %
+
+//calculate R&D Ms %
+
+//save their total Ms %
 
 });
 

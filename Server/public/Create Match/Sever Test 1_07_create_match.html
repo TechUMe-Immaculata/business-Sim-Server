@@ -8,6 +8,8 @@ function loadXMLDoc()
 {
   
   var clientUser = {};
+  clientUser.matchName = " Omega Outpost 137 " ;
+  clientUser.matchTime = 3 ;
   clientUser.objectId = localStorage.getItem("userId");
   //clientUser.id  = localStorage.getItem("userId");
   
@@ -27,7 +29,7 @@ function loadXMLDoc()
   .done(function( msg ) {
   // all code here gets run when the POST was successful
   // you can do things like update the console, display an alert, etc...
-   alert(msg.result);
+   console.log(msg.result);
   });
   
 }
