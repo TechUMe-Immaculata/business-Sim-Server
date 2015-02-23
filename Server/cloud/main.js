@@ -172,8 +172,8 @@ queryUser.equalTo("userId", currentUser);
   //add the company id to the list
   companyIdArray.push(company[0].id);
 
-      // Execute any logic that should take place after the object is saved.
-  //make an instance of comp match and initialize 
+	// Execute any logic that should take place after the object is saved.
+	//make an instance of comp match and initialize 
     var compMatch = new Parse.Object("CompMatch");
     compMatch.set("companyId",company[0].id);
     compMatch.set("matchId", match.id);
@@ -274,13 +274,45 @@ queryUser.find({
 
 });
 
-Parse.Cloud.define("oneTurn", function(request, response) {
+Parse.Cloud.define("turn", function(request, response) {
 //increase population exponetinaly but slowly****
-var turn;
+var turn = 0;
+var population = 1000000;
+var matchId = request.params.matchId;
+var totalPrice = 0, totalMarketing = 0, totalResearchAndDevelopment = 0, totalCharity = 0;
+var companyMatchDataArray = new Array();
+var Match = Parse.Object.extend("Match");
+var queryMatch = new  Parse.Query("Match");
+queryMatch.equalTo("objectId",matchId);
 
-var population = Math.round(1 000 000 * Math.Pow(turn,(0.05 + 1.00))); 
-//get user info into varinbles
-var charityAmount, marketingAmount, priceAmount, researchDevelopmentAmount, productionAmount;
+queryMatch.find().then(function(objectMatch){
+var match = new Match(); match = objectMatch[0];
+  match.increment("turn");
+  
+  turn = match.get("turn");
+  console.log(turn);
+  population = Math.round(population * Math.pow(1.05,turn)); 
+  match.set("population",population);
+  match.save();
+
+var queryComp = new Parse.Query("CompMatch");
+queryComp.equalTo("matchId", match.id);
+
+return queryComp.find();
+}).then(function(compMatch){
+
+for ( var i = 0; i < compMatch.length; i++)
+{
+	companyMatchDataArray.push(compMatch[i]);
+	totalPrice = totalPrice + compMatch[0].get("price");
+	totalMarketing = totalMarketing + compMatch[0].get("marketing");
+	totalResearchAndDevelopment = totalResearchAndDevelopment + compMatch[0].get("researchDevelopmen");
+	totalCharity = totalCharity + compMatch[0].get("charity");
+}
+return response.success(totalPrice);
+})
+
+
 //expense save
 
 //find charity MS %
@@ -319,7 +351,6 @@ var charityAmount, marketingAmount, priceAmount, researchDevelopmentAmount, prod
 //calculate R&D Ms %
 
 //save their total Ms %
-
 });
 
 
