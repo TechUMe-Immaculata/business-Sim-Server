@@ -304,12 +304,24 @@ return queryComp.find();
 for ( var i = 0; i < compMatch.length; i++)
 {
 	companyMatchDataArray.push(compMatch[i]);
-	totalPrice = totalPrice + compMatch[0].get("price");
-	totalMarketing = totalMarketing + compMatch[0].get("marketing");
-	totalResearchAndDevelopment = totalResearchAndDevelopment + compMatch[0].get("researchDevelopmen");
-	totalCharity = totalCharity + compMatch[0].get("charity");
+	totalPrice = totalPrice + compMatch[i].get("price");
+	totalMarketing = totalMarketing + compMatch[i].get("marketing");
+	totalResearchAndDevelopment = totalResearchAndDevelopment + compMatch[i].get("researchDevelopment");
+	totalCharity = totalCharity + compMatch[i].get("charity");
 }
-return response.success(totalPrice);
+
+for ( var i = 0;  i < companyMatchDataArray.length; i++)
+{
+	var object = {};
+	
+	object.researchAndDevelopmentMS = Math.round((companyMatchDataArray[i].get("researchDevelopment")/totalResearchAndDevelopment)*100)/100;
+	object.charityMS = Math.round((companyMatchDataArray[i].get("charity")/totalCharity)*100)/100;
+	
+	companyMatchDataArray[i].set("marketShare",object);
+	companyMatchDataArray[i].save();
+}
+
+return response.success(totalResearchAndDevelopment);
 })
 
 
