@@ -274,25 +274,29 @@ queryUser.find({
 
 });
 
+
+
 Parse.Cloud.define("turn", function(request, response) {
 //increase population exponetinaly but slowly****
 var turn = 0;
 var population = 1000000;
 var matchId = request.params.matchId;
-var totalPrice = 0, totalMarketing = 0, totalResearchAndDevelopment = 0, totalCharity = 0;
+var totalPopulationSum = 0, totalMarketing = 0, totalResearchAndDevelopment = 0, totalCharity = 0;
 var companyMatchDataArray = new Array();
 var Match = Parse.Object.extend("Match");
+var match = new Match();
 var queryMatch = new  Parse.Query("Match");
 queryMatch.equalTo("objectId",matchId);
 
 queryMatch.find().then(function(objectMatch){
-var match = new Match(); match = objectMatch[0];
-  match.increment("turn");
+	
+  match = objectMatch[0];
   
   turn = match.get("turn");
   console.log(turn);
   population = Math.round(population * Math.pow(1.05,turn)); 
   match.set("population",population);
+  match.increment("turn");
   match.save();
 
 var queryComp = new Parse.Query("CompMatch");
@@ -304,7 +308,8 @@ return queryComp.find();
 for ( var i = 0; i < compMatch.length; i++)
 {
 	companyMatchDataArray.push(compMatch[i]);
-	totalPrice = totalPrice + compMatch[i].get("price");
+	//totalPrice = totalPrice + compMatch[i].get("price");
+	totalPopulationSum = totalPopulationSum +(Math.pow((-1)(match.get("population")),(compMatch[i].get("price")/100))+match.get("population")+1);
 	totalMarketing = totalMarketing + compMatch[i].get("marketing");
 	totalResearchAndDevelopment = totalResearchAndDevelopment + compMatch[i].get("researchDevelopment");
 	totalCharity = totalCharity + compMatch[i].get("charity");
@@ -313,15 +318,18 @@ for ( var i = 0; i < compMatch.length; i++)
 for ( var i = 0;  i < companyMatchDataArray.length; i++)
 {
 	var object = {};
-	
+	object.priceMS = Math.pow((-1)(match.get("population")),(compMatch[i].get("price")/100))/totalPopulationSum;
 	object.researchAndDevelopmentMS = Math.round((companyMatchDataArray[i].get("researchDevelopment")/totalResearchAndDevelopment)*100)/100;
 	object.charityMS = Math.round((companyMatchDataArray[i].get("charity")/totalCharity)*100)/100;
 	
+	console.log("price "+companyMatchDataArray[i].get("price"));
+	console.log("pop "+totalPopulationSum);
+	console.log("% "+Math.pow((-1)(match.get("population")),(compMatch[i].get("price")/100))/totalPopulationSum);
 	companyMatchDataArray[i].set("marketShare",object);
 	companyMatchDataArray[i].save();
 }
 
-return response.success(totalResearchAndDevelopment);
+return response.success(totalPopulationSum);
 })
 
 
