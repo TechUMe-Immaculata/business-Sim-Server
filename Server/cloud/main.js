@@ -309,22 +309,23 @@ for ( var i = 0; i < compMatch.length; i++)
 {
 	companyMatchDataArray.push(compMatch[i]);
 	//totalPrice = totalPrice + compMatch[i].get("price");
-	totalPopulationSum = totalPopulationSum +(Math.pow((-1)(match.get("population")),(compMatch[i].get("price")/100))+match.get("population")+1);
+	totalPopulationSum = totalPopulationSum +(-1)*Math.pow(match.get("population"),(compMatch[i].get("price")/100))+match.get("population")+1;
 	totalMarketing = totalMarketing + compMatch[i].get("marketing");
 	totalResearchAndDevelopment = totalResearchAndDevelopment + compMatch[i].get("researchDevelopment");
 	totalCharity = totalCharity + compMatch[i].get("charity");
 }
-
+var object = {};
 for ( var i = 0;  i < companyMatchDataArray.length; i++)
 {
-	var object = {};
-	object.priceMS = Math.pow((-1)(match.get("population")),(compMatch[i].get("price")/100))/totalPopulationSum;
+	object.priceMS = ((-1)*Math.pow(match.get("population"),(compMatch[i].get("price")/100))+match.get("population")+1)/totalPopulationSum;
 	object.researchAndDevelopmentMS = Math.round((companyMatchDataArray[i].get("researchDevelopment")/totalResearchAndDevelopment)*100)/100;
 	object.charityMS = Math.round((companyMatchDataArray[i].get("charity")/totalCharity)*100)/100;
 	
 	console.log("price "+companyMatchDataArray[i].get("price"));
+	
+	console.log("% "+(-1)*Math.pow(match.get("population"),(compMatch[i].get("price")/100))+match.get("population")+1);
 	console.log("pop "+totalPopulationSum);
-	console.log("% "+Math.pow((-1)(match.get("population")),(compMatch[i].get("price")/100))/totalPopulationSum);
+	
 	companyMatchDataArray[i].set("marketShare",object);
 	companyMatchDataArray[i].save();
 }
