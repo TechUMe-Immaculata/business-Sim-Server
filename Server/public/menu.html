@@ -2,72 +2,21 @@
 <head>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.4.min.js"></script>
+   <script type="text/javascript" src="game.js"></script>
+ 
+ <script type="text/javascript">
+window.onload = function e(){
+	var j = JoinMatch();
+}
+
+
+ </script>
 
 </head>
+
 <body>
-<script>
-function JoinMatch(){
-Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6YjkuOq9leznJ4UguavX6bdt");
-var currentUser = Parse.User.current();
-// Assume Parse.Object myPost was previously created.
-var company = Parse.Object.extend("Company");
-var query = new Parse.Query(company);
-query.equalTo("userId", currentUser.id);
-console.log(currentUser.id);
-query.find({
-  success: function(results) {
-    // comments now contains the comments for myPost
-    	var usercomp = results[0];
-    	console.log(results.length);
-    	var usercompID = results[0].id;
-
-    	var Match = Parse.Object.extend("Match");
-    	var nquery = new Parse.Query(Match);
-
-    	nquery.equalTo("companyIds" , usercompID);
-    	nquery.find({
-    		success: function(findMatch){
-    			console.log(findMatch);
-    			if ( findMatch.length == 0 )
-    			{
-    				console.log('nothing');
-    			}
-    			else{
-    				for(var i = 0; i <= (findMatch.length -1); i++)
-    				{
-    			console.log(findMatch.length);
-    			console.log(findMatch[i].id);
-
-    			var usermatches = findMatch[i].get("name");
-    			var players= findMatch[i].get("companyIds");
-
-    			$("<tr></tr>").append("<td>"+usermatches+"</td>").append("<td><a href='game.html'>"+players+"</a></td>").appendTo("#matchlist");
-
-    			//alert("Match Name :"+ usermatches);
-    			// work on getting the macth id to confirm it works 
-    		}
-    		}
-    		},
-    		error:function(error){
-    			alert("No matches aviable");
-    		}
-    	});
 
 
-  } ,
-  error:function(error){
-
-alert("nope");
-  }
-});
-//do query , if they have previous games , display , you have previous games aviable , if not display create new game.
-// in new game, make a view , have the time? and company names and than usernames of people in your match... needs a timer function to work as well.
-
-
-
-
-};
-</script>
 
 <script>
 
@@ -81,11 +30,13 @@ running.objectId = currentUser.id;
 running.matchTime = 5;
 running.matchName = this.$("#myMatch").val();
 
+
 Parse.Cloud.run('createMatch', running, {
 
 	success: function(works){
-
-		console.log("yeah bouddy");
+	
+	window.location = "game.html";
+		
 	},
 	error:function(error){
 
@@ -94,19 +45,28 @@ Parse.Cloud.run('createMatch', running, {
 });
 
 
+
+
 };
+
+
 </script>
 
-<script type="text/javascript"></script>
+
 
 <p>Menu </p> 
 
-<button type="button" onclick="JoinMatch()">View Active Matches</button></li> 
+
 <table border="1" style="width:100%" id="matchlist">
-  <tr>
-    <th>Match Name</th>
-    <th> Users in current Match</th>
-  </tr>
+  
+ <tr id ="fox">
+  	
+    <td id ="matchNAME" class='clickable-row' a href="game.html">Match Name</td>
+
+
+<tr id="g1">"></tr> 
+<tr id="g2"></tr> 
+<tr id="g3"></tr> 
   
     
   
