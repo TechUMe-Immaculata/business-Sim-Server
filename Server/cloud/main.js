@@ -304,27 +304,24 @@ queryComp.equalTo("matchId", match.id);
 
 return queryComp.find();
 }).then(function(compMatch){
-
+const NUMBER_OF_DECIMALS = 1000;
 for ( var i = 0; i < compMatch.length; i++)
 {
 	companyMatchDataArray.push(compMatch[i]);
 	//totalPrice = totalPrice + compMatch[i].get("price");
-	totalPopulationSum = totalPopulationSum +(-1)*Math.pow(match.get("population"),(compMatch[i].get("price")/100))+match.get("population")+1;
+	totalPopulationSum = totalPopulationSum + (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
 	totalMarketing = totalMarketing + compMatch[i].get("marketing");
 	totalResearchAndDevelopment = totalResearchAndDevelopment + compMatch[i].get("researchDevelopment");
 	totalCharity = totalCharity + compMatch[i].get("charity");
 }
 var object = {};
 for ( var i = 0;  i < companyMatchDataArray.length; i++)
-{
-	object.priceMS = ((-1)*Math.pow(match.get("population"),(compMatch[i].get("price")/100))+match.get("population")+1)/totalPopulationSum;
-	object.researchAndDevelopmentMS = Math.round((companyMatchDataArray[i].get("researchDevelopment")/totalResearchAndDevelopment)*100)/100;
-	object.charityMS = Math.round((companyMatchDataArray[i].get("charity")/totalCharity)*100)/100;
-	
-	console.log("price "+companyMatchDataArray[i].get("price"));
-	
-	console.log("% "+(-1)*Math.pow(match.get("population"),(compMatch[i].get("price")/100))+match.get("population")+1);
-	console.log("pop "+totalPopulationSum);
+{console.log(match.get("population") + " = " + compMatch[i].get("price") + " = " + totalPopulationSum );
+var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
+	object.priceMS = Math.round((singlePopulation/totalPopulationSum)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	console.log(singlePopulation + "/" +totalPopulationSum + " = " + object.priceMS);
+	object.researchAndDevelopmentMS = Math.round((companyMatchDataArray[i].get("researchDevelopment")/totalResearchAndDevelopment)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	object.charityMS = Math.round((companyMatchDataArray[i].get("charity")/totalCharity)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
 	
 	companyMatchDataArray[i].set("marketShare",object);
 	companyMatchDataArray[i].save();
