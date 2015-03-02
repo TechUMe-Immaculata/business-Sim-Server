@@ -314,16 +314,28 @@ for ( var i = 0; i < compMatch.length; i++)
 	totalResearchAndDevelopment = totalResearchAndDevelopment + compMatch[i].get("researchDevelopment");
 	totalCharity = totalCharity + compMatch[i].get("charity");
 }
-var object = {};
+var objectMS = {};
 for ( var i = 0;  i < companyMatchDataArray.length; i++)
 {console.log(match.get("population") + " = " + compMatch[i].get("price") + " = " + totalPopulationSum );
 var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
-	object.priceMS = Math.round((singlePopulation/totalPopulationSum)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
-	console.log(singlePopulation + "/" +totalPopulationSum + " = " + object.priceMS);
-	object.researchAndDevelopmentMS = Math.round((companyMatchDataArray[i].get("researchDevelopment")/totalResearchAndDevelopment)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
-	object.charityMS = Math.round((companyMatchDataArray[i].get("charity")/totalCharity)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	objectMS.priceMS = Math.round((singlePopulation/totalPopulationSum)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	//console.log(singlePopulation + "/" +totalPopulationSum + " = " + objectMS.priceMS);
+	objectMS.researchAndDevelopmentMS = Math.round((companyMatchDataArray[i].get("researchDevelopment")/totalResearchAndDevelopment)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	objectMS.marketingMS = Math.round(companyMatchDataArray[i].get("marketing")/totalMarketing;
+	objectMS.charityMS = Math.round((companyMatchDataArray[i].get("charity")/totalCharity)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	objectMS.totalMS = object.priceMS * 0.30 + object.researchAndDevelopmentMS * 0.20 + objectMS.marketingMS * 0.40 + object.charityMS * 0.10;
 	
-	companyMatchDataArray[i].set("marketShare",object);
+	var maxCarterAmount = objectMS.total * match.get("population"), 
+	
+	if(){}
+	else if (){}
+	else if (){}
+	else{
+	//error
+	}
+	
+	
+	companyMatchDataArray[i].set("marketShare",objectMS);
 	companyMatchDataArray[i].save();
 }
 
