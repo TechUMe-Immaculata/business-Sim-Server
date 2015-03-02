@@ -7,7 +7,8 @@ var currentUser = Parse.User.current();
 var game1;
 var game2;
 var game3;
-
+var selectedgame;
+var Bcompany;
 function JoinMatch(){
 //get matches work 
 var company = Parse.Object.extend("Company");
@@ -20,7 +21,7 @@ query.find({
     	var usercomp = results[0];
     	console.log(results.length);
     	var usercompID = results[0].id;
-
+        
     	var Match = Parse.Object.extend("Match");
     	var nquery = new Parse.Query(Match);
 
@@ -87,51 +88,64 @@ alert("nope");
   }
 });   
 
-
+};
 
 
 
 $("tr").live('click', function() {
     if (this.id == "g1") {
-        var selectedgame= game1;
-        console.log(selectedgame.get("name"));
+         selectedgame= game1.id;
+        console.log(selectedgame);
+       window.location = "game.html";
 
     }
     else if (this.id =="g2"){
-    	 selectedgame = game2;
-    	 console.log(selectedgame.get("name"));
+    	 selectedgame = game2.id;
+    	
+         window.location = "game.html";
     }
     else if (this.id=="g3"){
-    	selectedgame = game3;
-    	 console.log(selectedgame.get("name"));
+    	selectedgame = game3.id;
+    	
+         window.location = "game.html";
     }
-})
+});
 
 
-};
+
    
 
 
 
 
 
-/*
+
 
 function loaduserstats(){
-submit work 
+console.log(Bcompany + "=" + selectedgame);
+var CompMatch = Parse.Object.extend("CompMatch");
+var query = new Parse.Query("CompMatch");
+query.equalTo("companyId",  Bcompany);
+query.equalTo("matchId",selectedgame);
+query.find({
+            success: function(result){
+                var compinfo = result[0];
+                
+                console.log(compinfo);
+                 
 
-var query = new Parse.Query(CompMatch);
-query.equalTo("CompMatch", currentUser.id) , var matchid = this.$("#td").val();;
+                
+},
+else : function(error){
 
-var usercapital 
-var userprice
-var usercharity
-var userprice
-var userproduction
-var userresearchDevelopment
-var usermarketing
+    console.log("nah man")
+}
 
+
+
+});
 };
+
 
 function playerSubmit(){
 
@@ -142,13 +156,13 @@ playerstats.objectId = currentUser.id;
 playerstats.matchTime = 5;
 playerstats.matchName = this.$("#myMatch").val();
 
-var player.capital = usercapital;
-var player.price = userprice;
-var player.charity = usercharity;
-var player.price = userprice;
-var player.production = userproduction;
-var player.researchDevelopment = userresearchDevelopment;
-var player.marketing= usermarketing;
+player.capital = usercapital;
+ player.price = userprice;
+ player.charity = usercharity;
+ player.price = userprice;
+ player.production = userproduction;
+ player.researchDevelopment = userresearchDevelopment;
+ player.marketing= usermarketing;
 
 Parse.Cloud.run('match', player, {
 
@@ -165,5 +179,5 @@ Parse.Cloud.run('match', player, {
 
 };
 
- });
-*/
+
+
