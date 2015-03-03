@@ -183,7 +183,7 @@ queryUser.equalTo("userId", currentUser);
     compMatch.set("production", 50);
     compMatch.set("researchDevelopment", 0);
     compMatch.set("marketing", 0);
-
+	compMatch.set("capitalTotal",0);
   //save compMatch
   compMatch.save();
 
@@ -207,6 +207,7 @@ return queryComp.find();
     compMatch.set("production", 50);
     compMatch.set("researchDevelopment", 0);
     compMatch.set("marketing", 0);
+	compMatch.set("capitalTotal",0);
 	
 	compMatch.save();
 
@@ -315,6 +316,7 @@ for ( var i = 0; i < compMatch.length; i++)
 	totalCharity = totalCharity + compMatch[i].get("charity");
 }
 var objectMS = {};
+var objectStats = {};
 for ( var i = 0;  i < companyMatchDataArray.length; i++)
 {console.log(match.get("population") + " = " + compMatch[i].get("price") + " = " + totalPopulationSum );
 var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
@@ -327,14 +329,47 @@ var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("p
 	
 	var maxCarterAmount = objectMS.total * match.get("population"), 
 	
-	if(){}
-	else if (){}
-	else if (){}
+	if(companyMatchDataArray[i].get("production") > maxCarterAmount)
+	{
+	//sell the least amoujnt of products that can be sent
+	objectStats.revenue = maxCarterAmount * companyMatchDataArray[i].get("price");
+	
+	}
+	else if (companyMatchDataArray[i].get("production") == maxCarterAmount)
+	{
+	//sell the equal amount of products
+	objectStats.revenue = maxCarterAmount * companyMatchDataArray[i].get("price");
+	
+	}
+	else if (companyMatchDataArray[i].get("production") < maxCarterAmount)
+	{
+	// sell the maximum amount of producs possible
+	objectStats.revenue = companyMatchDataArray[i].get("production") * companyMatchDataArray[i].get("price");
+	
+	}
 	else{
 	//error
 	}
+	//need to make theses object in create new match ********
+	objectStats.capitalInvestment = companyMatchDataArray[i].get("capitalTotal") + companyMatchDataArray[i].get("capital");
+	
+	var pricePerProduct = 0;
+	if (objectStats.capitalInvestment < 45 000 000)
+	{
+	
+	pricePerProduct = Math.abs((-(1.5/10000000)*objectStats.capitalInvestment) + 7);
+	
+	}
+	else
+	{
+	pricePerProduct = Math.abs((-(1.5/10000000)*45 000 000) + 7);
+	}
 	
 	
+	objectStats.expense = pricePerProduct * companyMatchDataArray[i].get("production")+companyMatchDataArray[i].get("capital") + companyMatchDataArray[i].get("researchDevelopment") + companyMatchDataArray[i].get("marketing") + companyMatchDataArray[i].get("charity");
+	objectStats.profit = objectStats.revenue - objectStats.expense;
+	
+	companyMatchDataArray[i].set("stats",objectStats);
 	companyMatchDataArray[i].set("marketShare",objectMS);
 	companyMatchDataArray[i].save();
 }
