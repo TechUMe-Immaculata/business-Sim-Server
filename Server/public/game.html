@@ -5,9 +5,13 @@
   <script type="text/javascript" src="game.js"></script>
 
 <script type="text/javascript">
+
+
 window.onload = function e(){
 	var y = loaduserstats();
-};
+}
+
+
 </script>
 
 </head>
@@ -29,7 +33,7 @@ var currentUser = Parse.User.current();
 <input id="researchDevelopment" type="number" placeholder="Research Development" min="1" max="100"/>
 <input id="myInput" type="number" placeholder="Marketing" min="1" max="*100"/>
 
-<button type="button" id="createMatch">Whats the match id ?</button></li>  
+<button type="button" id="createMatch" onclick="hot()">load data</button></li>  
 <button type="button" onclick="Start()">submit</button></li>  
 </body>
 </html>

@@ -7,8 +7,9 @@ var currentUser = Parse.User.current();
 var game1;
 var game2;
 var game3;
-var selectedgame;
-var Bcompany;
+var companyIdTest;
+
+
 function JoinMatch(){
 //get matches work 
 var company = Parse.Object.extend("Company");
@@ -21,10 +22,17 @@ query.find({
     	var usercomp = results[0];
     	console.log(results.length);
     	var usercompID = results[0].id;
+        companyIdTest = usercompID;
+        console.log("inside " + usercompID);
+        localStorage.setItem("companyId",usercompID);
+
+        Bcomp = results[0];
         
+        console.log(usercompID);
     	var Match = Parse.Object.extend("Match");
     	var nquery = new Parse.Query(Match);
-
+        
+     
     	nquery.equalTo("companyIds" , usercompID);
     	nquery.find({
     		success: function(findMatch){
@@ -40,6 +48,7 @@ query.find({
     			var usersgame1 = findMatch[0];
     			 game2 = findMatch[1];
     			var usersgame2 = findMatch[1];
+
 
     			 game3 = findMatch[2];
     			var usersgame3 = findMatch[2];
@@ -94,39 +103,37 @@ alert("nope");
 
 $("tr").live('click', function() {
     if (this.id == "g1") {
-         selectedgame= game1.id;
+         var selectedgame= game1.id;
         console.log(selectedgame);
+        localStorage.setItem("matchid",selectedgame);
        window.location = "game.html";
 
     }
     else if (this.id =="g2"){
     	 selectedgame = game2.id;
-    	
-         window.location = "game.html";
+    	localStorage.setItem("matchid",selectedgame);
+        window.location = "game.html";
     }
     else if (this.id=="g3"){
     	selectedgame = game3.id;
-    	
-         window.location = "game.html";
+    	localStorage.setItem("matchid",selectedgame);
+        window.location = "game.html";
     }
 });
 
 
 
-   
-
-
-
-
-
-
 
 function loaduserstats(){
-console.log(Bcompany + "=" + selectedgame);
+var matchid=localStorage.getItem("matchid");
+
+var compID = localStorage.getItem("companyId");
+
+
+var Match = Parse.Object.extend("Match");
 var CompMatch = Parse.Object.extend("CompMatch");
 var query = new Parse.Query("CompMatch");
-query.equalTo("companyId",  Bcompany);
-query.equalTo("matchId",selectedgame);
+query.containedIn("CompMatch" ,compID);
 query.find({
             success: function(result){
                 var compinfo = result[0];
@@ -136,7 +143,7 @@ query.find({
 
                 
 },
-else : function(error){
+error : function(error){
 
     console.log("nah man")
 }
@@ -178,6 +185,5 @@ Parse.Cloud.run('match', player, {
 });
 
 };
-
 
 
