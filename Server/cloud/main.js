@@ -316,9 +316,10 @@ for ( var i = 0; i < compMatch.length; i++)
 }
 var objectMS = {};
 var objectStats = {};
-for ( var i = 0;  i < companyMatchDataArray.length; i++)
-{console.log(match.get("population") + " = " + compMatch[i].get("price") + " = " + totalPopulationSum );
-var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
+for ( var i = 0;  i < compMatch.length; i++)
+{
+	console.log(match.get("population") + " = " + compMatch[i].get("price") + " = " + totalPopulationSum );
+	var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
 	objectMS.priceMS = Math.round((singlePopulation/totalPopulationSum)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
 	//console.log(singlePopulation + "/" +totalPopulationSum + " = " + objectMS.priceMS);
 	objectMS.researchAndDevelopmentMS = Math.round((compMatch[i].get("researchDevelopment")/totalResearchAndDevelopment)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
