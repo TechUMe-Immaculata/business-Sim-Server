@@ -308,7 +308,6 @@ return queryComp.find();
 const NUMBER_OF_DECIMALS = 1000;
 for ( var i = 0; i < compMatch.length; i++)
 {
-	companyMatchDataArray.push(compMatch[i]);
 	//totalPrice = totalPrice + compMatch[i].get("price");
 	totalPopulationSum = totalPopulationSum + (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
 	totalMarketing = totalMarketing + compMatch[i].get("marketing");
@@ -322,36 +321,39 @@ for ( var i = 0;  i < companyMatchDataArray.length; i++)
 var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
 	objectMS.priceMS = Math.round((singlePopulation/totalPopulationSum)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
 	//console.log(singlePopulation + "/" +totalPopulationSum + " = " + objectMS.priceMS);
-	objectMS.researchAndDevelopmentMS = Math.round((companyMatchDataArray[i].get("researchDevelopment")/totalResearchAndDevelopment)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
-	objectMS.marketingMS = Math.round(companyMatchDataArray[i].get("marketing")/totalMarketing;
-	objectMS.charityMS = Math.round((companyMatchDataArray[i].get("charity")/totalCharity)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
-	objectMS.totalMS = object.priceMS * 0.30 + object.researchAndDevelopmentMS * 0.20 + objectMS.marketingMS * 0.40 + object.charityMS * 0.10;
+	objectMS.researchAndDevelopmentMS = Math.round((compMatch[i].get("researchDevelopment")/totalResearchAndDevelopment)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	objectMS.marketingMS = Math.round(compMatch[i].get("marketing")/totalMarketing;
+	//totalCharity = totalCharity + compMatch[i].get("charity");
+	//console.log(compMatch[i].get("charity"));
+	//not recognizing chaarity as a proper idenditfyers
+	objectMS.charityMS = Math.round((compMatch[i].get("charity")/totalCharity)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	objectMS.totalMS = objectMS.priceMS * 0.30 + objectMS.researchAndDevelopmentMS * 0.20 + objectMS.marketingMS * 0.40 + objectMS.charityMS * 0.10;
 	
 	var maxCarterAmount = objectMS.total * match.get("population"), 
 	
-	if(companyMatchDataArray[i].get("production") > maxCarterAmount)
+	if(compMatch[i].get("production") > maxCarterAmount)
 	{
 	//sell the least amoujnt of products that can be sent
-	objectStats.revenue = maxCarterAmount * companyMatchDataArray[i].get("price");
+	objectStats.revenue = maxCarterAmount * compMatch[i].get("price");
 	
 	}
-	else if (companyMatchDataArray[i].get("production") == maxCarterAmount)
+	else if (compMatch[i].get("production") == maxCarterAmount)
 	{
 	//sell the equal amount of products
-	objectStats.revenue = maxCarterAmount * companyMatchDataArray[i].get("price");
+	objectStats.revenue = maxCarterAmount * compMatch[i].get("price");
 	
 	}
-	else if (companyMatchDataArray[i].get("production") < maxCarterAmount)
+	else if (compMatch[i].get("production") < maxCarterAmount)
 	{
 	// sell the maximum amount of producs possible
-	objectStats.revenue = companyMatchDataArray[i].get("production") * companyMatchDataArray[i].get("price");
+	objectStats.revenue = compMatch[i].get("production") * compMatch[i].get("price");
 	
 	}
 	else{
 	//error
 	}
 	//need to make theses object in create new match ********
-	objectStats.capitalInvestment = companyMatchDataArray[i].get("capitalTotal") + companyMatchDataArray[i].get("capital");
+	objectStats.capitalInvestment = compMatch[i].get("capitalTotal") + compMatch[i].get("capital");
 	
 	var pricePerProduct = 0;
 	if (objectStats.capitalInvestment < 45 000 000)
@@ -366,12 +368,12 @@ var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("p
 	}
 	
 	
-	objectStats.expense = pricePerProduct * companyMatchDataArray[i].get("production")+companyMatchDataArray[i].get("capital") + companyMatchDataArray[i].get("researchDevelopment") + companyMatchDataArray[i].get("marketing") + companyMatchDataArray[i].get("charity");
+	objectStats.expense = pricePerProduct * compMatch[i].get("production")+compMatch[i].get("capital") + compMatch[i].get("researchDevelopment") + compMatch[i].get("marketing") + compMatch[i].get("charity");
 	objectStats.profit = objectStats.revenue - objectStats.expense;
 	
-	companyMatchDataArray[i].set("stats",objectStats);
-	companyMatchDataArray[i].set("marketShare",objectMS);
-	companyMatchDataArray[i].save();
+	compMatch[i].set("stats",objectStats);
+	compMatch[i].set("marketShare",objectMS);
+	compMatch[i].save();
 }
 
 return response.success(totalPopulationSum);
