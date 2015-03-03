@@ -323,53 +323,61 @@ for ( var i = 0;  i < compMatch.length; i++)
 	objectMS.priceMS = Math.round((singlePopulation/totalPopulationSum)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
 	//console.log(singlePopulation + "/" +totalPopulationSum + " = " + objectMS.priceMS);
 	objectMS.researchAndDevelopmentMS = Math.round((compMatch[i].get("researchDevelopment")/totalResearchAndDevelopment)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
-	objectMS.marketingMS = Math.round(compMatch[i].get("marketing")/totalMarketing;
+	objectMS.marketingMS = Math.round((compMatch[i].get("marketing")/totalMarketing)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
 	//totalCharity = totalCharity + compMatch[i].get("charity");
 	//console.log(compMatch[i].get("charity"));
 	//not recognizing chaarity as a proper idenditfyers
 	objectMS.charityMS = Math.round((compMatch[i].get("charity")/totalCharity)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
-	objectMS.totalMS = objectMS.priceMS * 0.30 + objectMS.researchAndDevelopmentMS * 0.20 + objectMS.marketingMS * 0.40 + objectMS.charityMS * 0.10;
+	console.log(objectMS.priceMS * 0.30);
+	objectMS.totalMS = (objectMS.priceMS * 0.30) + (objectMS.researchAndDevelopmentMS * 0.20) + (objectMS.marketingMS * 0.40) + (objectMS.charityMS * 0.10);
 	
-	var maxCarterAmount = objectMS.total * match.get("population"), 
-	
+	console.log(objectMS.totalMS + "___yolo___" + match.get("population") );
+	var maxCarterAmount = Math.round(objectMS.totalMS * match.get("population")); 
+
+	console.log(compMatch[i].get("production") + "__" +maxCarterAmount + "____________________________")
 	if(compMatch[i].get("production") > maxCarterAmount)
 	{
 	//sell the least amoujnt of products that can be sent
 	objectStats.revenue = maxCarterAmount * compMatch[i].get("price");
+	console.log("more than capital = "+objectStats.revenue = maxCarterAmount * compMatch[i].get("price"));
 	
 	}
 	else if (compMatch[i].get("production") == maxCarterAmount)
 	{
 	//sell the equal amount of products
 	objectStats.revenue = maxCarterAmount * compMatch[i].get("price");
+	console.log("equal to  capital = "+ maxCarterAmount * compMatch[i].get("price"));
 	
 	}
 	else if (compMatch[i].get("production") < maxCarterAmount)
 	{
 	// sell the maximum amount of producs possible
 	objectStats.revenue = compMatch[i].get("production") * compMatch[i].get("price");
+	console.log("less than capital = "+ compMatch[i].get("production") * compMatch[i].get("price"));
 	
 	}
 	else{
 	//error
+	console.log("error 152");
 	}
 	//need to make theses object in create new match ********
-	objectStats.capitalInvestment = compMatch[i].get("capitalTotal") + compMatch[i].get("capital");
+	compMatch[i].set("capitalTotal",compMatch[i].get("capitalTotal") + compMatch[i].get("capital"));
 	
 	var pricePerProduct = 0;
-	if (objectStats.capitalInvestment < 45 000 000)
+	if (compMatch[i].get("capitalTotal") < 45000000)
 	{
-	
-	pricePerProduct = Math.abs((-(1.5/10000000)*objectStats.capitalInvestment) + 7);
+	pricePerProduct = Math.abs((-(1.5/10000000)*compMatch[i].get("capitalTotal")) + 7);
+	console.log("before" + " " + pricePerProduct);
 	
 	}
 	else
 	{
-	pricePerProduct = Math.abs((-(1.5/10000000)*45 000 000) + 7);
+		pricePerProduct = Math.abs((-(1.5/10000000)*45000000) + 7);
+		console.log("after" + " " + pricePerProduct);
 	}
 	
-	
-	objectStats.expense = pricePerProduct * compMatch[i].get("production")+compMatch[i].get("capital") + compMatch[i].get("researchDevelopment") + compMatch[i].get("marketing") + compMatch[i].get("charity");
+	console.log(pricePerProduct * compMatch[i].get("production"));
+	objectStats.expense = (pricePerProduct * compMatch[i].get("production")) +compMatch[i].get("capital") + compMatch[i].get("researchDevelopment") + compMatch[i].get("marketing") + compMatch[i].get("charity");
 	objectStats.profit = objectStats.revenue - objectStats.expense;
 	
 	compMatch[i].set("stats",objectStats);
