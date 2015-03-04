@@ -185,6 +185,7 @@ queryUser.equalTo("userId", currentUser);
     compMatch.set("marketing", 0);
     compMatch.set("isSubbed",false);
     compMatch.set("isBot",false);
+	compMatch.set("capitalTotal",0);
  
   //save compMatch
   compMatch.save();
@@ -211,6 +212,7 @@ return queryComp.find();
     compMatch.set("marketing", 0);
     compMatch.set("isSubbed",false);
     compMatch.set("isBot",true);
+	compMatch.set("capitalTotal",0);
      
     compMatch.save();
  
