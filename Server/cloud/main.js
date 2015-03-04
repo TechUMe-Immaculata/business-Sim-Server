@@ -147,33 +147,33 @@ query.find({
 
 //this function creates a single player match with 5 bots and one user
 Parse.Cloud.define("createMatch", function(request, response) {
-
+ 
 //define variables
 var currentUser = request.params.objectId;
 var Match = Parse.Object.extend("Match");
 var match = new Match();
 var companyIdArray = new Array();
-
+ 
   match.set("name",request.params.matchName);
   match.set("gameTime",request.params.matchTime);
   match.set("turn",0);
   match.set("population",1000000);
   match.save().then(function(afterSave)
   {
-
+ 
 //create a query to find the user creating the match
 var queryUser = new Parse.Query("Company");
 queryUser.equalTo("userId", currentUser);
-
+ 
     return queryUser.find();
   }).then(function(company) {
-
-
+ 
+ 
   //add the company id to the list
   companyIdArray.push(company[0].id);
-
-	// Execute any logic that should take place after the object is saved.
-	//make an instance of comp match and initialize 
+ 
+    // Execute any logic that should take place after the object is saved.
+    //make an instance of comp match and initialize 
     var compMatch = new Parse.Object("CompMatch");
     compMatch.set("companyId",company[0].id);
     compMatch.set("matchId", match.id);
@@ -183,16 +183,18 @@ queryUser.equalTo("userId", currentUser);
     compMatch.set("production", 50);
     compMatch.set("researchDevelopment", 0);
     compMatch.set("marketing", 0);
-	compMatch.set("capitalTotal",0);
+    compMatch.set("isSubbed",false);
+    compMatch.set("isBot",false);
+ 
   //save compMatch
   compMatch.save();
-
-
-	
+ 
+ 
+     
 //create a query to find the computer company's
 var queryComp = new Parse.Query("Company");
 queryComp.equalTo("isBot", true);
-
+ 
 return queryComp.find();
 }).then(function(bot) {
 //add 5 bots into match
@@ -207,33 +209,32 @@ return queryComp.find();
     compMatch.set("production", 50);
     compMatch.set("researchDevelopment", 0);
     compMatch.set("marketing", 0);
-	compMatch.set("capitalTotal",0);
-	
-	compMatch.save();
-
+    compMatch.set("isSubbed",false);
+    compMatch.set("isBot",true);
+     
+    compMatch.save();
+ 
 companyIdArray.push(bot[i].id);
   }
-
+ 
 match.set("companyIds",companyIdArray);
-
-
+ 
+ 
 match.save();
-
+ 
   var returnData = {};
   returnData.clientMatchId = match.id;
   returnData.clientGameresult = true;
   console.log("+++++++++"+match.id);
-  
-  
+   
+   
   response.success(match.id);
-  
+   
   },function(error){
   console.log("error with bot");  
 });
-
+ 
 });
-
-
 Parse.Cloud.define("logIn", function(request, response) {
 
 //console.log("AAAAAA");
