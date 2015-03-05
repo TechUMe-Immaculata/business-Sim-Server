@@ -44,6 +44,9 @@ query.find({
     			else{
     				for(var i = 0; i <= (findMatch.length -1); i++)
     				{
+
+
+
     			 game1 = findMatch[0];
     			var usersgame1 = findMatch[0];
     			 game2 = findMatch[1];
@@ -53,10 +56,23 @@ query.find({
     			 game3 = findMatch[2];
     			var usersgame3 = findMatch[2];
     				console.log(findMatch[0]);
-
+                    if (findMatch.length==1){
 					document.getElementById("g1").innerHTML = game1.get("name");
-					document.getElementById("g2").innerHTML = game2.get("name");
-					document.getElementById("g3").innerHTML = game3.get("name");
+
+                    }
+					else if( findMatch.length ==2){
+                        document.getElementById("g1").innerHTML = game1.get("name");
+                        document.getElementById("g2").innerHTML = game2.get("name");
+					
+                }
+                else if (findMatch.length==3){
+
+                    document.getElementById("g1").innerHTML = game1.get("name");
+                    document.getElementById("g2").innerHTML = game2.get("name");
+                    document.getElementById("g3").innerHTML = game3.get("name");
+
+
+                }
 
 
 
@@ -79,7 +95,7 @@ query.find({
     			//$('td').on('click', 'usermatches', function gname() { var matchname = usermatches; });
     			
 
-
+            
     		
     		}
     		}
@@ -170,7 +186,7 @@ player.capital = usercapital;
  player.production = userproduction;
  player.researchDevelopment = userresearchDevelopment;
  player.marketing= usermarketing;
-
+/*
 Parse.Cloud.run('match', player, {
 
 	success: function(works){
@@ -183,6 +199,8 @@ Parse.Cloud.run('match', player, {
 		console.log("Nah boi");
 	}
 });
+
+*/
 
 };
 
