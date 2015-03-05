@@ -386,25 +386,23 @@ for ( var i = 0;  i < compMatch.length; i++)
 	objectStats.profit = objectStats.revenue - objectStats.expense;
 	
 	var maxProduction = 0;
-	maxProduction = (compMatch[i].get("capitalTotal")/50) + 1000;
 	
-	for (var i = 0; i < compMatch[i].length; i++)
+	maxProduction = (compMatch[i].get("capitalTotal")/50) + 1000;
+	if (compMatch[i].get("isBot") == true)
 	{
-	if (compMatch[i].get(isBot))
-	{
-    compMatch.set("capital", Math.floor((Math.random() * 10000) + 1));
-    compMatch.set("charity",Math.floor((Math.random() * 10000) + 1));
-    compMatch.set("price",Math.floor((Math.random() * 100) + 1));
-    compMatch.set("production", Math.floor((Math.random() * maxProduction) + 1));
-    compMatch.set("researchDevelopment", Math.floor((Math.random() * 10000) + 1));
-    compMatch.set("marketing", Math.floor((Math.random() * 10000) + 1));
-    compMatch.set("isSubbed",true);
+    compMatch[i].set("capital", Math.floor((Math.random() * 10000) + 1));
+    compMatch[i].set("charity",Math.floor((Math.random() * 10000) + 1));
+    compMatch[i].set("price",Math.floor((Math.random() * 100) + 1));
+    compMatch[i].set("production", Math.floor((Math.random() * maxProduction) + 1));
+    compMatch[i].set("researchDevelopment", Math.floor((Math.random() * 10000) + 1));
+    compMatch[i].set("marketing", Math.floor((Math.random() * 10000) + 1));
+    compMatch[i].set("isSubbed",true);
 	}
 	else
 	{
-    compMatch.set("isSubbed",false);
+    compMatch[i].set("isSubbed",false);
 	}
-	}
+	
 	compMatch[i].set("maxProduction",maxProduction);
 	compMatch[i].set("stats",objectStats);
 	compMatch[i].set("marketShare",objectMS);
