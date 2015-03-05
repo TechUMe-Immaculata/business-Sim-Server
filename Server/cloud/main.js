@@ -285,7 +285,7 @@ queryUser.find({
 Parse.Cloud.define("turn", function(request, response) {
 //increase population exponetinaly but slowly****
 var turn = 0;
-var population = 1000000;
+var population = 0;
 var matchId = request.params.matchId;
 var totalPopulationSum = 0, totalMarketing = 0, totalResearchAndDevelopment = 0, totalCharity = 0;
 var companyMatchDataArray = new Array();
@@ -300,7 +300,10 @@ queryMatch.find().then(function(objectMatch){
   
   turn = match.get("turn");
   console.log(turn);
-  population = Math.round(population * Math.pow(1.05,turn)); 
+  
+  population = match.get("population");
+  var percent = 1.05;
+  population = Math.round(population * percent); 
   match.set("population",population);
   match.increment("turn");
   match.save();
@@ -409,7 +412,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	compMatch[i].save();
 }
 
-return response.success(totalPopulationSum);
+return response.success(population);
 })
 
 
