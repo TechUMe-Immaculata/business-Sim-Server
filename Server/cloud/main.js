@@ -414,235 +414,59 @@ for ( var i = 0;  i < compMatch.length; i++)
 
 return response.success(population);
 })
-
-
-//expense save
-
-//find charity MS %
-
-//find marketing Ms %
-
-//find price Ms %
-
-//calculate R&D Ms %
-
-//add all Ms together
-//save their total Ms % to comp match
-
-//find how many products they can sell
-//if amount >= production then sell production
-//else if amount < production then sell the amount
-//save products sold to comp match
-
-//revenue save 
-//net profit save
-
-
-
-
-
-//loop for each bot
-
-//create fake varibles for bots based ( based off last decision )
-
-//find charity MS %
-
-//find marketing Ms %
-
-//find price Ms %
-
-//calculate R&D Ms %
-
-//save their total Ms %
 });
 
+Parse.Cloud.define("submitSolo", function(request, response) {
+
+//variables to find the user in match
+var companyId = request.params.companyId; 
+var matchId = request.params.matchId; 
 
 
+//set up a query
+var CompMatch = Parse.Object.extend("CompMatch");
+var query = new Parse.Query(CompMatch);
+
+query.equalTo("matchId",matchId);
+query.equalTo("companyId",companyId);
+
+console.log("before all");
+query.first().then(function(company){
 
 
+//check if user has submitted before
+if (company.get("isSubbed") == false)
+{
+//define var to get all submitted data
+var userStats = {};
+
+userStats.clientProduction = request.params.clientProduction;
+userStats.clientResearchDevelopment = request.params.clientResearchDevelopment;
+userStats.clientCapital = request.params.clientCapital;
+userStats.clientMarketing = request.params.clientMarketing;
+userStats.clientPrice = request.params.clientPrice;
+userStats.clientCharity = request.params.clientCharity;
 
 
+company.set("capital", userStats.clientCapital);
+company.set("researchDevelopment",userStats.clientResearchDevelopment);
+company.set("production", userStats.clientProduction);
+company.set("marketing",userStats.clientMarketing);
+company.set("price",userStats.clientPrice);
+company.set("charity",userStats.clientCharity);
+console.log("yup");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- /*   console.log(request.params);
- var Company = Parse.Object.extend("Company");
- var objectList = new Array();
-  //saving data
-  alert("before");
- for (var i = 0; i < 6; i++)
- {
-	alert("after");
-	console.log(i);
-	var company = new Company();
-	 
-	//var clientUserName = request.params.playerName;
-	var  matchId = "1";
-	 
-	company.set("matchId", matchId);
-	company.set("UserName","bot"+i);
-	  
-	company.set("capital",0);
-	company.set("price",0);
-	company.set("production",0);
-	company.set("charity",0);
-	company.set("researchDevelopment",0);
-	
-	objectList.push(company);
-	  
-	}
-
-  //adds unique columns to the data on server
-    //company.addUnique("Price",Price);
-    //company.addUnique("UserName",UserName);
- 
- Parse.Object.saveAll(objectList, {
-  success: function(list) {
-    // Execute any logic that should take place after the object is saved.
-    alert('new object lists created');
-	//reponse.success("done");
-  },
-  error: function(error) {
-    // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and message.
-    alert('Failed to create new object, with error code: ' + error.message);
-	//response.error("shit");
-  }
+console.log(company.get("charity"));
+console.log(userStats.clientCharity);
+//update server with new varibles
+company.save();
+//sleep(1000);
+return response.success();
+}
+else
+{
+console.log("nope");
+return response.success(false);
+}
+})
 });
-
-  response.success("done");
-  */
-  
-  
-  
-  /*
-  Parse.Cloud.define("averageStars", function(request, response) {
-  var sum = 0;
-  var j=0;
-
-  var query = new Parse.Query("Comedy");
-  query.equalTo("movie", request.params.movie);
-
-  query.find().then(function(results) {
-    for (var i = 0; i < results.length; ++i) {
-      sum += results[i].get("stars");
-      ++j;
-    }
-
-    var query2 = new Parse.Query("Drama");
-    query2.equalTo("movie", request.params.movie);
-
-    return query2.find();
-  }).then(function(results) {
-    for (var i = 0; i < results.length; ++i) {
-      sum += results[i].get("stars");
-      ++j;
-    }
-
-    response.success(sum / j);
-  }, function(error) {
-    response.error("movie lookup failed");
-  });
-});
-*/
-
-
-//Parse.Cloud.run('',{},
-/*
- Parse.Cloud.run('createMatchUserSingle',{currentUser}, {
-      success: function(results) {
-          Parse.Cloud.run('getGifts',{}, {
-            success: function(results) {
-                response.success(results);
-            },
-            error: function(error) {
-                response.error("Some error.");
-            }
-          });
-      },
-      error: function(error) {
-          response.error("Some error.");
-      }
-    });
-*/
-
-/* function backup
-Parse.Cloud.define("createMatch", function(request, response) {
-
-//console.log("part A");
-//var currentUser = request.params.objectId;
-//var Match = Parse.Object.extend("Match");
-//var match = new Match();
-
-match.set("name","starfox");
-//Match.addUnique("name","starfox");
-//Add other users before bots.
-
-
-var queryUser = new Parse.Query("Company");
-queryUser.equalTo("userId", currentUser.id);
-console.log("part B");
-queryUser.find({
-  success: function(user) {
-  console.log("part C");
-    var compMatch = new parse.object("CompMatch");
-    compMatch.set("userId",user[0].id);
-    compMatch.set("matchId", Match.id);
-    compMatch.set("capital", 500);
-    compMatch.set("charity",0);
-    compMatch.set("price",5);
-    compMatch.set("production", 50);
-    compMatch.set("researchDevelopment", 0);
-    compMatch.set("marketing", 0);
-  },
-  error: function(error){
-    console.log("error with match");
-  }
-});
-
-console.log("part D");
-var queryComp = new Parse.Query("Bots");
-queryComp.equalTo("difficulty", "easy");
-
-queryComp.find({
-  success: function(bot) {
-  console.log("part E");
-    var object = bot;
-  for (i =0; i< 5;i++){
-    var compMatch = new parse.object("CompMatch");
-    compMatch.set("userId",bot[0].id);
-    compMatch.set("matchId", Match.id);
-    compMatch.set("capital", 500);
-    compMatch.set("charity",0);
-    compMatch.set("price",5);
-    compMatch.set("production", 50);
-    compMatch.set("researchDevelopment", 0);
-    compMatch.set("marketing", 0);
-  }  
-  },
-  error: function(error){
-  console.log("error with bot");  
-  }
-});
-
-console.log("part F");
-  var returnData = {};
-  returnData.clientMatchId = Match.id;
-  returnData.clientGameresult = true;
-  response.success("done");
-});
- */
