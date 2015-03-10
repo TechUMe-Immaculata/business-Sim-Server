@@ -25,15 +25,27 @@ var currentUser = Parse.User.current();
 
 
 
+ <li><label id="labelCapital"for="captial">Capital</label> 
+<input id="capital" placeholder="Captal" type="number" min="1" max="*usercapital *"/>
 
-<input id="capital" placeholder="Captail" type="number" min="1" max="*usercapital *"/>
-<input id="price" type="number" placeholder="Product Price" min="1" />
+ <li><label id="labelPrice" for="price">Price</label> 
+<input id="price" type="number" placeholder="Product Price" min="1" max="*userprice *">
+
+ <li><label id="labelCharity" for="charity">Charity</label> 
 <input id="charity" type="number" min="1" placeholder="Charity Spending" max="100"/>
-<input id="production" type="number" placeholder="Production rate" min="1" max="100"/>
-<input id="researchDevelopment" type="number" placeholder="Research Development" min="1" max="100"/>
-<input id="myInput" type="number" placeholder="Marketing" min="1" max="*100"/>
 
-<button type="button" id="createMatch" onclick="hot()">load data</button></li>  
-<button type="button" onclick="Start()">submit</button></li>  
+ <li><label id="labelProduction" for="production">Username</label> 
+<input id="production" type="number" placeholder="Production rate" min="1" max="100"/>
+
+ <li><label id="labelResearchDevelopment" for="researchDevelopment">ResearchDev</label> 
+<input id="researchDevelopment" type="number" placeholder="Research Development" min="1" max="100"/>
+
+ <li><label id="labelMarketing" for="marketing">Marketing</label> 
+<input id="marketing" type="number" placeholder="Marketing" min="1" max="*100"/>
+
+
+
+
+<button type="button" onclick="playerSubmit()">submit</button></li>  
 </body>
 </html>

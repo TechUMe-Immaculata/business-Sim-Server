@@ -454,12 +454,7 @@ return response.success(totalPopulationSum);
 });
 
 
-Parse.Cloud.define("match", function(request, response) {
-  request.params.price;
 
-
-
-});
 
 
 
