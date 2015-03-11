@@ -437,36 +437,28 @@ query.first().then(function(company){
 //check if user has submitted before
 if (company.get("isSubbed") == false)
 {
-//define var to get all submitted data
-var userStats = {};
+//update the online data base
+company.set("capital", request.params.clientCapital);
+company.set("researchDevelopment",request.params.clientResearchDevelopment);
+company.set("production", request.params.clientProduction);
+company.set("marketing",request.params.clientMarketing);
+company.set("price",request.params.clientPrice);
+company.set("charity",request.params.clientCharity);
 
-userStats.clientProduction = request.params.clientProduction;
-userStats.clientResearchDevelopment = request.params.clientResearchDevelopment;
-userStats.clientCapital = request.params.clientCapital;
-userStats.clientMarketing = request.params.clientMarketing;
-userStats.clientPrice = request.params.clientPrice;
-userStats.clientCharity = request.params.clientCharity;
-
-
-company.set("capital", userStats.clientCapital);
-company.set("researchDevelopment",userStats.clientResearchDevelopment);
-company.set("production", userStats.clientProduction);
-company.set("marketing",userStats.clientMarketing);
-company.set("price",userStats.clientPrice);
-company.set("charity",userStats.clientCharity);
-console.log("yup");
-
-console.log(company.get("charity"));
-console.log(userStats.clientCharity);
 //update server with new varibles
 company.save();
-//sleep(1000);
-return response.success();
+
+//update
+return company.save();
 }
 else
 {
-console.log("nope");
+//the user has already submitted
 return response.success(false);
 }
+}).then(function (doneSave){
+
+//send info back to client
+response.success(true);
 })
 });
