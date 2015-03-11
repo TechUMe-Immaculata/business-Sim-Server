@@ -433,32 +433,87 @@ query.equalTo("companyId",companyId);
 console.log("before all");
 query.first().then(function(company){
 
-
+//console.log(company);
 //check if user has submitted before
+console.log(request.params.clientPrice);
 if (company.get("isSubbed") == false)
 {
 //update the online data base
-company.set("capital", request.params.clientCapital);
-company.set("researchDevelopment",request.params.clientResearchDevelopment);
-company.set("production", request.params.clientProduction);
-company.set("marketing",request.params.clientMarketing);
-company.set("price",request.params.clientPrice);
-company.set("charity",request.params.clientCharity);
+company.set("capital", Number(request.params.clientCapital));
+company.set("researchDevelopment",Number(request.params.clientResearchDevelopment));
+company.set("production", Number(request.params.clientProduction));
+company.set("marketing",Number(request.params.clientMarketing));
+company.set("price",Number(request.params.clientPrice));
+company.set("charity",Number(request.params.clientCharity));
+console.log(request.params.clientPrice);
+console.log(request.params.clientCapital);
+company.set("isSubbed",true);
+//update server with new variables
 
-//update server with new varibles
-company.save();
-
-//update
-return company.save();
+console.log("if loop");
+console.log(company.get("charity"));
 }
 else
 {
 //the user has already submitted
-return response.success(false);
+console.log("else loop");
 }
+
+return company.save();
 }).then(function (doneSave){
 
 //send info back to client
-response.success(true);
+console.log("after");
+return response.success(true);
 })
 });
+
+/*
+Parse.Cloud.define("submitSolo", function(request, response) {
+
+var companyId = request.params.companyId; 
+var matchId = request.params.matchId; 
+
+
+//set up a query
+var CompMatch = Parse.Object.extend("CompMatch");
+var query = new Parse.Query(CompMatch);
+
+var ch =request.params.clientCharity;
+query.equalTo("matchId",matchId);
+query.equalTo("companyId",companyId);
+
+query.first({
+  success: function(company) {
+  console.log("after");
+    // The object was retrieved successfully.
+	company.set("capital", 777);
+	company.set("researchDevelopment",777);
+	company.set("production", 777);
+	company.set("marketing",777);
+	company.set("price",7);
+	company.set("charity",Number(ch));
+	
+	company.save(null, {
+  success: function(gameScore) {
+    // Execute any logic that should take place after the object is saved.
+    //alert('New object created with objectId: ' + gameScore.id);
+	response.success(true);
+  },
+  error: function(gameScore, error) {
+    // Execute any logic that should take place if the save fails.
+    // error is a Parse.Error with an error code and message.
+    //alert('Failed to create new object, with error code: ' + error.message);
+  }
+});
+  },
+  error: function(error){
+    // The object was not retrieved successfully.
+    // error is a Parse.Error with an error code and message.
+    console.log("error    = " + error.code + "    " + error.message );
+	response.error("shit");
+  }
+});
+
+});
+*/
