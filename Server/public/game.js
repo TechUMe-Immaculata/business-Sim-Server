@@ -190,11 +190,11 @@ xMarketing.value = queryMarketing;
 
  document.getElementById('labelCapital').innerHTML = " Chapital : " + querycapital;
 
- document.getElementById('labelPrice').innerHTML = " Production :" +queryProduction;
+ document.getElementById('labelPrice').innerHTML = " Production :" +queryPrice;
 
   document.getElementById('labelCharity').innerHTML = " Charity :" +queryCharity;
 
-   document.getElementById('labelProduction').innerHTML = " Price : " +queryPrice;
+   document.getElementById('labelProduction').innerHTML = " Price : " +queryProduction;
 
     document.getElementById('labelResearchDevelopment').innerHTML = " ResearchDevelopment :" +queryResearchDevelopment;
 
@@ -225,27 +225,8 @@ var compID = localStorage.getItem("companyId");
 
 // find out what the player wants to change his prices to
 
-var  usercapital = this.$("#capital").val();
-var userprice = this.$("#price").val();
-var usercharity = this.$("#charity").val();
-var userproduction = this.$("#production").val();
-var userresearchDevelopment = this.$("#researchDevelopment").val();
-var usermarketing = this.$("#marketing").val();
 
 //error checking so he doesn't pass the maxes
-if(usercapital > 10000 ){
-
-usercapital=10000;
-
-}
-else if ( usercharity > 10000){
-
- usercharity = 10000;
-}
-else if (usermarketing > 10000){
-
-    usermarketing = 10000;
-}
 
 
 
@@ -264,25 +245,20 @@ playerstats.clientProduction=this.$("#production").val();
 playerstats.clientResearchDevelopment=this.$("#researchDevelopment").val();
 playerstats.clientMarketing= this.$("#marketing").val();
 playerstats.clientCharity =this.$("#charity").val();
-playerstats.clienttPrice = this.$("#price").val();
+playerstats.clientPrice = this.$("#price").val();
+playerstats.clientCapital =this.$("#capital").val();
+console.log(playerstats.clientPrice);
+console.log(playerstats.clientProduction);
+console.log(playerstats.clientMarketing);
 
-<<<<<<< Updated upstream
-player.capital = usercapital;
- player.price = userprice;
- player.charity = usercharity;
- player.price = userprice;
- player.production = userproduction;
- player.researchDevelopment = userresearchDevelopment;
- player.marketing= usermarketing;
-/*
-Parse.Cloud.run('match', player, {
-=======
+
+
 
 Parse.Cloud.run('submitSolo', playerstats, {
->>>>>>> Stashed changes
+
 
     success: function(works){
-alert("IT works");
+  location.reload();
 
  
         
@@ -293,9 +269,6 @@ alert("IT works");
     }
 });
 
-<<<<<<< Updated upstream
-*/
-=======
 
 
 
@@ -303,7 +276,9 @@ alert("IT works");
 
 
 
->>>>>>> Stashed changes
+
+
+
 
 };
 
