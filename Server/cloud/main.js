@@ -285,7 +285,7 @@ queryUser.find({
 Parse.Cloud.define("turn", function(request, response) {
 //increase population exponetinaly but slowly****
 var turn = 0;
-var population = 1000000;
+var population = 0;
 var matchId = request.params.matchId;
 var totalPopulationSum = 0, totalMarketing = 0, totalResearchAndDevelopment = 0, totalCharity = 0;
 var companyMatchDataArray = new Array();
@@ -300,7 +300,10 @@ queryMatch.find().then(function(objectMatch){
   
   turn = match.get("turn");
   console.log(turn);
-  population = Math.round(population * Math.pow(1.05,turn)); 
+  
+  population = match.get("population");
+  var percent = 1.05;
+  population = Math.round(population * percent); 
   match.set("population",population);
   match.increment("turn");
   match.save();
@@ -409,64 +412,78 @@ for ( var i = 0;  i < compMatch.length; i++)
 	compMatch[i].save();
 }
 
-return response.success(totalPopulationSum);
+return response.success(population);
 })
-
-
-//expense save
-
-//find charity MS %
-
-//find marketing Ms %
-
-//find price Ms %
-
-//calculate R&D Ms %
-
-//add all Ms together
-//save their total Ms % to comp match
-
-//find how many products they can sell
-//if amount >= production then sell production
-//else if amount < production then sell the amount
-//save products sold to comp match
-
-//revenue save 
-//net profit save
-
-
-
-
-
-//loop for each bot
-
-//create fake varibles for bots based ( based off last decision )
-
-//find charity MS %
-
-//find marketing Ms %
-
-//find price Ms %
-
-//calculate R&D Ms %
-
-//save their total Ms %
 });
 
+Parse.Cloud.define("submitSolo", function(request, response) {
+
+//variables to find the user in match
+var companyId = request.params.companyId; 
+var matchId = request.params.matchId; 
 
 
+//set up a query
+var CompMatch = Parse.Object.extend("CompMatch");
+var query = new Parse.Query(CompMatch);
+
+query.equalTo("matchId",matchId);
+query.equalTo("companyId",companyId);
+
+console.log("before all");
+query.first().then(function(company){
+
+//console.log(company);
+//check if user has submitted before
+console.log(request.params.clientPrice);
+if (company.get("isSubbed") == false)
+{
+//update the online data base
+company.set("capital", Number(request.params.clientCapital));
+company.set("researchDevelopment",Number(request.params.clientResearchDevelopment));
+company.set("production", Number(request.params.clientProduction));
+company.set("marketing",Number(request.params.clientMarketing));
+company.set("price",Number(request.params.clientPrice));
+company.set("charity",Number(request.params.clientCharity));
+console.log(request.params.clientPrice);
+console.log(request.params.clientCapital);
+company.set("isSubbed",true);
+//update server with new variables
+
+console.log("if loop");
+console.log(company.get("charity"));
+}
+else
+{
+//the user has already submitted
+console.log("else loop");
+}
+
+return company.save();
+}).then(function (doneSave){
+
+//send info back to client
+console.log("after");
+return response.success(true);
+})
+});
+
+/*
+Parse.Cloud.define("submitSolo", function(request, response) {
+
+var companyId = request.params.companyId; 
+var matchId = request.params.matchId; 
 
 
+//set up a query
+var CompMatch = Parse.Object.extend("CompMatch");
+var query = new Parse.Query(CompMatch);
 
+var ch =request.params.clientCharity;
+query.equalTo("matchId",matchId);
+query.equalTo("companyId",companyId);
 
-
-
-
-
-
-
-
-
+<<<<<<< HEAD
 
 
  /*   console.log(request.params);
@@ -491,148 +508,43 @@ return response.success(totalPopulationSum);
 	company.set("production",0);
 	company.set("charity",0);
 	company.set("researchDevelopment",0);
+=======
+query.first({
+  success: function(company) {
+  console.log("after");
+    // The object was retrieved successfully.
+	company.set("capital", 777);
+	company.set("researchDevelopment",777);
+	company.set("production", 777);
+	company.set("marketing",777);
+	company.set("price",7);
+	company.set("charity",Number(ch));
+>>>>>>> Christopher-Blackman
 	
-	objectList.push(company);
-	  
-	}
-
-  //adds unique columns to the data on server
-    //company.addUnique("Price",Price);
-    //company.addUnique("UserName",UserName);
- 
- Parse.Object.saveAll(objectList, {
-  success: function(list) {
+	company.save(null, {
+  success: function(gameScore) {
     // Execute any logic that should take place after the object is saved.
-    alert('new object lists created');
-	//reponse.success("done");
+    //alert('New object created with objectId: ' + gameScore.id);
+	response.success(true);
   },
-  error: function(error) {
+  error: function(gameScore, error) {
     // Execute any logic that should take place if the save fails.
     // error is a Parse.Error with an error code and message.
-    alert('Failed to create new object, with error code: ' + error.message);
-	//response.error("shit");
+    //alert('Failed to create new object, with error code: ' + error.message);
   }
 });
-
-  response.success("done");
-  */
-  
-  
-  
-  /*
-  Parse.Cloud.define("averageStars", function(request, response) {
-  var sum = 0;
-  var j=0;
-
-  var query = new Parse.Query("Comedy");
-  query.equalTo("movie", request.params.movie);
-
-  query.find().then(function(results) {
-    for (var i = 0; i < results.length; ++i) {
-      sum += results[i].get("stars");
-      ++j;
-    }
-
-    var query2 = new Parse.Query("Drama");
-    query2.equalTo("movie", request.params.movie);
-
-    return query2.find();
-  }).then(function(results) {
-    for (var i = 0; i < results.length; ++i) {
-      sum += results[i].get("stars");
-      ++j;
-    }
-
-    response.success(sum / j);
-  }, function(error) {
-    response.error("movie lookup failed");
-  });
-});
-*/
-
-
-//Parse.Cloud.run('',{},
-/*
- Parse.Cloud.run('createMatchUserSingle',{currentUser}, {
-      success: function(results) {
-          Parse.Cloud.run('getGifts',{}, {
-            success: function(results) {
-                response.success(results);
-            },
-            error: function(error) {
-                response.error("Some error.");
-            }
-          });
-      },
-      error: function(error) {
-          response.error("Some error.");
-      }
-    });
-*/
-
-/* function backup
-Parse.Cloud.define("createMatch", function(request, response) {
-
-//console.log("part A");
-//var currentUser = request.params.objectId;
-//var Match = Parse.Object.extend("Match");
-//var match = new Match();
-
-match.set("name","starfox");
-//Match.addUnique("name","starfox");
-//Add other users before bots.
-
-
-var queryUser = new Parse.Query("Company");
-queryUser.equalTo("userId", currentUser.id);
-console.log("part B");
-queryUser.find({
-  success: function(user) {
-  console.log("part C");
-    var compMatch = new parse.object("CompMatch");
-    compMatch.set("userId",user[0].id);
-    compMatch.set("matchId", Match.id);
-    compMatch.set("capital", 500);
-    compMatch.set("charity",0);
-    compMatch.set("price",5);
-    compMatch.set("production", 50);
-    compMatch.set("researchDevelopment", 0);
-    compMatch.set("marketing", 0);
   },
   error: function(error){
-    console.log("error with match");
+    // The object was not retrieved successfully.
+    // error is a Parse.Error with an error code and message.
+    console.log("error    = " + error.code + "    " + error.message );
+	response.error("shit");
   }
 });
 
-console.log("part D");
-var queryComp = new Parse.Query("Bots");
-queryComp.equalTo("difficulty", "easy");
-
-queryComp.find({
-  success: function(bot) {
-  console.log("part E");
-    var object = bot;
-  for (i =0; i< 5;i++){
-    var compMatch = new parse.object("CompMatch");
-    compMatch.set("userId",bot[0].id);
-    compMatch.set("matchId", Match.id);
-    compMatch.set("capital", 500);
-    compMatch.set("charity",0);
-    compMatch.set("price",5);
-    compMatch.set("production", 50);
-    compMatch.set("researchDevelopment", 0);
-    compMatch.set("marketing", 0);
-  }  
-  },
-  error: function(error){
-  console.log("error with bot");  
-  }
 });
-
-console.log("part F");
-  var returnData = {};
-  returnData.clientMatchId = Match.id;
-  returnData.clientGameresult = true;
-  response.success("done");
-});
+<<<<<<< HEAD
  */
+=======
+*/
+>>>>>>> Christopher-Blackman
