@@ -252,13 +252,15 @@ console.log(playerstats.clientProduction);
 console.log(playerstats.clientMarketing);
 
 
-
+var  match = {};
+match.matchId = matchid;
+console.log("matchid");
 
 Parse.Cloud.run('submitSolo', playerstats, {
 
 
     success: function(works){
-  location.reload();
+
 
  
         
@@ -271,7 +273,22 @@ Parse.Cloud.run('submitSolo', playerstats, {
 
 
 
+Parse.Cloud.run('turn', match, {
 
+
+    success: function(works){
+  
+
+  console.log("it ran")
+
+ 
+        
+    },
+    error:function(error){
+
+        console.log("Nah boi");
+    }
+});
 
 
 
