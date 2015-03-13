@@ -153,11 +153,15 @@ var currentUser = request.params.objectId;
 var Match = Parse.Object.extend("Match");
 var match = new Match();
 var companyIdArray = new Array();
+var isMultiplayer = false;
+//isMultiplayer = request.params.clientMultiplayer;
+
  
   match.set("name",request.params.matchName);
   match.set("gameTime",request.params.matchTime);
   match.set("turn",0);
   match.set("population",1000000);
+  match.set("multiplayer",isMultiplayer);
   match.save().then(function(afterSave)
   {
  
@@ -187,6 +191,8 @@ queryUser.equalTo("userId", currentUser);
     compMatch.set("isBot",false);
 	compMatch.set("capitalTotal",10);
 	compMatch.set("maxProduction",1000);
+	compMatch.set("cashAvailable",50000);
+	compMatch.set("creditLine",50000);
  
   //save compMatch
   compMatch.save();
@@ -215,6 +221,8 @@ return queryComp.find();
     compMatch.set("isBot",true);
 	compMatch.set("capitalTotal",0);
 	compMatch.set("maxProduction",1000);
+	compMatch.set("cashAvailable",50000);
+	compMatch.set("creditLine",50000);
      
     compMatch.save();
  
