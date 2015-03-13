@@ -447,7 +447,7 @@ company.set("price",Number(request.params.clientPrice));
 company.set("charity",Number(request.params.clientCharity));
 console.log(request.params.clientPrice);
 console.log(request.params.clientCapital);
-company.set("isSubbed",true);
+//company.set("isSubbed",true);
 //update server with new variables
 
 console.log("if loop");
