@@ -430,14 +430,40 @@ for ( var i = 0;  i < compMatch.length; i++)
 	
 	
 	
-	//define varibles
+	//define variables
 	var maxProduction = 0;
 	const PRICE_INCREMENT_PER_PRODUCT = 50 , INITIAL_PRODUCTION = 1000;
 	
 	//every 50$ invested 1 product can be made
 	maxProduction = (compMatch[i].get("capitalTotal")/PRICE_INCREMENT_PER_PRODUCT) + INITIAL_PRODUCTION;
 	
+	const MAX_CREDIT = 50000;
+	var networth = compMatch[i].get("cashAvailable") + compMatch[i].get("creditLine");
 	
+	if(networth > MAX_CREDIT)
+	{
+		compMatch[i].set("cashAvailable",networth-MAX_CREDIT);
+		compMatch[i].set("creditLine",MAX_CREDIT);
+	}
+	else if ( networth < MAX_CREDIT)
+	{
+		//compMatch[i].set(
+	}
+	
+	/*
+	if ( objectStats.profit > 0)
+	{
+		 if(net
+	}
+	else if ( objectStats.profit < 0)
+	{
+	
+	}
+	else if ( objectStats.profit == 0)
+	{
+	
+	}
+	*/
 	//if company is a bot then calculate the next turn moves and submit
 	if (compMatch[i].get("isBot") == true)
 	{
@@ -462,6 +488,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	compMatch[i].set("marketShare",objectMS);
 	compMatch[i].save();
 }
+
 //long run this will return data for single player
 return response.success(population);
 })
