@@ -154,11 +154,15 @@ var currentUser = request.params.objectId;
 var Match = Parse.Object.extend("Match");
 var match = new Match();
 var companyIdArray = new Array();
+var isMultiplayer = false;
+//isMultiplayer = request.params.clientMultiplayer;
+
  
   match.set("name",request.params.matchName);
   match.set("gameTime",request.params.matchTime);
   match.set("turn",0);
   match.set("population",1000000);
+  match.set("multiplayer",isMultiplayer);
   match.save().then(function(afterSave)
   {
  
@@ -188,6 +192,8 @@ queryUser.equalTo("userId", currentUser);
     compMatch.set("isBot",false);
 	compMatch.set("capitalTotal",10);
 	compMatch.set("maxProduction",1000);
+	compMatch.set("cashAvailable",50000);
+	compMatch.set("creditLine",50000);
  
   //save compMatch
   compMatch.save();
@@ -216,6 +222,8 @@ return queryComp.find();
     compMatch.set("isBot",true);
 	compMatch.set("capitalTotal",0);
 	compMatch.set("maxProduction",1000);
+	compMatch.set("cashAvailable",50000);
+	compMatch.set("creditLine",50000);
      
     compMatch.save();
  
@@ -284,6 +292,7 @@ queryUser.find({
 
 
 Parse.Cloud.define("turn", function(request, response) {
+<<<<<<< HEAD
 //increase population exponetinaly but slowly
 var Match = Parse.Object.extend("Company");
 var query = new Parse.Query(company);
@@ -310,6 +319,8 @@ Parse.Push.send({
 */
 
 
+=======
+>>>>>>> MASTER
 var turn = 0;
 var population = 0;
 var matchId = request.params.matchId;
@@ -317,106 +328,147 @@ var totalPopulationSum = 0, totalMarketing = 0, totalResearchAndDevelopment = 0,
 var companyMatchDataArray = new Array();
 var Match = Parse.Object.extend("Match");
 var match = new Match();
+
+//query to find the match
 var queryMatch = new  Parse.Query("Match");
 queryMatch.equalTo("objectId",matchId);
 
 queryMatch.find().then(function(objectMatch){
-	
+  
+  //population natural birth rate
+  var percent = 1.05;
+  
+  //get current match data
   match = objectMatch[0];
   
-  turn = match.get("turn");
-  console.log(turn);
-  
+  //get the past population of the last turn
   population = match.get("population");
-  var percent = 1.05;
+  
+  //increase poulation
   population = Math.round(population * percent); 
   match.set("population",population);
+  
+  //increment for next turn
   match.increment("turn");
+  
+  //save
   match.save();
 
+  //define query to find the individual companies in the match
 var queryComp = new Parse.Query("CompMatch");
 queryComp.equalTo("matchId", match.id);
 
 return queryComp.find();
 }).then(function(compMatch){
+//how many decimals to round to
 const NUMBER_OF_DECIMALS = 1000;
+
+//calculate totals
 for ( var i = 0; i < compMatch.length; i++)
 {
-	//totalPrice = totalPrice + compMatch[i].get("price");
+	//get the total amount of population that they carter to on their own as a seprate business
 	totalPopulationSum = totalPopulationSum + (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
+	
+	//get the total investment of marketing in turn
 	totalMarketing = totalMarketing + compMatch[i].get("marketing");
+	
+	//get total investment of R&D in turn
 	totalResearchAndDevelopment = totalResearchAndDevelopment + compMatch[i].get("researchDevelopment");
+	
+	//get total investment of charity in game
 	totalCharity = totalCharity + compMatch[i].get("charity");
 }
-var objectMS = {};
-var objectStats = {};
+
+//calculate all that will happen in one turn
 for ( var i = 0;  i < compMatch.length; i++)
 {
-	console.log(match.get("population") + " = " + compMatch[i].get("price") + " = " + totalPopulationSum );
-	var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
-	objectMS.priceMS = Math.round((singlePopulation/totalPopulationSum)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
-	//console.log(singlePopulation + "/" +totalPopulationSum + " = " + objectMS.priceMS);
-	objectMS.researchAndDevelopmentMS = Math.round((compMatch[i].get("researchDevelopment")/totalResearchAndDevelopment)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
-	objectMS.marketingMS = Math.round((compMatch[i].get("marketing")/totalMarketing)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
-	//totalCharity = totalCharity + compMatch[i].get("charity");
-	//console.log(compMatch[i].get("charity"));
-	//not recognizing chaarity as a proper idenditfyers
-	objectMS.charityMS = Math.round((compMatch[i].get("charity")/totalCharity)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
-	console.log(objectMS.priceMS * 0.30);
-	objectMS.totalMS = (objectMS.priceMS * 0.30) + (objectMS.researchAndDevelopmentMS * 0.20) + (objectMS.marketingMS * 0.40) + (objectMS.charityMS * 0.10);
+	//objects that save the calculations
+	var objectMS = {};
+	var objectStats = {};
 	
-	console.log(objectMS.totalMS + "___yolo___" + match.get("population") );
+	//find the single population for the company
+	var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
+	//calculate how much MS based on price ( pop / sum pop) 
+	objectMS.priceMS = Math.round((singlePopulation/totalPopulationSum)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+
+	//calculate R&D MS (R&D / R&D sum)
+	objectMS.researchAndDevelopmentMS = Math.round((compMatch[i].get("researchDevelopment")/totalResearchAndDevelopment)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	
+	//calaculate marketing MS 9(marketing / marketing sum)
+	objectMS.marketingMS = Math.round((compMatch[i].get("marketing")/totalMarketing)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+
+	//calaculate charity MS ( charity / charity sum)
+	objectMS.charityMS = Math.round((compMatch[i].get("charity")/totalCharity)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+
+	//calculate total MS by adding up all market based on their individual worth       
+	objectMS.totalMS = Math.round(((objectMS.priceMS * 0.30) + (objectMS.researchAndDevelopmentMS * 0.20) + (objectMS.marketingMS * 0.40) + (objectMS.charityMS * 0.10))*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	
+
+	//get the demand for your product
 	var maxCarterAmount = Math.round(objectMS.totalMS * match.get("population")); 
 
-	console.log(compMatch[i].get("production") + "__" +maxCarterAmount + "____________________________")
+	//check if you have to much production for demand
 	if(compMatch[i].get("production") > maxCarterAmount)
 	{
-	//sell the least amoujnt of products that can be sent
+	//sell the least amount of products that can be sent //save as revenue
 	objectStats.revenue = maxCarterAmount * compMatch[i].get("price");
-	console.log("more than capital = "+objectStats.revenue = maxCarterAmount * compMatch[i].get("price"));
-	
 	}
+	
+	//check if you have just enough procuction for demand
 	else if (compMatch[i].get("production") == maxCarterAmount)
 	{
-	//sell the equal amount of products
+	//sell the equal amount of products //save as revenue
 	objectStats.revenue = maxCarterAmount * compMatch[i].get("price");
-	console.log("equal to  capital = "+ maxCarterAmount * compMatch[i].get("price"));
-	
 	}
+	
+	//check if you do not have enough production for demand
 	else if (compMatch[i].get("production") < maxCarterAmount)
 	{
-	// sell the maximum amount of producs possible
+	// sell the maximum amount of producs possible //save as revenue
 	objectStats.revenue = compMatch[i].get("production") * compMatch[i].get("price");
-	console.log("less than capital = "+ compMatch[i].get("production") * compMatch[i].get("price"));
-	
 	}
 	else{
 	//error
-	console.log("error 152");
+	console.log("error 403 WHA");
 	}
-	//need to make theses object in create new match ********
+	
+	//long term investment into company is set here //depreciation is needed
 	compMatch[i].set("capitalTotal",compMatch[i].get("capitalTotal") + compMatch[i].get("capital"));
 	
-	var pricePerProduct = 0;
-	if (compMatch[i].get("capitalTotal") < 45000000)
-	{
-	pricePerProduct = Math.abs((-(1.5/10000000)*compMatch[i].get("capitalTotal")) + 7);
-	console.log("before" + " " + pricePerProduct);
 	
+	
+	//define varibles
+	var pricePerProduct = 0;
+	const MAX_INVESTMENT = 45000000;
+	
+	//error checking if the investment goes beyound what is expected of the function
+	if (compMatch[i].get("capitalTotal") < MAX_INVESTMENT)
+	{
+		//get price of product
+		pricePerProduct = Math.abs((-(1.5/10000000)*compMatch[i].get("capitalTotal")) + 7);
 	}
 	else
 	{
-		pricePerProduct = Math.abs((-(1.5/10000000)*45000000) + 7);
-		console.log("after" + " " + pricePerProduct);
+		//maximum duduction of price
+		pricePerProduct = Math.abs((-(1.5/10000000)*MAX_INVESTMENT) + 7);
 	}
 	
-	console.log(pricePerProduct * compMatch[i].get("production"));
+	//calculate the total expenses of the turn for the company
 	objectStats.expense = (pricePerProduct * compMatch[i].get("production")) +compMatch[i].get("capital") + compMatch[i].get("researchDevelopment") + compMatch[i].get("marketing") + compMatch[i].get("charity");
+	//find the profit obtained for the turn
 	objectStats.profit = objectStats.revenue - objectStats.expense;
 	
-	var maxProduction = 0;
 	
-	maxProduction = (compMatch[i].get("capitalTotal")/50) + 1000;
+	
+	//define varibles
+	var maxProduction = 0;
+	const PRICE_INCREMENT_PER_PRODUCT = 50 , INITIAL_PRODUCTION = 1000;
+	
+	//every 50$ invested 1 product can be made
+	maxProduction = (compMatch[i].get("capitalTotal")/PRICE_INCREMENT_PER_PRODUCT) + INITIAL_PRODUCTION;
+	
+	
+	//if company is a bot then calculate the next turn moves and submit
 	if (compMatch[i].get("isBot") == true)
 	{
     compMatch[i].set("capital", Math.floor((Math.random() * 10000) + 1));
@@ -427,17 +479,20 @@ for ( var i = 0;  i < compMatch.length; i++)
     compMatch[i].set("marketing", Math.floor((Math.random() * 10000) + 1));
     compMatch[i].set("isSubbed",true);
 	}
+	//else the company is not a bot 
 	else
 	{
+	//reset submitted turn
     compMatch[i].set("isSubbed",false);
 	}
 	
+	//save the company
 	compMatch[i].set("maxProduction",maxProduction);
 	compMatch[i].set("stats",objectStats);
 	compMatch[i].set("marketShare",objectMS);
 	compMatch[i].save();
 }
-
+//long run this will return data for single player
 return response.success(population);
 })
 });
@@ -449,17 +504,16 @@ var companyId = request.params.companyId;
 var matchId = request.params.matchId; 
 
 
-//set up a query
+//set up a query to find the company in Match
 var CompMatch = Parse.Object.extend("CompMatch");
 var query = new Parse.Query(CompMatch);
 
 query.equalTo("matchId",matchId);
 query.equalTo("companyId",companyId);
 
-console.log("before all");
+//find frist result
 query.first().then(function(company){
 
-//console.log(company);
 //check if user has submitted before
 console.log(request.params.clientPrice);
 if (company.get("isSubbed") == false)
@@ -471,29 +525,22 @@ company.set("production", Number(request.params.clientProduction));
 company.set("marketing",Number(request.params.clientMarketing));
 company.set("price",Number(request.params.clientPrice));
 company.set("charity",Number(request.params.clientCharity));
-console.log(request.params.clientPrice);
-console.log(request.params.clientCapital);
-company.set("isSubbed",true);
-//update server with new variables
-
-console.log("if loop");
-console.log(company.get("charity"));
 }
 else
 {
 //the user has already submitted
-console.log("else loop");
 }
 
+//save to server
 return company.save();
-}).then(function (doneSave){
-
+}).then(function (doneSave)
+{
 //send info back to client
-console.log("after");
 return response.success(true);
 })
 });
 
+<<<<<<< HEAD
 /*
 Parse.Cloud.define("submitSolo", function(request, response) {
 
@@ -574,3 +621,5 @@ query.first({
 =======
 */
 >>>>>>> Christopher-Blackman
+=======
+>>>>>>> MASTER
