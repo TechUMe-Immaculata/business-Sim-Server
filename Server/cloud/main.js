@@ -438,16 +438,17 @@ for ( var i = 0;  i < compMatch.length; i++)
 	maxProduction = (compMatch[i].get("capitalTotal")/PRICE_INCREMENT_PER_PRODUCT) + INITIAL_PRODUCTION;
 	
 	const MAX_CREDIT = 50000;
-	var networth = compMatch[i].get("cashAvailable") + compMatch[i].get("creditLine");
+	var networth = compMatch[i].get("cashAvailable") + compMatch[i].get("creditLine") + objectStats.profit;
 	
 	if(networth > MAX_CREDIT)
 	{
 		compMatch[i].set("cashAvailable",networth-MAX_CREDIT);
 		compMatch[i].set("creditLine",MAX_CREDIT);
 	}
-	else if ( networth < MAX_CREDIT)
+	else if ( networth <= MAX_CREDIT)
 	{
-		//compMatch[i].set(
+		compMatch[i].set("cashAvailable",0);
+		compMatch[i].set("creditLine",MAX_CREDIT-networth);
 	}
 	
 	/*
@@ -495,10 +496,13 @@ return response.success(population);
 });
 
 Parse.Cloud.define("submitSolo", function(request, response) {
-
+console.log("super error pls stop");
 //variables to find the user in match
 var companyId = request.params.companyId; 
 var matchId = request.params.matchId; 
+
+console.log(companyId);
+console.log(matchId);
 
 
 //set up a query to find the company in Match
