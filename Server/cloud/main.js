@@ -70,6 +70,7 @@ query.find({
 
 Parse.Cloud.define("signUp", function(request, response) {
 
+//Marco
 var user = new Parse.User();
 var company = Parse.Object.extend('Company')
 
@@ -283,7 +284,32 @@ queryUser.find({
 
 
 Parse.Cloud.define("turn", function(request, response) {
-//increase population exponetinaly but slowly****
+//increase population exponetinaly but slowly
+var Match = Parse.Object.extend("Company");
+var query = new Parse.Query(company);
+query.equalTo("userId", currentUser.id);
+
+
+
+/*
+Parse.Push.send({
+        channels: [ "match" ],
+        data: {
+            alert("hello");
+        }
+    }, {
+        success: function () {
+            response.success("Push was sent");
+        },
+        error: function (error) {
+            response.error("Could not send push " + error)
+        }
+    });
+
+
+*/
+
+
 var turn = 0;
 var population = 0;
 var matchId = request.params.matchId;
