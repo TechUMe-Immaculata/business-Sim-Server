@@ -441,13 +441,48 @@ for ( var i = 0;  i < compMatch.length; i++)
 	
 	
 	
-	//define varibles
+	//define variables
 	var maxProduction = 0;
 	const PRICE_INCREMENT_PER_PRODUCT = 50 , INITIAL_PRODUCTION = 1000;
 	
 	//every 50$ invested 1 product can be made
 	maxProduction = (compMatch[i].get("capitalTotal")/PRICE_INCREMENT_PER_PRODUCT) + INITIAL_PRODUCTION;
 	
+	//define varibles
+	const MAX_CREDIT = 50000;
+	var networth = compMatch[i].get("cashAvailable") + compMatch[i].get("creditLine") + objectStats.profit;
+	
+	//determine users state
+	if(networth > MAX_CREDIT)
+	{
+		//adding cash and fill up mac credit
+		compMatch[i].set("cashAvailable",networth-MAX_CREDIT);
+		compMatch[i].set("creditLine",MAX_CREDIT);
+	}
+	else if ( networth <= MAX_CREDIT)
+	{
+		//no cash and subtracting what credit you have left
+		compMatch[i].set("cashAvailable",0);
+		compMatch[i].set("creditLine",MAX_CREDIT-networth);
+		
+		//check if player is bankrupt or not then declares bankruptcy
+		if (networth < 0 )
+		{
+			compMatch[i].set("isBankrupt", true);
+		}
+	}
+	
+	/*
+	if ( objectStats.profit > 0)
+	{
+		 if(net
+	}
+	else if ( objectStats.profit < 0)
+	{
+	
+	}
+	else if ( objectStats.profit == 0)
+	{
 	
 	//if company is a bot then calculate the next turn moves and submit
 	if (compMatch[i].get("isBot") == true)
@@ -473,6 +508,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	compMatch[i].set("marketShare",objectMS);
 	compMatch[i].save();
 }
+<<<<<<< HEAD
 // marco code
 
 var eMatch = Parse.Object.extend("Match");
@@ -499,6 +535,8 @@ nsp.emit('hi', 'everyone!');
 
 
 
+=======
+>>>>>>> MASTER
 
 //long run this will return data for single player
 return response.success(population);
@@ -506,10 +544,13 @@ return response.success(population);
 });
 
 Parse.Cloud.define("submitSolo", function(request, response) {
-
+console.log("super error pls stop");
 //variables to find the user in match
 var companyId = request.params.companyId; 
 var matchId = request.params.matchId; 
+
+console.log(companyId);
+console.log(matchId);
 
 
 //set up a query to find the company in Match
