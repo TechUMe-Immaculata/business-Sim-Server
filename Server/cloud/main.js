@@ -461,17 +461,6 @@ for ( var i = 0;  i < compMatch.length; i++)
 		}
 	}
 	
-	/*
-	if ( objectStats.profit > 0)
-	{
-		 if(net
-	}
-	else if ( objectStats.profit < 0)
-	{
-	
-	}
-	else if ( objectStats.profit == 0)
-	{
 	
 	//if company is a bot then calculate the next turn moves and submit
 	if (compMatch[i].get("isBot") == true)
