@@ -154,6 +154,7 @@ var Match = Parse.Object.extend("Match");
 var match = new Match();
 var companyIdArray = new Array();
 var isMultiplayer = false;
+var numberOfPlayers = 6;
 //isMultiplayer = request.params.clientMultiplayer;
 
  
@@ -193,6 +194,22 @@ queryUser.equalTo("userId", currentUser);
 	compMatch.set("maxProduction",1000);
 	compMatch.set("cashAvailable",50000);
 	compMatch.set("creditLine",50000);
+	compMatch.set("isBankrupt",false);
+	
+	var marketShare = {};
+	marketShare.charityMS =  Math.round(1 / numberOfPlayers *100)/100;
+	marketShare.marketingMS =   Math.round(1 / numberOfPlayers*100)/100;
+	marketShare.priceMS =   Math.round(1 / numberOfPlayers*100)/100;
+	marketShare.researchAndDevelopmentMS =   Math.round(1 / numberOfPlayers*100)/100;
+	marketShare.totalMS =  Math.round(1 / numberOfPlayers*100)/100;
+	compMatch.set("marketShare",marketShare);
+	
+	var stats = {}
+	stats.expense = compMatch.get("capital")+compMatch.get("charity")+compMatch.get("researchDevelopment")+compMatch.get("marketing")+(compMatch.get("production")*7);
+	stats.profit = 0;
+	stats.revenue = 0;
+	compMatch.set("stats",stats);
+
  
   //save compMatch
   compMatch.save();
@@ -206,7 +223,7 @@ queryComp.equalTo("isBot", true);
 return queryComp.find();
 }).then(function(bot) {
 //add 5 bots into match
-  for (i =0; i< 5;i++){
+  for (i =0; i< numberOfPlayers-1;i++){
   //create a comp match and initialize variables
     var compMatch = new Parse.Object("CompMatch");
     compMatch.set("companyId",bot[i].id);
@@ -223,6 +240,21 @@ return queryComp.find();
 	compMatch.set("maxProduction",1000);
 	compMatch.set("cashAvailable",50000);
 	compMatch.set("creditLine",50000);
+	compMatch.set("isBankrupt",false);
+	
+	var marketShare = {};
+	marketShare.charityMS =  Math.round(1 / numberOfPlayers *100)/100;
+	marketShare.marketingMS =   Math.round(1 / numberOfPlayers*100)/100;
+	marketShare.priceMS =   Math.round(1 / numberOfPlayers*100)/100;
+	marketShare.researchAndDevelopmentMS =   Math.round(1 / numberOfPlayers*100)/100;
+	marketShare.totalMS =  Math.round(1 / numberOfPlayers*100)/100;
+	compMatch.set("marketShare",marketShare);
+	
+	var stats = {}
+	stats.expense = compMatch.get("capital")+compMatch.get("charity")+compMatch.get("researchDevelopment")+compMatch.get("marketing")+(compMatch.get("production")*7);
+	stats.profit = 0;
+	stats.revenue = 0;
+	compMatch.set("stats",stats);
      
     compMatch.save();
  
@@ -460,19 +492,6 @@ for ( var i = 0;  i < compMatch.length; i++)
 			compMatch[i].set("isBankrupt", true);
 		}
 	}
-	
-	/*
-	if ( objectStats.profit > 0)
-	{
-		 if(net
-	}
-	else if ( objectStats.profit < 0)
-	{
-	
-	}
-	else if ( objectStats.profit == 0)
-	{
-	
 	//if company is a bot then calculate the next turn moves and submit
 	if (compMatch[i].get("isBot") == true)
 	{
