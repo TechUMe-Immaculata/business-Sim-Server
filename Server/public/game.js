@@ -290,7 +290,10 @@ Parse.Cloud.run('turn', match, {
     }
 });
 
+app.get('/game', function(req, res) {
 
+    
+});
 
 
 

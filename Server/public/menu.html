@@ -35,6 +35,7 @@ else if ( rowCount <4)
 {
 */
 
+var room = "red";
 
 
  var username = this.$("#userName").val();
@@ -44,6 +45,7 @@ else if ( rowCount <4)
 running.objectId = currentUser.id;
 running.matchTime = 5;
 running.matchName = this.$("#myMatch").val();
+running.matchroom = room;
 
 
 Parse.Cloud.run('createMatch', running, {
