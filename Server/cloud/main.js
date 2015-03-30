@@ -190,11 +190,12 @@ queryUser.equalTo("userId", currentUser);
     compMatch.set("marketing", 10);
     compMatch.set("isSubbed",false);
     compMatch.set("isBot",false);
-	compMatch.set("capitalTotal",10);
+	compMatch.set("capitalTotal",0);
 	compMatch.set("maxProduction",1000);
 	compMatch.set("cashAvailable",50000);
 	compMatch.set("creditLine",50000);
 	compMatch.set("isBankrupt",false);
+	compMatch.set("unitCost",7);
 	
 	var marketShare = {};
 	marketShare.charityMS =  Math.round(1 / numberOfPlayers *100)/100;
@@ -241,6 +242,7 @@ return queryComp.find();
 	compMatch.set("cashAvailable",50000);
 	compMatch.set("creditLine",50000);
 	compMatch.set("isBankrupt",false);
+	compMatch.set("unitCost",7);
 	
 	var marketShare = {};
 	marketShare.charityMS =  Math.round(1 / numberOfPlayers *100)/100;
@@ -443,7 +445,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	var pricePerProduct = 0;
 	const MAX_INVESTMENT = 45000000;
 	
-	//error checking if the investment goes beyound what is expected of the function
+	//finding the price to make one product
 	if (compMatch[i].get("capitalTotal") < MAX_INVESTMENT)
 	{
 		//get price of product
@@ -455,6 +457,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 		pricePerProduct = Math.abs((-(1.5/10000000)*MAX_INVESTMENT) + 7);
 	}
 	
+	compMatch[i].set("unitCost",pricePerProduct);
 	//calculate the total expenses of the turn for the company
 	objectStats.expense = (pricePerProduct * compMatch[i].get("production")) +compMatch[i].get("capital") + compMatch[i].get("researchDevelopment") + compMatch[i].get("marketing") + compMatch[i].get("charity");
 	//find the profit obtained for the turn
