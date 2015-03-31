@@ -477,7 +477,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	//define variables
 	const MAX_CREDIT = 50000;
 	var networth = compMatch[i].get("cashAvailable") + compMatch[i].get("creditLine") + objectStats.profit;
-	
+	compMatch[i].set("networth",networth);
 	//determine users state
 	if(networth > MAX_CREDIT)
 	{
@@ -524,13 +524,18 @@ for ( var i = 0;  i < compMatch.length; i++)
 	compMatch[i].save();
 }
 
+compMatch.sort(function(a, b){
+	console.log(b.get("networth"));
+	console.log(-a.get("networth"));
+	return b.get("networth")-a.get("networth")});
+
 for ( var i = 0;  i < compMatch.length; i++)
 {
 compMatch[i].set("rank",(i+1));
-compMatch[i].save();
-console.log(compMatch[i].get("rank"));
+//compMatch[i].save();
+console.log(compMatch[i].get("rank") + "_______"+compMatch[i].get("networth"));
 }
-return response.success(population);
+return Parse.Object.saveAll(compMatch);
 //var query = new Parse.Query("CompMatch");
 
 //query.descending("marketing");
@@ -577,6 +582,9 @@ rankings[5].set("rank",6);
 //return null;
 //}).then(function(goTo)
 //{
+}).then(function (afteSave){
+	
+	return response.success(population);
 })
 });
 
