@@ -415,21 +415,21 @@ for ( var i = 0;  i < compMatch.length; i++)
 	if(compMatch[i].get("production") > maxCarterAmount)
 	{
 	//sell the least amount of products that can be sent //save as revenue
-	objectStats.revenue = maxCarterAmount * compMatch[i].get("price");
+	objectStats.revenue = Math.round(maxCarterAmount * compMatch[i].get("price"));
 	}
 	
 	//check if you have just enough procuction for demand
 	else if (compMatch[i].get("production") == maxCarterAmount)
 	{
 	//sell the equal amount of products //save as revenue
-	objectStats.revenue = maxCarterAmount * compMatch[i].get("price");
+	objectStats.revenue = Math.round(maxCarterAmount * compMatch[i].get("price"));
 	}
 	
 	//check if you do not have enough production for demand
 	else if (compMatch[i].get("production") < maxCarterAmount)
 	{
 	// sell the maximum amount of producs possible //save as revenue
-	objectStats.revenue = compMatch[i].get("production") * compMatch[i].get("price");
+	objectStats.revenue = Math.round(compMatch[i].get("production") * compMatch[i].get("price"));
 	}
 	else{
 	//error
@@ -441,27 +441,22 @@ for ( var i = 0;  i < compMatch.length; i++)
 	
 	
 	
-	//define varibles
-	var pricePerProduct = 0;
-	const MAX_INVESTMENT = 45000000;
+	//define variables
+	var pricePerProduct = 7 - ((compMatch[i].get("capitalTotal"))/75000)
 	
-	//finding the price to make one product
-	if (compMatch[i].get("capitalTotal") < MAX_INVESTMENT)
-	{
-		//get price of product
-		pricePerProduct = Math.abs((-(1.5/10000000)*compMatch[i].get("capitalTotal")) + 7);
-	}
-	else
-	{
-		//maximum duduction of price
-		pricePerProduct = Math.abs((-(1.5/10000000)*MAX_INVESTMENT) + 7);
-	}
 	
-	compMatch[i].set("unitCost",pricePerProduct);
+	//lowest efficiency possible 
+	if (pricePerProduct < 1)
+	{
+		pricePerProduct = 1;
+	}
+	else{}
+	
+	compMatch[i].set("unitCost",Math.round(pricePerProduct*100)/100);
 	//calculate the total expenses of the turn for the company
-	objectStats.expense = (pricePerProduct * compMatch[i].get("production")) +compMatch[i].get("capital") + compMatch[i].get("researchDevelopment") + compMatch[i].get("marketing") + compMatch[i].get("charity");
+	objectStats.expense = Math.round((pricePerProduct * compMatch[i].get("production")) +compMatch[i].get("capital") + compMatch[i].get("researchDevelopment") + compMatch[i].get("marketing") + compMatch[i].get("charity"));
 	//find the profit obtained for the turn
-	objectStats.profit = objectStats.revenue - objectStats.expense;
+	objectStats.profit = Math.round(objectStats.revenue - objectStats.expense);
 	
 	
 	
@@ -470,9 +465,9 @@ for ( var i = 0;  i < compMatch.length; i++)
 	const PRICE_INCREMENT_PER_PRODUCT = 50 , INITIAL_PRODUCTION = 1000;
 	
 	//every 50$ invested 1 product can be made
-	maxProduction = (compMatch[i].get("capitalTotal")/PRICE_INCREMENT_PER_PRODUCT) + INITIAL_PRODUCTION;
+	maxProduction = Math.round((compMatch[i].get("capitalTotal")/PRICE_INCREMENT_PER_PRODUCT) + INITIAL_PRODUCTION);
 	
-	//define varibles
+	//define variables
 	const MAX_CREDIT = 50000;
 	var networth = compMatch[i].get("cashAvailable") + compMatch[i].get("creditLine") + objectStats.profit;
 	
@@ -493,6 +488,8 @@ for ( var i = 0;  i < compMatch.length; i++)
 		if (networth < 0 )
 		{
 			compMatch[i].set("isBankrupt", true);
+			compMatch[i].set("cashAvailable",0);
+			compMatch[i].set("creditLine",MAX_CREDIT-networth);
 		}
 	}
 	//if company is a bot then calculate the next turn moves and submit
