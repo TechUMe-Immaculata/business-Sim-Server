@@ -518,6 +518,10 @@ for ( var i = 0;  i < compMatch.length; i++)
 }
 
 //long run this will return data for single player
+return compMatch();
+}).then(function(rankings){
+
+
 return response.success(population);
 })
 });
