@@ -455,7 +455,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	//determine users state
 	if(networth > MAX_CREDIT)
 	{
-		//adding cash and fill up mac credit
+		//adding cash and fill up max credit
 		compMatch[i].set("cashAvailable",networth-MAX_CREDIT);
 		compMatch[i].set("creditLine",MAX_CREDIT);
 	}
@@ -472,17 +472,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 		}
 	}
 	
-	/*
-	if ( objectStats.profit > 0)
-	{
-		 if(net
-	}
-	else if ( objectStats.profit < 0)
-	{
 	
-	}
-	else if ( objectStats.profit == 0)
-	{
 	
 	//if company is a bot then calculate the next turn moves and submit
 	if (compMatch[i].get("isBot") == true)
@@ -508,35 +498,11 @@ for ( var i = 0;  i < compMatch.length; i++)
 	compMatch[i].set("marketShare",objectMS);
 	compMatch[i].save();
 }
-<<<<<<< HEAD
-// marco code
-
-var eMatch = Parse.Object.extend("Match");
-var equery = new Parse.Query(eMatch);
-equery.equalTo("matchId" , matchId);
-equery.first({
-
-  success: function(room){
-    //try local storage etc.... put in then 
-var room = room[0].
-  }
-});
-var namespace = "/" +room;
-console.log(namespace);
-var io = require('socket.io')();
-
-var nsp = io.of('/my-namespace');
-nsp.on('connection', function(socket){
-  console.log('someone connected'):
-});
-nsp.emit('hi', 'everyone!');
 
 
 
 
 
-=======
->>>>>>> MASTER
 
 //long run this will return data for single player
 return response.success(population);
@@ -594,49 +560,7 @@ return response.success(true);
 
 });
 
-io = require("socket.io")();
-socket = io.listen(8000);
-var rooms = ['Lobby'];
 
-io.sockets.on('connection', function(socket) {
-    socket.on('adduser', function(username) {
-        socket.username = username;
-        socket.room = 'Lobby';
-        usernames[username] = username;
-        socket.join('Lobby');
-        socket.emit('updatechat', 'SERVER', 'you have connected to Lobby');
-        socket.broadcast.to('Lobby').emit('updatechat', 'SERVER', username + ' has connected to this room');
-        socket.emit('updaterooms', rooms, 'Lobby');
-    });
-
-    socket.on('create', function(room) {
-        rooms.push(room);
-        socket.emit('updaterooms', rooms, socket.room);
-    });
-
-    socket.on('sendchat', function(data) {
-        io.sockets["in"](socket.room).emit('updatechat', socket.username, data);
-    });
-
-    socket.on('switchRoom', function(newroom) {
-        var oldroom;
-        oldroom = socket.room;
-        socket.leave(socket.room);
-        socket.join(newroom);
-        socket.emit('updatechat', 'SERVER', 'you have connected to ' + newroom);
-        socket.broadcast.to(oldroom).emit('updatechat', 'SERVER', socket.username + ' has left this room');
-        socket.room = newroom;
-        socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username + ' has joined this room');
-        socket.emit('updaterooms', rooms, newroom);
-    });
-
-    socket.on('disconnect', function() {
-        delete usernames[socket.username];
-        io.sockets.emit('updateusers', usernames);
-        socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
-        socket.leave(socket.room);
-    });
- });
 /*
 Parse.Cloud.define("submitSolo", function(request, response) {
 

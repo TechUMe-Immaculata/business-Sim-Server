@@ -212,6 +212,54 @@ error : function(error){
 
 });
 };
+function testNetworth(){
+//get the keys to do the search
+var matchid=localStorage.getItem("matchid");
+var compID = localStorage.getItem("companyId");
+var CompMatch = Parse.Object.extend("CompMatch");
+
+var query = new Parse.Query("CompMatch");
+query.equalTo("matchId" , matchid);
+query.descending("marketing");
+query.include("objectId");
+
+query.find().then(function(rankings){
+  
+console.log(rankings);
+var rank1 = rankings[0].get("marketing");
+console.log(rank1);
+var rank2=rankings[1].get("marketing");
+console.log(rank2);
+var rank3=rankings[2].get("marketing");
+console.log(rank3);
+var rank4= rankings[3].get("marketing");
+console.log(rank4);
+var rank5= rankings[4].get("marketing");
+console.log(rank5);
+var rank6= rankings[5].get("marketing");
+console.log(rank6);
+
+
+rankings[0].set("rank",1);
+rankings[1].set("rank",2);
+rankings[2].set("rank",3);
+rankings[3].set("rank",4);
+rankings[4].set("rank",5);
+rankings[5].set("rank",6);
+
+
+
+return rankings.save();
+}).then(function(result){
+
+})
+
+//console.log(rank1 + " " + rank2 + " "rank3 + " " + rank4 + " "+ rank5 + " "+ rank6);
+
+
+  };
+
+
 
 
 function playerSubmit(){
