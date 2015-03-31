@@ -536,52 +536,7 @@ compMatch[i].set("rank",(i+1));
 console.log(compMatch[i].get("rank") + "_______"+compMatch[i].get("networth"));
 }
 return Parse.Object.saveAll(compMatch);
-//var query = new Parse.Query("CompMatch");
 
-//query.descending("marketing");
-//query.include("objectId");
-
-//long run this will return data for single player
-//return query.find();
-//}).then(function(rankings){
- //console.log(rankings[1]);
-//for ( var i = 0;  i < rankings.length; i++)
-//{
-//rankings[i].set("rank",(i+1));
-//rankings[i].save();
-//}
-/*
-console.log(rankings);
-var rank1 = rankings[0].get("marketing");
-console.log(rank1);
-var rank2=rankings[1].get("marketing");
-console.log(rank2);
-var rank3=rankings[2].get("marketing");
-console.log(rank3);
-var rank4= rankings[3].get("marketing");
-console.log(rank4);
-var rank5= rankings[4].get("marketing");
-console.log(rank5);
-var rank6= rankings[5].get("marketing");
-console.log(rank6);
-
-
-rankings[0].set("rank",1);
-rankings[1].set("rank",2);
-rankings[2].set("rank",3);
-rankings[3].set("rank",4);
-rankings[4].set("rank",5);
-rankings[5].set("rank",6);
-*/
-//console.log("HELP __ " + rankings);
-
-
-//return rankings.save();
-
-
-//return null;
-//}).then(function(goTo)
-//{
 }).then(function (afteSave){
 	
 	return response.success(population);
