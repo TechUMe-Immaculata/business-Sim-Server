@@ -489,14 +489,19 @@ for ( var i = 0;  i < compMatch.length; i++)
 	{
 		//no cash and subtracting what credit you have left
 		compMatch[i].set("cashAvailable",0);
-		compMatch[i].set("creditLine",MAX_CREDIT-networth);
+		compMatch[i].set("creditLine",-MAX_CREDIT-networth);
 		
 		//check if player is bankrupt or not then declares bankruptcy
 		if (networth < 0 )
 		{
 			compMatch[i].set("isBankrupt", true);
 			compMatch[i].set("cashAvailable",0);
-			compMatch[i].set("creditLine",MAX_CREDIT-networth);
+			compMatch[i].set("creditLine",networth);
+			console.log("----BANKRUPT----");
+			console.log(MAX_CREDIT +"CREDIT");
+			console.log(networth+"NETWORTH");
+			console.log(objectStats.profit+"profit")
+			console.log(MAX_CREDIT-networth);
 		}
 	}
 	//if company is a bot then calculate the next turn moves and submit
