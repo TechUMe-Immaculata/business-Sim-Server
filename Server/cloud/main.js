@@ -177,6 +177,7 @@ queryUser.equalTo("userId", currentUser);
  
   //add the company id to the list
   companyIdArray.push(company[0].id);
+
  
     // Execute any logic that should take place after the object is saved.
     //make an instance of comp match and initialize 
@@ -195,10 +196,12 @@ queryUser.equalTo("userId", currentUser);
 	compMatch.set("maxProduction",1000);
 	compMatch.set("cashAvailable",50000);
 	compMatch.set("creditLine",50000);
+	compMatch.set("networth",100000);
 	compMatch.set("isBankrupt",false);
 	compMatch.set("unitCost",7);
 	rank++;
 	compMatch.set("rank",rank);
+	compMatch.set("companyName",company[0].get("company"));
 	
 	var marketShare = {};
 	marketShare.charityMS =  Math.round(1 / numberOfPlayers *100)/100;
@@ -244,10 +247,12 @@ return queryComp.find();
 	compMatch.set("maxProduction",1000);
 	compMatch.set("cashAvailable",50000);
 	compMatch.set("creditLine",50000);
+	compMatch.set("networth",100000);
 	compMatch.set("isBankrupt",false);
 	compMatch.set("unitCost",7);
 	rank++;
 	compMatch.set("rank",rank);
+	compMatch.set("companyName",bot[i].get("company"));
 	
 	
 	var marketShare = {};
