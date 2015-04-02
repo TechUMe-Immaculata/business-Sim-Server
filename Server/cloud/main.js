@@ -162,7 +162,7 @@ var rank = 0;
   match.set("name",request.params.matchName);
   match.set("gameTime",request.params.matchTime);
   match.set("turn",0);
-  match.set("population",1000000);
+  match.set("population",100000);
   match.set("multiplayer",isMultiplayer);
   match.save().then(function(afterSave)
   {
@@ -238,7 +238,7 @@ return queryComp.find();
     compMatch.set("capital", Math.floor((Math.random() * 10000) + 1));
     compMatch.set("charity",Math.floor((Math.random() * 10000) + 1));
     compMatch.set("price",Math.floor((Math.random() * 100) + 1));
-    compMatch.set("production", Math.floor((Math.random() * 10000) + 1));
+    compMatch.set("production", Math.floor((Math.random() * 1000) + 1));
     compMatch.set("researchDevelopment", Math.floor((Math.random() * 10000) + 1));
     compMatch.set("marketing", Math.floor((Math.random() * 10000) + 1));
     compMatch.set("isSubbed",true);
@@ -448,12 +448,14 @@ for ( var i = 0;  i < compMatch.length; i++)
 
 	//get the demand for your product
 	var maxCarterAmount = Math.round(objectMS.totalMS * match.get("population")); 
-
+	console.log("production" + "====" + "max");
+	console.log(compMatch[i].get("production") + "====" + maxCarterAmount);
 	//check if you have to much production for demand
 	if(compMatch[i].get("production") > maxCarterAmount)
 	{
 	//sell the least amount of products that can be sent //save as revenue
 	objectStats.revenue = Math.round(maxCarterAmount * compMatch[i].get("price"));
+	console.log("1")
 	}
 	
 	//check if you have just enough procuction for demand
@@ -461,6 +463,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	{
 	//sell the equal amount of products //save as revenue
 	objectStats.revenue = Math.round(maxCarterAmount * compMatch[i].get("price"));
+	console.log("2")
 	}
 	
 	//check if you do not have enough production for demand
@@ -468,11 +471,15 @@ for ( var i = 0;  i < compMatch.length; i++)
 	{
 	// sell the maximum amount of producs possible //save as revenue
 	objectStats.revenue = Math.round(compMatch[i].get("production") * compMatch[i].get("price"));
+	console.log("3")
+	console.log(compMatch[i].get("price"));
+	console.log(objectStats.revenue);
 	}
 	else{
 	//error
 	console.log("error 403 WHA");
 	}
+	console.log(compMatch[i].get("companyName"));
 	
 	//long term investment into company is set here //depreciation is needed
 	compMatch[i].set("capitalTotal",compMatch[i].get("capitalTotal") + compMatch[i].get("capital"));
@@ -495,6 +502,8 @@ for ( var i = 0;  i < compMatch.length; i++)
 	objectStats.expense = Math.round((pricePerProduct * compMatch[i].get("production")) +compMatch[i].get("capital") + compMatch[i].get("researchDevelopment") + compMatch[i].get("marketing") + compMatch[i].get("charity"));
 	//find the profit obtained for the turn
 	objectStats.profit = Math.round(objectStats.revenue - objectStats.expense);
+	console.log("revenue = " + objectStats.revenue + " expense = " + objectStats.expense );
+	console.log("profit = " +objectStats.profit);
 	
 	
 	
@@ -508,6 +517,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	//define variables
 	const MAX_CREDIT = 50000;
 	var networth = compMatch[i].get("cashAvailable") + compMatch[i].get("creditLine") + objectStats.profit;
+	console.log("networth = " + networth);
 	compMatch[i].set("networth",networth);
 	//determine users state
 	if(networth > MAX_CREDIT)
