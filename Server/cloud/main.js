@@ -340,9 +340,22 @@ var turn = 0;
 var population = 0;
 var matchId = request.params.matchId;
 var totalPopulationSum = 0, totalMarketing = 0, totalResearchAndDevelopment = 0, totalCharity = 0;
-var companyMatchDataArray = new Array();
+
 var Match = Parse.Object.extend("Match");
 var match = new Match();
+
+var companyMatchDataArray = new Array();
+var companyMatchData = {};
+companyMatchData.turn = null;
+companyMatchData.totalMS = null;
+companyMatchData.totalProduction = null;
+companyMatchData.totalInvestment = null;
+companyMatchData.rank = null;
+companyMatchData.companyName = null;
+companyMatchData.production = null;
+companyMatchData.networth = null;
+companyMatchData.companyId = null;
+companyMatchData.maxCarterAmount = null;
 
 //query to find the match
 var queryMatch = new  Parse.Query("Match");
@@ -365,6 +378,9 @@ queryMatch.find().then(function(objectMatch){
   
   //increment for next turn
   match.increment("turn");
+
+  //set turn to data going out
+  companyMatchData.turn = match.get("turn");
   
   //save
   match.save();
@@ -401,6 +417,16 @@ for ( var i = 0;  i < compMatch.length; i++)
 	//objects that save the calculations
 	var objectMS = {};
 	var objectStats = {};
+
+  companyMatchData.totalMS = null;
+  companyMatchData.totalProduction = null;
+  companyMatchData.totalInvestment = null;
+  companyMatchData.rank = null;
+  companyMatchData.companyName = null;
+  companyMatchData.production = null;
+  companyMatchData.networth = null;
+  companyMatchData.companyId = null;
+  companyMatchData.maxCarterAmount = null;
 	
 	//find the single population for the company
 	var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
@@ -519,6 +545,24 @@ for ( var i = 0;  i < compMatch.length; i++)
 			console.log(MAX_CREDIT-networth);
 		}
 	}
+
+    //set some varible for next turn
+  compMatch[i].set("maxProduction",maxProduction);
+  compMatch[i].set("stats",objectStats);
+  compMatch[i].set("marketShare",objectMS);
+
+  companyMatchData.totalMS = objectMS.totalMS;
+  companyMatchData.totalProduction = maxProduction;
+  companyMatchData.totalInvestment = compMatch[i].get("capitalTotal");
+  companyMatchData.companyName = compMatch[i].get("companyName");
+  companyMatchData.production = compMatch[i].get("production");
+  companyMatchData.networth = compMatch[i].get("networth");
+  companyMatchData.companyId = compMatch[i].get("companyId");
+  companyMatchData.maxCarterAmount = maxCarterAmount;
+
+  companyMatchDataArray.push(companyMatchData);
+
+
 	//if company is a bot then calculate the next turn moves and submit
 	if (compMatch[i].get("isBot") == true)
 	{
@@ -537,30 +581,31 @@ for ( var i = 0;  i < compMatch.length; i++)
     compMatch[i].set("isSubbed",false);
 	}
 	
-	//save the company
-	compMatch[i].set("maxProduction",maxProduction);
-	compMatch[i].set("stats",objectStats);
-	compMatch[i].set("marketShare",objectMS);
-	compMatch[i].save();
 }
 
 compMatch.sort(function(a, b){
-	console.log(b.get("networth"));
-	console.log(-a.get("networth"));
-	return b.get("networth")-a.get("networth")});
+  console.log(b.get("networth"));
+  console.log(-a.get("networth"));
+  return b.get("networth")-a.get("networth")});
 
 for ( var i = 0;  i < compMatch.length; i++)
 {
 compMatch[i].set("rank",(i+1));
+companyMatchData.rank = compMatch[i].get("rank");
 //compMatch[i].save();
 console.log(compMatch[i].get("rank") + "_______"+compMatch[i].get("networth"));
 }
+
 return Parse.Object.saveAll(compMatch);
 
 }).then(function (afteSave){
-	
-	return response.success(population);
-})
+	match.set("dataOut",companyMatchDataArray);
+  return Parse.Object.saveAll(match);
+
+}).then(function(saveMatch){
+
+    return response.success(population);
+  })
 });
 
 Parse.Cloud.define("submitSolo", function(request, response) {
