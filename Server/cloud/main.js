@@ -450,29 +450,32 @@ for ( var i = 0;  i < compMatch.length; i++)
 	
 	//define varibles
 	const MAX_CREDIT = 50000;
-	var networth = compMatch[i].get("cashAvailable") + compMatch[i].get("creditLine") + objectStats.profit;
+
+	compMatch[i].set( "networth", compMatch[i].get("cashAvailable") + compMatch[i].get("creditLine") + objectStats.profit);
 	
 	//determine users state
-	if(networth > MAX_CREDIT)
+	if(compMatch[i].get("networth") > MAX_CREDIT)
 	{
 		//adding cash and fill up max credit
 		compMatch[i].set("cashAvailable",networth-MAX_CREDIT);
 		compMatch[i].set("creditLine",MAX_CREDIT);
 	}
-	else if ( networth <= MAX_CREDIT)
+	else if (compMatch[i].get("networth") <= MAX_CREDIT)
 	{
 		//no cash and subtracting what credit you have left
 		compMatch[i].set("cashAvailable",0);
 		compMatch[i].set("creditLine",MAX_CREDIT-networth);
 		
 		//check if player is bankrupt or not then declares bankruptcy
-		if (networth < 0 )
+		if compMatch[i].get("networth") < 0 )
 		{
 			compMatch[i].set("isBankrupt", true);
 		}
 	}
 	
 	
+
+
 	
 	//if company is a bot then calculate the next turn moves and submit
 	if (compMatch[i].get("isBot") == true)
@@ -500,7 +503,10 @@ for ( var i = 0;  i < compMatch.length; i++)
 }
 
 
-
+var CompMatch = Parse.Object.extend("CompMatch");
+var query = new Parse.Query(CompMatch);
+query.equalTo("networth",matchId);
+query.descending("networth");
 
 
 
