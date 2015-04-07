@@ -156,13 +156,15 @@ var Match = Parse.Object.extend("Match");
 var match = new Match();
 var companyIdArray = new Array();
 var isMultiplayer = false;
+var numberOfPlayers = 6;
+var rank = 0;
 //isMultiplayer = request.params.clientMultiplayer;
 
  
   match.set("name",request.params.matchName);
   match.set("gameTime",request.params.matchTime);
   match.set("turn",0);
-  match.set("population",1000000);
+  match.set("population",100000);
   match.set("multiplayer",isMultiplayer);
 
   //create room for match
@@ -180,6 +182,7 @@ queryUser.equalTo("userId", currentUser);
  
   //add the company id to the list
   companyIdArray.push(company[0].id);
+
  
     // Execute any logic that should take place after the object is saved.
     //make an instance of comp match and initialize 
@@ -194,10 +197,31 @@ queryUser.equalTo("userId", currentUser);
     compMatch.set("marketing", 10);
     compMatch.set("isSubbed",false);
     compMatch.set("isBot",false);
-	compMatch.set("capitalTotal",10);
+	compMatch.set("capitalTotal",0);
 	compMatch.set("maxProduction",1000);
 	compMatch.set("cashAvailable",50000);
 	compMatch.set("creditLine",50000);
+	compMatch.set("networth",100000);
+	compMatch.set("isBankrupt",false);
+	compMatch.set("unitCost",7);
+	rank++;
+	compMatch.set("rank",rank);
+	compMatch.set("companyName",company[0].get("company"));
+	
+	var marketShare = {};
+	marketShare.charityMS =  Math.round(1 / numberOfPlayers *100)/100;
+	marketShare.marketingMS =   Math.round(1 / numberOfPlayers*100)/100;
+	marketShare.priceMS =   Math.round(1 / numberOfPlayers*100)/100;
+	marketShare.researchAndDevelopmentMS =   Math.round(1 / numberOfPlayers*100)/100;
+	marketShare.totalMS =  Math.round(1 / numberOfPlayers*100)/100;
+	compMatch.set("marketShare",marketShare);
+	
+	var stats = {}
+	stats.expense = compMatch.get("capital")+compMatch.get("charity")+compMatch.get("researchDevelopment")+compMatch.get("marketing")+(compMatch.get("production")*7);
+	stats.profit = 0;
+	stats.revenue = 0;
+	compMatch.set("stats",stats);
+
  
   //save compMatch
   compMatch.save();
@@ -211,7 +235,7 @@ queryComp.equalTo("isBot", true);
 return queryComp.find();
 }).then(function(bot) {
 //add 5 bots into match
-  for (i =0; i< 5;i++){
+  for (i =0; i< numberOfPlayers-1;i++){
   //create a comp match and initialize variables
     var compMatch = new Parse.Object("CompMatch");
     compMatch.set("companyId",bot[i].id);
@@ -219,7 +243,7 @@ return queryComp.find();
     compMatch.set("capital", Math.floor((Math.random() * 10000) + 1));
     compMatch.set("charity",Math.floor((Math.random() * 10000) + 1));
     compMatch.set("price",Math.floor((Math.random() * 100) + 1));
-    compMatch.set("production", Math.floor((Math.random() * 10000) + 1));
+    compMatch.set("production", Math.floor((Math.random() * 1000) + 1));
     compMatch.set("researchDevelopment", Math.floor((Math.random() * 10000) + 1));
     compMatch.set("marketing", Math.floor((Math.random() * 10000) + 1));
     compMatch.set("isSubbed",true);
@@ -228,6 +252,27 @@ return queryComp.find();
 	compMatch.set("maxProduction",1000);
 	compMatch.set("cashAvailable",50000);
 	compMatch.set("creditLine",50000);
+	compMatch.set("networth",100000);
+	compMatch.set("isBankrupt",false);
+	compMatch.set("unitCost",7);
+	rank++;
+	compMatch.set("rank",rank);
+	compMatch.set("companyName",bot[i].get("company"));
+	
+	
+	var marketShare = {};
+	marketShare.charityMS =  Math.round(1 / numberOfPlayers *100)/100;
+	marketShare.marketingMS =   Math.round(1 / numberOfPlayers*100)/100;
+	marketShare.priceMS =   Math.round(1 / numberOfPlayers*100)/100;
+	marketShare.researchAndDevelopmentMS =   Math.round(1 / numberOfPlayers*100)/100;
+	marketShare.totalMS =  Math.round(1 / numberOfPlayers*100)/100;
+	compMatch.set("marketShare",marketShare);
+	
+	var stats = {}
+	stats.expense = compMatch.get("capital")+compMatch.get("charity")+compMatch.get("researchDevelopment")+compMatch.get("marketing")+(compMatch.get("production")*7);
+	stats.profit = 0;
+	stats.revenue = 0;
+	compMatch.set("stats",stats);
      
     compMatch.save();
  
@@ -306,9 +351,22 @@ var turn = 0;
 var population = 0;
 var matchId = request.params.matchId;
 var totalPopulationSum = 0, totalMarketing = 0, totalResearchAndDevelopment = 0, totalCharity = 0;
-var companyMatchDataArray = new Array();
+
 var Match = Parse.Object.extend("Match");
 var match = new Match();
+
+var companyMatchDataArray = new Array();
+var companyMatchData = {};
+companyMatchData.turn = null;
+companyMatchData.totalMS = null;
+companyMatchData.totalProduction = null;
+companyMatchData.totalInvestment = null;
+companyMatchData.rank = null;
+companyMatchData.companyName = null;
+companyMatchData.production = null;
+companyMatchData.networth = null;
+companyMatchData.companyId = null;
+companyMatchData.maxCarterAmount = null;
 
 //query to find the match
 var queryMatch = new  Parse.Query("Match");
@@ -331,6 +389,9 @@ queryMatch.find().then(function(objectMatch){
   
   //increment for next turn
   match.increment("turn");
+
+  //set turn to data going out
+  companyMatchData.turn = match.get("turn");
   
   //save
   match.save();
@@ -338,6 +399,7 @@ queryMatch.find().then(function(objectMatch){
   //define query to find the individual companies in the match
 var queryComp = new Parse.Query("CompMatch");
 queryComp.equalTo("matchId", match.id);
+queryComp.descending("marketing");
 
 return queryComp.find();
 }).then(function(compMatch){
@@ -366,6 +428,16 @@ for ( var i = 0;  i < compMatch.length; i++)
 	//objects that save the calculations
 	var objectMS = {};
 	var objectStats = {};
+
+  companyMatchData.totalMS = null;
+  companyMatchData.totalProduction = null;
+  companyMatchData.totalInvestment = null;
+  companyMatchData.rank = null;
+  companyMatchData.companyName = null;
+  companyMatchData.production = null;
+  companyMatchData.networth = null;
+  companyMatchData.companyId = null;
+  companyMatchData.maxCarterAmount = null;
 	
 	//find the single population for the company
 	var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
@@ -387,57 +459,62 @@ for ( var i = 0;  i < compMatch.length; i++)
 
 	//get the demand for your product
 	var maxCarterAmount = Math.round(objectMS.totalMS * match.get("population")); 
-
+	console.log("production" + "====" + "max");
+	console.log(compMatch[i].get("production") + "====" + maxCarterAmount);
 	//check if you have to much production for demand
 	if(compMatch[i].get("production") > maxCarterAmount)
 	{
 	//sell the least amount of products that can be sent //save as revenue
-	objectStats.revenue = maxCarterAmount * compMatch[i].get("price");
+	objectStats.revenue = Math.round(maxCarterAmount * compMatch[i].get("price"));
+	console.log("1")
 	}
 	
 	//check if you have just enough procuction for demand
 	else if (compMatch[i].get("production") == maxCarterAmount)
 	{
 	//sell the equal amount of products //save as revenue
-	objectStats.revenue = maxCarterAmount * compMatch[i].get("price");
+	objectStats.revenue = Math.round(maxCarterAmount * compMatch[i].get("price"));
+	console.log("2")
 	}
 	
 	//check if you do not have enough production for demand
 	else if (compMatch[i].get("production") < maxCarterAmount)
 	{
 	// sell the maximum amount of producs possible //save as revenue
-	objectStats.revenue = compMatch[i].get("production") * compMatch[i].get("price");
+	objectStats.revenue = Math.round(compMatch[i].get("production") * compMatch[i].get("price"));
+	console.log("3")
+	console.log(compMatch[i].get("price"));
+	console.log(objectStats.revenue);
 	}
 	else{
 	//error
 	console.log("error 403 WHA");
 	}
+	console.log(compMatch[i].get("companyName"));
 	
 	//long term investment into company is set here //depreciation is needed
 	compMatch[i].set("capitalTotal",compMatch[i].get("capitalTotal") + compMatch[i].get("capital"));
 	
 	
 	
-	//define varibles
-	var pricePerProduct = 0;
-	const MAX_INVESTMENT = 45000000;
+	//define variables
+	var pricePerProduct = 7 - ((compMatch[i].get("capitalTotal"))/75000)
 	
-	//error checking if the investment goes beyound what is expected of the function
-	if (compMatch[i].get("capitalTotal") < MAX_INVESTMENT)
-	{
-		//get price of product
-		pricePerProduct = Math.abs((-(1.5/10000000)*compMatch[i].get("capitalTotal")) + 7);
-	}
-	else
-	{
-		//maximum duduction of price
-		pricePerProduct = Math.abs((-(1.5/10000000)*MAX_INVESTMENT) + 7);
-	}
 	
+	//lowest efficiency possible 
+	if (pricePerProduct < 1)
+	{
+		pricePerProduct = 1;
+	}
+	else{}
+	
+	compMatch[i].set("unitCost",Math.round(pricePerProduct*100)/100);
 	//calculate the total expenses of the turn for the company
-	objectStats.expense = (pricePerProduct * compMatch[i].get("production")) +compMatch[i].get("capital") + compMatch[i].get("researchDevelopment") + compMatch[i].get("marketing") + compMatch[i].get("charity");
+	objectStats.expense = Math.round((pricePerProduct * compMatch[i].get("production")) +compMatch[i].get("capital") + compMatch[i].get("researchDevelopment") + compMatch[i].get("marketing") + compMatch[i].get("charity"));
 	//find the profit obtained for the turn
-	objectStats.profit = objectStats.revenue - objectStats.expense;
+	objectStats.profit = Math.round(objectStats.revenue - objectStats.expense);
+	console.log("revenue = " + objectStats.revenue + " expense = " + objectStats.expense );
+	console.log("profit = " +objectStats.profit);
 	
 	
 	
@@ -446,13 +523,19 @@ for ( var i = 0;  i < compMatch.length; i++)
 	const PRICE_INCREMENT_PER_PRODUCT = 50 , INITIAL_PRODUCTION = 1000;
 	
 	//every 50$ invested 1 product can be made
-	maxProduction = (compMatch[i].get("capitalTotal")/PRICE_INCREMENT_PER_PRODUCT) + INITIAL_PRODUCTION;
+	maxProduction = Math.round((compMatch[i].get("capitalTotal")/PRICE_INCREMENT_PER_PRODUCT) + INITIAL_PRODUCTION);
 	
-	//define varibles
+	//define variables
 	const MAX_CREDIT = 50000;
+<<<<<<< HEAD
 
 	compMatch[i].set( "networth", compMatch[i].get("cashAvailable") + compMatch[i].get("creditLine") + objectStats.profit);
 	
+=======
+	var networth = compMatch[i].get("cashAvailable") + compMatch[i].get("creditLine") + objectStats.profit;
+	console.log("networth = " + networth);
+	compMatch[i].set("networth",networth);
+>>>>>>> MASTER
 	//determine users state
 	if(compMatch[i].get("networth") > MAX_CREDIT)
 	{
@@ -464,19 +547,47 @@ for ( var i = 0;  i < compMatch.length; i++)
 	{
 		//no cash and subtracting what credit you have left
 		compMatch[i].set("cashAvailable",0);
-		compMatch[i].set("creditLine",MAX_CREDIT-networth);
+		compMatch[i].set("creditLine",-MAX_CREDIT-networth);
 		
 		//check if player is bankrupt or not then declares bankruptcy
 		if compMatch[i].get("networth") < 0 )
 		{
 			compMatch[i].set("isBankrupt", true);
+			compMatch[i].set("cashAvailable",0);
+			compMatch[i].set("creditLine",networth);
+			console.log("----BANKRUPT----");
+			console.log(MAX_CREDIT +"CREDIT");
+			console.log(networth+"NETWORTH");
+			console.log(objectStats.profit+"profit")
+			console.log(MAX_CREDIT-networth);
 		}
 	}
+<<<<<<< HEAD
 	
 	
 
 
 	
+=======
+
+    //set some varible for next turn
+  compMatch[i].set("maxProduction",maxProduction);
+  compMatch[i].set("stats",objectStats);
+  compMatch[i].set("marketShare",objectMS);
+
+  companyMatchData.totalMS = objectMS.totalMS;
+  companyMatchData.totalProduction = maxProduction;
+  companyMatchData.totalInvestment = compMatch[i].get("capitalTotal");
+  companyMatchData.companyName = compMatch[i].get("companyName");
+  companyMatchData.production = compMatch[i].get("production");
+  companyMatchData.networth = compMatch[i].get("networth");
+  companyMatchData.companyId = compMatch[i].get("companyId");
+  companyMatchData.maxCarterAmount = maxCarterAmount;
+
+  companyMatchDataArray.push(companyMatchData);
+
+
+>>>>>>> MASTER
 	//if company is a bot then calculate the next turn moves and submit
 	if (compMatch[i].get("isBot") == true)
 	{
@@ -495,13 +606,9 @@ for ( var i = 0;  i < compMatch.length; i++)
     compMatch[i].set("isSubbed",false);
 	}
 	
-	//save the company
-	compMatch[i].set("maxProduction",maxProduction);
-	compMatch[i].set("stats",objectStats);
-	compMatch[i].set("marketShare",objectMS);
-	compMatch[i].save();
 }
 
+<<<<<<< HEAD
 
 var CompMatch = Parse.Object.extend("CompMatch");
 var query = new Parse.Query(CompMatch);
@@ -513,6 +620,31 @@ query.descending("networth");
 //long run this will return data for single player
 return response.success(population);
 })
+=======
+compMatch.sort(function(a, b){
+  console.log(b.get("networth"));
+  console.log(-a.get("networth"));
+  return b.get("networth")-a.get("networth")});
+
+for ( var i = 0;  i < compMatch.length; i++)
+{
+compMatch[i].set("rank",(i+1));
+companyMatchData.rank = compMatch[i].get("rank");
+//compMatch[i].save();
+console.log(compMatch[i].get("rank") + "_______"+compMatch[i].get("networth"));
+}
+
+return Parse.Object.saveAll(compMatch);
+
+}).then(function (afteSave){
+	match.set("dataOut",companyMatchDataArray);
+  return Parse.Object.saveAll(match);
+
+}).then(function(saveMatch){
+
+    return response.success(population);
+  })
+>>>>>>> MASTER
 });
 
 Parse.Cloud.define("submitSolo", function(request, response) {
