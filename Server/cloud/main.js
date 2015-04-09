@@ -343,7 +343,29 @@ var totalPopulationSum = 0, totalMarketing = 0, totalResearchAndDevelopment = 0,
 
 var Match = Parse.Object.extend("Match");
 var match = new Match();
+var numberOfTurns
 
+var queryM = new  Parse.Query("Match");
+queryM.equalTo("objectId",matchId);
+queryM.find({
+success: function(match){
+numberOfTurns = match[0].get("turn")
+response.success("works");
+},
+error: function(error){
+  console.log("gameover failed");
+  response.error(error);
+}
+
+})
+
+
+if (numberOfTurns > 12){
+// MARCO work
+gameOver(matchId);
+
+}
+else if (numberOfTurns < 12){
 //var companyMatchDataArray = new Array();
 //var companyMatchData = {};
 //companyMatchData.turn = null;
@@ -620,6 +642,8 @@ return Parse.Object.saveAll(compMatch);
 
     return response.success(population);
   })
+};
+
 });
 
 Parse.Cloud.define("submitSolo", function(request, response) {
@@ -667,4 +691,209 @@ return company.save();
 return response.success(true);
 })
 });
+
+function gameOver(match){
+// game over function , saves the user reusults , and than deletes the match 
+
+// this can be replaced with the match query which is done at the bottom..
+var matchid=match;
+
+var CompMatch = Parse.Object.extend("CompMatch");
+
+// query to get the place of the users 
+var query = new Parse.Query("CompMatch");
+query.equalTo("matchId" , matchid);
+query.descending("networth");
+
+ 
+query.find().then(function(rankings){
+  
+//get the winner
+
+var rank1 = rankings[0].get("networth");
+company1 = rankings[0].get("companyName");
+companyId1 = rankings[0].get("companyId");
+console.log(companyId1);
+var Company = Parse.Object.extend("Company");
+var query1 = new Parse.Query("Company");
+query1.equalTo("objectId" , rankings[0].get("companyId"));
+
+query1.find({
+
+    success: function(usercompany) {
+      //increase the users win loss record
+       
+    usercompany[0].increment("gamesTotal");
+    usercompany[0].increment("gamesWon");
+   console.log(usercompany[0]);
+   
+
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+
+
+//get the second place 
+var rank2 = rankings[1].get("networth");
+company2 = rankings[1].get("companyName");
+companyId2 = rankings[1].get("companyId");
+var query2 = new Parse.Query("Company");
+query2.equalTo("objectId" , rankings[1].get("companyId"));
+query2.find({
+
+    success: function(usercompany) {
+//increase the users win loss record
+    usercompany[0].increment("gamesTotal");
+    usercompany[0].increment("gamesWon");
+   usercompany[0].save();
+   
+
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+
+//get third place 
+var rank3 = rankings[2].get("networth");
+company3 = rankings[2].get("companyName");
+var query3 = new Parse.Query("Company");
+companyId3 = rankings[2].get("companyId");
+query3.equalTo("objectId" , rankings[2].get("companyId"));
+query3.find({
+
+    success: function(usercompany) {
+ //increase the users win loss record
+    usercompany[0].increment("gamesTotal");
+    
+    usercompany[0].increment("gameslost");
+   usercompany[0].save();
+
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+
+// get four place
+var rank4 = rankings[3].get("networth");
+company4 = rankings[3].get("companyName");
+var query4 = new Parse.Query("Company");
+companyId4 = rankings[3].get("companyId");
+query4.equalTo("objectId" , rankings[3].get("companyId"));
+query4.find({
+
+    success: function(usercompany) {
+ //increase the users win loss record
+    usercompany[0].increment("gamesTotal");
+    
+    usercompany[0].increment("gameslost");
+   usercompany[0].save();
+
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+//get fith place
+var rank5 = rankings[4].get("networth");
+company5 = rankings[4].get("companyName");
+companyId5 = rankings[4].get("companyId");
+var query5 = new Parse.Query("Company");
+query5.equalTo("objectId" , rankings[4].get("companyId"));
+query5.find({
+
+    success: function(usercompany) {
+ //increase the users win loss record
+    usercompany[0].increment("gamesTotal");
+   
+    usercompany[0].increment("gamesLost");
+   usercompany[0].save();
+
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+
+//get sixth place 
+var rank6 = rankings[5].get("networth");
+company6 = rankings[5].get("companyName");
+companyId6 = rankings[5].get("companyId");
+var query6 = new Parse.Query("Company");
+query6.equalTo("objectId" , rankings[5].get("companyId"));
+query6.find({
+ 
+    success: function(usercompany) {
+//increase the users win loss record
+    usercompany[0].increment("gamesTotal");
+    
+    usercompany[0].increment("gameslost");
+   usercompany[0].save();
+
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+
+
+
+// contains the company names
+
+var company1;
+var company2;
+var company3;
+var company4;
+var company5;
+var company6;
+// get winnner var for console log
+var winner1 = company1;
+var winner2 = company2;
+var winner3 = company3;
+
+
+
+
+
+
+
+
+
+alert("The winner is " + winner1 + " : second winner"+ winner2 + " : the third winner is " + winner3);
+var Match = Parse.Object.extend("Match");
+var matchquery = new Parse.Query("Match");
+matchquery.equalTo("objectId" , matchid);
+matchquery.find({
+
+success: function(match){
+var matchname = match[0].get("name");
+match[0].destroy({
+  success: function(match) {
+    // The object was deleted from the Parse Cloud.
+    console.log("match : " + matchname + " is deleted" );
+  },
+  error: function(match, error) {
+    // The delete failed.
+    // error is a Parse.Error with an error code and message.
+  }
+});
+
+},
+error: function(error){
+    console.log("not working");
+}
+
+});
+
+return null
+}).then(function(result){
+
+
+})
+
+};
+
 
