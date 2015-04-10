@@ -625,7 +625,8 @@ return Parse.Object.saveAll(compMatch);
 
   if ( match.get("turn") > 3){
 // MARCO work
-gameOver(matchId);
+gameOver(match.get("objectid"));
+console.log("you were supposed to deleted it");
 
 }
 else if (match.get("turn")  <= 3){
@@ -686,9 +687,10 @@ return response.success(true);
 
 function gameOver(match){
 // game over function , saves the user reusults , and than deletes the match 
-
+console.log("Im inside the match");
 // this can be replaced with the match query which is done at the bottom..
 var matchid=match;
+
 
 var CompMatch = Parse.Object.extend("CompMatch");
 
