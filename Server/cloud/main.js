@@ -343,29 +343,12 @@ var totalPopulationSum = 0, totalMarketing = 0, totalResearchAndDevelopment = 0,
 
 var Match = Parse.Object.extend("Match");
 var match = new Match();
-var numberOfTurns
-
-var queryM = new  Parse.Query("Match");
-queryM.equalTo("objectId",matchId);
-queryM.find({
-success: function(match){
-numberOfTurns = match[0].get("turn")
-response.success("works");
-},
-error: function(error){
-  console.log("gameover failed");
-  response.error(error);
-}
-
-})
+//var numberOfTurns;
 
 
-if (numberOfTurns > 12){
-// MARCO work
-gameOver(matchId);
 
-}
-else if (numberOfTurns < 12){
+
+
 //var companyMatchDataArray = new Array();
 //var companyMatchData = {};
 //companyMatchData.turn = null;
@@ -640,9 +623,18 @@ return Parse.Object.saveAll(compMatch);
 
 }).then(function(saveMatch){
 
-    return response.success(population);
+  if ( match.get("turn") > 3){
+// MARCO work
+gameOver(matchId);
+
+}
+else if (match.get("turn")  <= 3){
+
+}
+
+    return response.success("turn:"+ match.get("turn"));
   })
-};
+
 
 });
 
