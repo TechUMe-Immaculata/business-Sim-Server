@@ -625,7 +625,30 @@ return Parse.Object.saveAll(compMatch);
 
   if ( match.get("turn") > 3){
 // MARCO work
-gameOver(match.get("objectid"));
+
+var  deleteMatch= {};
+deleteMatch.matchId = match.id;
+
+
+Parse.Cloud.run('gameOver', deleteMatch, {
+
+
+    success: function(works){
+
+      console.log("it was deleted");
+ 
+        
+    },
+    error:function(error){
+
+        console.log("cloudy did not work");
+    }
+}); 
+
+console.log("tress" + match.id);
+console.log("lol" + match.get("turn"));
+console.log("sharks : " + match.id);
+
 console.log("you were supposed to deleted it");
 
 }
@@ -685,14 +708,11 @@ return response.success(true);
 })
 });
 
-function gameOver(match){
-// game over function , saves the user reusults , and than deletes the match 
-console.log("Im inside the match");
-// this can be replaced with the match query which is done at the bottom..
-var matchid=match;
 
 
-var CompMatch = Parse.Object.extend("CompMatch");
+Parse.Cloud.define("gameOver", function(request, response) {
+var matchid = request.params.matchId;
+CompMatch = Parse.Object.extend("CompMatch");
 
 // query to get the place of the users 
 var query = new Parse.Query("CompMatch");
@@ -856,7 +876,7 @@ var winner3 = company3;
 
 
 
-alert("The winner is " + winner1 + " : second winner"+ winner2 + " : the third winner is " + winner3);
+var plot = "The winner is " + winner1 + " : second winner"+ winner2 + " : the third winner is " + winner3;
 var Match = Parse.Object.extend("Match");
 var matchquery = new Parse.Query("Match");
 matchquery.equalTo("objectId" , matchid);
@@ -874,10 +894,12 @@ match[0].destroy({
     // error is a Parse.Error with an error code and message.
   }
 });
-
+response.success(plot);
 },
 error: function(error){
     console.log("not working");
+
+    response.error("Nopeee")
 }
 
 });
@@ -888,6 +910,7 @@ return null
 
 })
 
-};
+})
+
 
 

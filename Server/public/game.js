@@ -228,11 +228,11 @@ error : function(error){
 });
 };
 
-function gameOver(){
+function gameOver(cop){
 // game over function , saves the user reusults , and than deletes the match 
 
 // this can be replaced with the match query which is done at the bottom..
-var matchid=localStorage.getItem("matchid");
+var matchid=cop;
 
 var CompMatch = Parse.Object.extend("CompMatch");
 
