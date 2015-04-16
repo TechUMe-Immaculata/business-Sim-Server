@@ -145,6 +145,21 @@ var matchid=localStorage.getItem("matchid");
 
 var compID = localStorage.getItem("companyId");
 
+//test turn display function
+
+var queryM = new  Parse.Query("Match");
+queryM.equalTo("objectId",matchid);
+queryM.find({
+success: function(match){
+numberOfTurns = match[0].get("turn");
+document.getElementById('turns').innerHTML = " quarter: " + numberOfTurns;
+
+},
+error: function(error){
+  console.log("gameover failed");
+}
+
+})
 
 var Match = Parse.Object.extend("Match");
 var CompMatch = Parse.Object.extend("CompMatch");
@@ -188,7 +203,7 @@ var xMarketing = document.getElementById("marketing");
 xMarketing.value = queryMarketing;
 
 
- document.getElementById('labelCapital').innerHTML = " Chapital : " + querycapital;
+ document.getElementById('labelCapital').innerHTML = " Capital : " + querycapital;
 
  document.getElementById('labelPrice').innerHTML = " Production :" +queryPrice;
 
@@ -513,20 +528,7 @@ var  match = {};
 match.matchId = matchid;
 console.log("matchid");
 
-Parse.Cloud.run('submitSolo', playerstats, {
 
-
-    success: function(works){
-
-
- 
-        
-    },
-    error:function(error){
-
-        console.log("Nah boi");
-    }
-});
 
 
 

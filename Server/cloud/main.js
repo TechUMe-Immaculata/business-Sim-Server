@@ -171,6 +171,7 @@ var rank = 0;
   match.set("room", currentRoom);
   match.save().then(function(afterSave)
   {
+    //deeee
  
 //create a query to find the user creating the match
 var queryUser = new Parse.Query("Company");
@@ -281,7 +282,7 @@ companyIdArray.push(bot[i].id);
  
 match.set("companyIds",companyIdArray);
  
- 
+
 match.save();
  
   var returnData = {};
@@ -294,9 +295,11 @@ match.save();
    
   },function(error){
   console.log("error with bot");  
-});
- 
-});
+}
+})
+//gold
+
+
 Parse.Cloud.define("logIn", function(request, response) {
 
 //console.log("AAAAAA");
@@ -550,7 +553,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 		compMatch[i].set("creditLine",-MAX_CREDIT-networth);
 		
 		//check if player is bankrupt or not then declares bankruptcy
-		if compMatch[i].get("networth") < 0 )
+		if (compMatch[i].get("networth") < 0 )
 		{
 			compMatch[i].set("isBankrupt", true);
 			compMatch[i].set("cashAvailable",0);
@@ -632,7 +635,7 @@ return response.success(population);
 })
 
 compMatch.sort(function(a, b){
-  return b.get("networth")-a.get("networth")});
+  return b.get("networth")-a.get("networth");
 
 for ( var i = 0;  i < compMatch.length; i++)
 {
@@ -657,7 +660,7 @@ return Parse.Object.saveAll(compMatch);
 }).then(function(saveMatch){
 
     return response.success(population);
-  })
+  
 
 });
 
