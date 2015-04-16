@@ -1,0 +1,54 @@
+<html>
+<head>>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.4.min.js"></script>
+  <script type="text/javascript" src="game.js"></script>
+
+<script type="text/javascript">
+
+
+window.onload = function e(){
+	var y = loaduserstats();
+}
+
+
+</script>
+
+</head>
+<body>
+<script>
+Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6YjkuOq9leznJ4UguavX6bdt");
+var currentUser = Parse.User.current();
+
+
+</script>
+
+<button type="button" onclick="testNetworth()">test networth</button>
+<li><label id="turns">Quartar</label> 
+ <li><label id="labelCapital"for="captial">Capital</label> 
+<input id="capital" placeholder="Captal" type="number" min="1" max="*usercapital *"/>
+
+ <li><label id="labelPrice" for="price">Price</label> 
+<input id="price" type="number" placeholder="Product Price" min="1" max="*userprice *">
+
+ <li><label id="labelCharity" for="charity">Charity</label> 
+<input id="charity" type="number" min="1" placeholder="Charity Spending" max="100"/>
+
+ <li><label id="labelProduction" for="production">Username</label> 
+<input id="production" type="number" placeholder="Production rate" min="1" max="100"/>
+
+ <li><label id="labelResearchDevelopment" for="researchDevelopment">ResearchDev</label> 
+<input id="researchDevelopment" type="number" placeholder="Research Development" min="1" max="100"/>
+
+ <li><label id="labelMarketing" for="marketing">Marketing</label> 
+<input id="marketing" type="number" placeholder="Marketing" min="1" max="*100"/>
+
+
+
+
+<button type="button" onclick="playerSubmit()">submit</button></li>  
+
+
+<button type="button" onclick="gameOver()"> Gameover </button>
+</body>
+</html>

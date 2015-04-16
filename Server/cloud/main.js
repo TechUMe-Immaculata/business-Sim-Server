@@ -70,6 +70,7 @@ query.find({
 
 Parse.Cloud.define("signUp", function(request, response) {
 
+//Marco
 var user = new Parse.User();
 var company = Parse.Object.extend('Company')
 
@@ -149,6 +150,7 @@ query.find({
 Parse.Cloud.define("createMatch", function(request, response) {
  
 //define variables
+var currentRoom= request.params.matchroom;
 var currentUser = request.params.objectId;
 var Match = Parse.Object.extend("Match");
 var match = new Match();
@@ -164,8 +166,12 @@ var rank = 0;
   match.set("turn",0);
   match.set("population",100000);
   match.set("multiplayer",isMultiplayer);
+
+  //create room for match
+  match.set("room", currentRoom);
   match.save().then(function(afterSave)
   {
+    //deeee
  
 //create a query to find the user creating the match
 var queryUser = new Parse.Query("Company");
@@ -276,7 +282,7 @@ companyIdArray.push(bot[i].id);
  
 match.set("companyIds",companyIdArray);
  
- 
+
 match.save();
  
   var returnData = {};
@@ -289,9 +295,11 @@ match.save();
    
   },function(error){
   console.log("error with bot");  
-});
- 
-});
+}
+})
+//gold
+
+
 Parse.Cloud.define("logIn", function(request, response) {
 
 //console.log("AAAAAA");
@@ -336,6 +344,12 @@ queryUser.find({
 
 
 Parse.Cloud.define("turn", function(request, response) {
+
+
+
+//increase population exponetinaly but slowly
+
+
 var turn = 0;
 var population = 0;
 var matchId = request.params.matchId;
@@ -344,18 +358,18 @@ var totalPopulationSum = 0, totalMarketing = 0, totalResearchAndDevelopment = 0,
 var Match = Parse.Object.extend("Match");
 var match = new Match();
 
-var companyMatchDataArray = new Array();
-var companyMatchData = {};
-companyMatchData.turn = null;
-companyMatchData.totalMS = null;
-companyMatchData.totalProduction = null;
-companyMatchData.totalInvestment = null;
-companyMatchData.rank = null;
-companyMatchData.companyName = null;
-companyMatchData.production = null;
-companyMatchData.networth = null;
-companyMatchData.companyId = null;
-companyMatchData.maxCarterAmount = null;
+//var companyMatchDataArray = new Array();
+//var companyMatchData = {};
+//companyMatchData.turn = null;
+//companyMatchData.totalMS = null;
+//companyMatchData.totalProduction = null;
+//companyMatchData.totalInvestment = null;
+//companyMatchData.rank = null;
+//companyMatchData.companyName = null;
+//companyMatchData.production = null;
+//companyMatchData.networth = null;
+//companyMatchData.companyId = null;
+//companyMatchData.maxCarterAmount = null;
 
 //query to find the match
 var queryMatch = new  Parse.Query("Match");
@@ -380,7 +394,7 @@ queryMatch.find().then(function(objectMatch){
   match.increment("turn");
 
   //set turn to data going out
-  companyMatchData.turn = match.get("turn");
+  //companyMatchData.turn = match.get("turn");
   
   //save
   match.save();
@@ -418,15 +432,15 @@ for ( var i = 0;  i < compMatch.length; i++)
 	var objectMS = {};
 	var objectStats = {};
 
-  companyMatchData.totalMS = null;
-  companyMatchData.totalProduction = null;
-  companyMatchData.totalInvestment = null;
-  companyMatchData.rank = null;
-  companyMatchData.companyName = null;
-  companyMatchData.production = null;
-  companyMatchData.networth = null;
-  companyMatchData.companyId = null;
-  companyMatchData.maxCarterAmount = null;
+ // companyMatchData.totalMS = null;
+ // companyMatchData.totalProduction = null;
+ // companyMatchData.totalInvestment = null;
+ // companyMatchData.rank = null;
+ // companyMatchData.companyName = null;
+ // companyMatchData.production = null;
+  //companyMatchData.networth = null;
+ // companyMatchData.companyId = null;
+ // companyMatchData.maxCarterAmount = null;
 	
 	//find the single population for the company
 	var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
@@ -516,51 +530,75 @@ for ( var i = 0;  i < compMatch.length; i++)
 	
 	//define variables
 	const MAX_CREDIT = 50000;
+
+
+	compMatch[i].set( "networth", compMatch[i].get("cashAvailable") + compMatch[i].get("creditLine") + objectStats.profit);
+	
+
 	var networth = compMatch[i].get("cashAvailable") + compMatch[i].get("creditLine") + objectStats.profit;
 	console.log("networth = " + networth);
 	compMatch[i].set("networth",networth);
+
 	//determine users state
-	if(networth > MAX_CREDIT)
+	if(compMatch[i].get("networth") > MAX_CREDIT)
 	{
-		//adding cash and fill up mac credit
+		//adding cash and fill up max credit
 		compMatch[i].set("cashAvailable",networth-MAX_CREDIT);
 		compMatch[i].set("creditLine",MAX_CREDIT);
 	}
-	else if ( networth <= MAX_CREDIT)
+	else if (compMatch[i].get("networth") <= MAX_CREDIT)
 	{
 		//no cash and subtracting what credit you have left
 		compMatch[i].set("cashAvailable",0);
 		compMatch[i].set("creditLine",-MAX_CREDIT-networth);
 		
 		//check if player is bankrupt or not then declares bankruptcy
-		if (networth < 0 )
+		if (compMatch[i].get("networth") < 0 )
 		{
 			compMatch[i].set("isBankrupt", true);
 			compMatch[i].set("cashAvailable",0);
 			compMatch[i].set("creditLine",networth);
-			console.log("----BANKRUPT----");
-			console.log(MAX_CREDIT +"CREDIT");
-			console.log(networth+"NETWORTH");
-			console.log(objectStats.profit+"profit")
-			console.log(MAX_CREDIT-networth);
+			//console.log("----BANKRUPT----");
+			//console.log(MAX_CREDIT +"CREDIT");
+			//console.log(networth+"NETWORTH");
+			//console.log(objectStats.profit+"profit")
+			//console.log(MAX_CREDIT-networth);
 		}
 	}
+
+	
+	
+
+
+	
+
 
     //set some varible for next turn
   compMatch[i].set("maxProduction",maxProduction);
   compMatch[i].set("stats",objectStats);
   compMatch[i].set("marketShare",objectMS);
 
-  companyMatchData.totalMS = objectMS.totalMS;
-  companyMatchData.totalProduction = maxProduction;
-  companyMatchData.totalInvestment = compMatch[i].get("capitalTotal");
-  companyMatchData.companyName = compMatch[i].get("companyName");
-  companyMatchData.production = compMatch[i].get("production");
-  companyMatchData.networth = compMatch[i].get("networth");
-  companyMatchData.companyId = compMatch[i].get("companyId");
-  companyMatchData.maxCarterAmount = maxCarterAmount;
+ // companyMatchData.totalMS = objectMS.totalMS;
+  //companyMatchData.totalProduction = maxProduction;
+ // companyMatchData.totalInvestment = compMatch[i].get("capitalTotal");
+  //.companyName = compMatch[i].get("companyName");
+  //companyMatchData.production = compMatch[i].get("production");
+  //companyMatchData.networth = compMatch[i].get("networth");
+  //companyMatchData.companyId = compMatch[i].get("companyId");
+ // companyMatchData.maxCarterAmount = maxCarterAmount;
 
-  companyMatchDataArray.push(companyMatchData);
+ // var object = companyMatchData;
+  //companyMatchDataArray.push(object);
+ // console.log("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+ // console.log(companyMatchData);
+  //console.log(companyMatchDataArray[i]);
+  //if ( i == 0)
+ // {}
+ // else{
+ // console.log(companyMatchDataArray[i-1]);
+  //}
+
+
 
 
 	//if company is a bot then calculate the next turn moves and submit
@@ -583,15 +621,26 @@ for ( var i = 0;  i < compMatch.length; i++)
 	
 }
 
+
+
+var CompMatch = Parse.Object.extend("CompMatch");
+var query = new Parse.Query(CompMatch);
+query.equalTo("networth",matchId);
+query.descending("networth");
+
+
+
+//long run this will return data for single player
+return response.success(population);
+})
+
 compMatch.sort(function(a, b){
-  console.log(b.get("networth"));
-  console.log(-a.get("networth"));
-  return b.get("networth")-a.get("networth")});
+  return b.get("networth")-a.get("networth");
 
 for ( var i = 0;  i < compMatch.length; i++)
 {
 compMatch[i].set("rank",(i+1));
-companyMatchData.rank = compMatch[i].get("rank");
+//companyMatchDataArray[i].rank = compMatch[i].get("rank");
 //compMatch[i].save();
 console.log(compMatch[i].get("rank") + "_______"+compMatch[i].get("networth"));
 }
@@ -599,13 +648,20 @@ console.log(compMatch[i].get("rank") + "_______"+compMatch[i].get("networth"));
 return Parse.Object.saveAll(compMatch);
 
 }).then(function (afteSave){
-	match.set("dataOut",companyMatchDataArray);
+	//match.set("dataOut",companyMatchDataArray);
+	//console.log(companyMatchDataArray[0]);
+	//console.log(companyMatchDataArray[1]);
+	//console.log(companyMatchDataArray[2]);
+	//console.log(companyMatchDataArray[3]);
+	//console.log(companyMatchDataArray[4]);
+	//console.log(companyMatchDataArray[5]);
   return Parse.Object.saveAll(match);
 
 }).then(function(saveMatch){
 
     return response.success(population);
-  })
+  
+
 });
 
 Parse.Cloud.define("submitSolo", function(request, response) {
@@ -651,6 +707,296 @@ return company.save();
 {
 //send info back to client
 return response.success(true);
+
+
+
 })
+
+
 });
+
+function gameOver(){
+// game over function , saves the user reusults , and than deletes the match 
+
+// this can be replaced with the match query which is done at the bottom..
+var matchid=localStorage.getItem("matchid");
+
+var CompMatch = Parse.Object.extend("CompMatch");
+
+// query to get the place of the users 
+var query = new Parse.Query("CompMatch");
+query.equalTo("matchId" , matchid);
+query.descending("networth");
+
+ 
+query.find().then(function(rankings){
+  
+//get the winner
+
+var rank1 = rankings[0].get("networth");
+company1 = rankings[0].get("companyName");
+companyId1 = rankings[0].get("companyId");
+console.log(companyId1);
+var Company = Parse.Object.extend("Company");
+var query1 = new Parse.Query("Company");
+query1.equalTo("objectId" , rankings[0].get("companyId"));
+
+query1.find({
+
+    success: function(usercompany) {
+      //increase the users win loss record
+       
+    usercompany[0].increment("gamesTotal");
+    usercompany[0].increment("gamesWon");
+   console.log(usercompany[0]);
+   
+
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+
+
+//get the second place 
+var rank2 = rankings[1].get("networth");
+company2 = rankings[1].get("companyName");
+companyId2 = rankings[1].get("companyId");
+var query2 = new Parse.Query("Company");
+query2.equalTo("objectId" , rankings[1].get("companyId"));
+query2.find({
+
+    success: function(usercompany) {
+//increase the users win loss record
+    usercompany[0].increment("gamesTotal");
+    usercompany[0].increment("gamesWon");
+   usercompany[0].save();
+   
+
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+
+//get third place 
+var rank3 = rankings[2].get("networth");
+company3 = rankings[2].get("companyName");
+var query3 = new Parse.Query("Company");
+companyId3 = rankings[2].get("companyId");
+query3.equalTo("objectId" , rankings[2].get("companyId"));
+query3.find({
+
+    success: function(usercompany) {
+ //increase the users win loss record
+    usercompany[0].increment("gamesTotal");
+    
+    usercompany[0].increment("gameslost");
+   usercompany[0].save();
+
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+
+// get four place
+var rank4 = rankings[3].get("networth");
+company4 = rankings[3].get("companyName");
+var query4 = new Parse.Query("Company");
+companyId4 = rankings[3].get("companyId");
+query4.equalTo("objectId" , rankings[3].get("companyId"));
+query4.find({
+
+    success: function(usercompany) {
+ //increase the users win loss record
+    usercompany[0].increment("gamesTotal");
+    
+    usercompany[0].increment("gameslost");
+   usercompany[0].save();
+
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+//get fith place
+var rank5 = rankings[4].get("networth");
+company5 = rankings[4].get("companyName");
+companyId5 = rankings[4].get("companyId");
+var query5 = new Parse.Query("Company");
+query5.equalTo("objectId" , rankings[4].get("companyId"));
+query5.find({
+
+    success: function(usercompany) {
+ //increase the users win loss record
+    usercompany[0].increment("gamesTotal");
+   
+    usercompany[0].increment("gamesLost");
+   usercompany[0].save();
+
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+
+//get sixth place 
+var rank6 = rankings[5].get("networth");
+company6 = rankings[5].get("companyName");
+companyId6 = rankings[5].get("companyId");
+var query6 = new Parse.Query("Company");
+query6.equalTo("objectId" , rankings[5].get("companyId"));
+query6.find({
+ 
+    success: function(usercompany) {
+//increase the users win loss record
+    usercompany[0].increment("gamesTotal");
+    
+    usercompany[0].increment("gameslost");
+   usercompany[0].save();
+
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+
+
+
+// contains the company names
+
+var company1;
+var company2;
+var company3;
+var company4;
+var company5;
+var company6;
+// get winnner var for console log
+var winner1 = company1;
+var winner2 = company2;
+var winner3 = company3;
+
+
+
+
+
+
+
+
+
+alert("The winner is " + winner1 + " : second winner"+ winner2 + " : the third winner is " + winner3);
+var Match = Parse.Object.extend("Match");
+var matchquery = new Parse.Query("Match");
+matchquery.equalTo("objectId" , matchid);
+matchquery.find({
+
+success: function(match){
+var matchname = match[0].get("name");
+match[0].destroy({
+  success: function(match) {
+    // The object was deleted from the Parse Cloud.
+    console.log("match : " + matchname + " is deleted" );
+  },
+  error: function(match, error) {
+    // The delete failed.
+    // error is a Parse.Error with an error code and message.
+  }
+});
+
+},
+error: function(error){
+    console.log("not working");
+}
+
+});
+
+return null
+}).then(function(result){
+
+
+})
+
+};
+
+
+
+
+/*
+Parse.Cloud.define("submitSolo", function(request, response) {
+
+var companyId = request.params.companyId; 
+var matchId = request.params.matchId; 
+
+
+//set up a query
+var CompMatch = Parse.Object.extend("CompMatch");
+var query = new Parse.Query(CompMatch);
+
+var ch =request.params.clientCharity;
+query.equalTo("matchId",matchId);
+query.equalTo("companyId",companyId);
+
+<<<<<<< HEAD
+
+
+ /*   console.log(request.params);
+ var Company = Parse.Object.extend("Company");
+ var objectList = new Array();
+  //saving data
+  alert("before");
+ for (var i = 0; i < 6; i++)
+ {
+	alert("after");
+	console.log(i);
+	var company = new Company();
+	 
+	//var clientUserName = request.params.playerName;
+	var  matchId = "1";
+	 
+	company.set("matchId", matchId);
+	company.set("UserName","bot"+i);
+	  
+	company.set("capital",0);
+	company.set("price",0);
+	company.set("production",0);
+	company.set("charity",0);
+	company.set("researchDevelopment",0);
+=======
+query.first({
+  success: function(company) {
+  console.log("after");
+    // The object was retrieved successfully.
+	company.set("capital", 777);
+	company.set("researchDevelopment",777);
+	company.set("production", 777);
+	company.set("marketing",777);
+	company.set("price",7);
+	company.set("charity",Number(ch));
+>>>>>>> Christopher-Blackman
+	
+	company.save(null, {
+  success: function(gameScore) {
+    // Execute any logic that should take place after the object is saved.
+    //alert('New object created with objectId: ' + gameScore.id);
+	response.success(true);
+  },
+  error: function(gameScore, error) {
+    // Execute any logic that should take place if the save fails.
+    // error is a Parse.Error with an error code and message.
+    //alert('Failed to create new object, with error code: ' + error.message);
+  }
+});
+  },
+  error: function(error){
+    // The object was not retrieved successfully.
+    // error is a Parse.Error with an error code and message.
+    console.log("error    = " + error.code + "    " + error.message );
+	response.error("shit");
+  }
+});
+
+});
+<<<<<<< HEAD
+ */
 
