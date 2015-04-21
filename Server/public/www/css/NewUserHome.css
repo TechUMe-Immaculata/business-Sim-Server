@@ -1,0 +1,123 @@
+ body, html {
+          height: 100%;
+          margin: 0;
+          overflow:hidden;
+          font-family: helvetica;
+          font-weight: 100;
+          color: black;
+      }
+
+#screenDescription{
+  color: white;
+  font-size: 22.5px;
+  font-weight: bold;
+
+}
+
+#guestPlayButton {
+
+  font-size: 23px;
+  width: 310px;
+  margin-top: 375px;
+ /* margin-left: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;*/
+}
+
+ 
+
+
+
+  #serverLoginButton {
+  /* Locked Colour. */
+  background: gray;
+  /* THIS IS THE PROPER BUTTON COLOUR!
+  background: orange;
+  */
+  border-radius: 0px;
+  font-family: Georgia;
+  
+  /* LOCKED FONT COLOUR */
+  color: black; 
+  /* THIS IS THE PROPER FONT COLOUR!
+  color: white;
+  */
+  font-size: 23px;
+  border: solid #000000 2px;
+  text-decoration: none;
+  width: 310px;
+  margin-top: 50px;
+/*margin-left: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;*/
+}
+
+
+
+#registerButton {
+   /* Locked Colour. */
+  background: gray;
+  /* THIS IS THE PROPER BUTTON COLOUR!
+  background: orange;
+  */
+  border-radius: 0px;
+  font-family: Georgia;
+  
+  /* LOCKED FONT COLOUR */
+  color: black; 
+  /* THIS IS THE PROPER FONT COLOUR!
+  color: white;
+  */
+
+  font-size: 23px;
+  border: solid #000000 2px;
+  text-decoration: none;
+  width: 310px;
+  margin-top: 50px;
+/*margin-left: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;*/
+}
+
+
+
+#facebookLoginButton {
+  background: orange;
+ 
+  border-radius: 0px;
+  font-family: Georgia;
+  color: white; 
+  font-size: 23px;
+
+  border: solid #000000 2px;
+  text-decoration: none;
+  width: 350px;
+  margin-top: 20px;
+  margin-left: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+
+      /* Space behind the buttons */
+      .container {
+           
+          position: relative;
+          height: 100%;
+          width: 100%;
+          left: 0;
+
+      }
+
+      
+      /* The bar you can swipe */
+      #banner{
+          position: absolute;
+          width: 100%;
+          height: 8%;
+          left: 0;
+          top: 0;
+          background: #dd4814;
+          z-index: 0;
+      }
+      /*The Sidebar*/
