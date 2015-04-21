@@ -1,0 +1,83 @@
+ body, html {
+          height: 100%;
+          margin: 0;
+          overflow:hidden;
+          font-family: helvetica;
+          font-weight: 100;
+          color: black;
+      }
+
+#screenDescription{
+  bottom: -10px;
+  position: absolute;
+  left: 35%;
+  color: white;
+  font-size: 22.5px;
+  font-weight: bold;
+
+}
+ /* Space behind the buttons */
+      .container {
+          background-color:#E6E6E6; 
+          position: relative;
+          height: 100%;
+          width: 100%;
+          left: 0;
+          -webkit-transition:  left 0.4s ease-in-out;
+          -moz-transition:  left 0.4s ease-in-out;
+          -ms-transition:  left 0.4s ease-in-out;
+          -o-transition:  left 0.4s ease-in-out;
+          transition:  left 0.4s ease-in-out;
+      }
+      .container.open-sidebar {
+          left: 200px;
+      }
+      
+      /* The bar you can swipe */
+      .swipe-area {
+          position: absolute;
+          width: 100%;
+          height: 8%;
+          left: 0;
+          top: 0;
+          background: orange;
+          z-index: 0;
+      }
+      /*The Sidebar*/
+      #sidebar {
+          background: #585858;
+          position: absolute;
+          width: 200px;
+          height: 100%;
+          left: -200px;
+          border-width: 5px;
+          border-style: solid;
+          border color: black;
+          box-sizing: border-box;
+          -moz-box-sizing: border-box;
+      }
+    
+#enterButton
+{
+  position: absolute;
+  background: orange;
+
+  border-radius: 0px;
+  font-family: Georgia;
+  color: white; 
+  font-size: 23px;
+
+  border: solid #000000 2px;
+  text-decoration: none;
+  width: 90%;
+  height: 10%;
+  top:73%;
+  left: 5%;
+}
+
+#inputFields
+{
+  position: absolute;
+   top:55%;
+  left: 5%;
+}

@@ -1,0 +1,117 @@
+<html>
+<head>
+	 <title> Choose YOUR COMPANY! </title>
+
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.4.min.js"></script>
+
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	
+    <title>Register</title>
+
+    <!--does not work with internet explorer 6 and 7 for jquery 2.1-->
+    <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.4.min.js"></script>
+      <!--Link to the css file Home.css -->
+    <link rel="stylesheet" type="text/css" href="css/register.css"/>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+
+  </head>
+<body>
+
+<script>
+function GetCompany(){
+Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6YjkuOq9leznJ4UguavX6bdt");
+		// create company 
+		var userCompanyName = this.$("#userCompany").val();
+		var Company = Parse.Object.extend("Company");
+		var mycompany = new Company();
+		mycompany.set("company", userCompanyName);
+
+
+		// get user id and company 
+		var currentUser = Parse.User.current();
+	    var myUserId = currentUser.id;
+
+		mycompany.set("userId" , myUserId);
+		console.log(myUserId);
+		mycompany.set("username" , currentUser.get("username"));
+		mycompany.set("isBot" , false);
+		mycompany.save(null, {
+
+			success: function(setCompany){
+
+				alert("we working boss")
+				console.log(mycompany);
+
+
+			}, 
+			error: function(object, error){
+
+				 console.log("Error: " + error.code + " " + error.message);
+
+
+			}
+		});
+
+
+		
+	
+		
+		
+		
+		
+		
+		//localStorage.setItem("username" , username);
+		//localStorage.setItem("userId" , currentUserId);
+
+};
+</script>
+ <div class="container">
+            
+      <div class="main-content">
+          <div class="swipe-area">
+            <p id="screenDescription">Register</p>
+          </div>
+          
+
+      </div>
+        <div id="main">
+    <section class="loginform cf">  
+<form id="inputFields" name="login" action="index_submit" method="get" accept-charset="utf-8">  
+    <li><label for="userName">Choose your company name </label>  
+		<input type="text" id="userCompany" placeholder=" Apple ,Google etc.." required></li> 
+
+		
+
+    
+</form>  
+<button id="enterButton" type="button" onclick="GetCompany()">Select Company</button>
+</section>  
+  </div>
+	
+	
+  
+ <!--
+<form id="inputFields">
+UserName:<br>
+<input type="text" name="UserName">
+<br>
+Email:<br>
+<input type="text" name="Email">
+<br>
+Password:<br>
+<input type="text" name="Password">
+</form>-->
+
+    </div>
+
+</body>
+
+
+</html>

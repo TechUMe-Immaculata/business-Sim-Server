@@ -1,0 +1,232 @@
+ body, html {
+          height: 100%;
+          margin: 0;
+          overflow:hidden;
+          font-family: helvetica;
+          font-weight: 100;
+          color: black;
+      }
+
+#screenDescription{
+  bottom: -10px;
+  position: absolute;
+  left: 35%;
+  color: white;
+  font-size: 22.5px;
+  font-weight: bold;
+}
+
+#quickPlayButton {
+  position: absolute;
+  background: orange;
+ 
+  border-radius: 0px;
+  font-family: Georgia;
+  color: white; 
+  font-size: 23px;
+
+  border: solid #000000 2px;
+  text-decoration: none;
+  width: 90%;
+  height: 10%;
+  top:58%;
+  left: 5%;
+}
+
+#quickPlayButton:hover {
+  background: #f5084b;
+  background-image: -webkit-linear-gradient(top, #f5084b, #fa9e00);
+  background-image: -moz-linear-gradient(top, #f5084b, #fa9e00);
+  background-image: -ms-linear-gradient(top, #f5084b, #fa9e00);
+  background-image: -o-linear-gradient(top, #f5084b, #fa9e00);
+  background-image: linear-gradient(to bottom, #f5084b, #fa9e00);
+  text-decoration: none;
+}
+  #leaguePlayButton {
+  position: absolute;
+  background: orange;
+
+  border-radius: 0px;
+  font-family: Georgia;
+  color: white; 
+  font-size: 23px;
+
+  border: solid #000000 2px;
+  text-decoration: none;
+  width: 90%;
+  height: 10%;
+  top:73%;
+  left: 5%;
+}
+
+#leaguePlayButton:hover {
+  background: #3ce6fc;
+  background-image: -webkit-linear-gradient(top, #3ce6fc, #bd34d9);
+  background-image: -moz-linear-gradient(top, #3ce6fc, #bd34d9);
+  background-image: -ms-linear-gradient(top, #3ce6fc, #bd34d9);
+  background-image: -o-linear-gradient(top, #3ce6fc, #bd34d9);
+  background-image: linear-gradient(to bottom, #3ce6fc, #bd34d9);
+  text-decoration: none;
+}
+#privateGameButton {
+  position: absolute;
+  background: orange;
+ 
+  border-radius: 0px;
+  font-family: Georgia;
+  color: white; 
+  font-size: 23px;
+
+  border: solid #000000 2px;
+  text-decoration: none;
+  width: 90%;
+  height: 10%;
+  top:88%;
+  left: 5%;
+}
+
+#privateGameButton:hover {
+  background: #423cfa;
+  background-image: -webkit-linear-gradient(top, #423cfa, #d93434);
+  background-image: -moz-linear-gradient(top, #423cfa, #d93434);
+  background-image: -ms-linear-gradient(top, #423cfa, #d93434);
+  background-image: -o-linear-gradient(top, #423cfa, #d93434);
+  background-image: linear-gradient(to bottom, #423cfa, #d93434);
+  text-decoration: none;
+}
+      /* Space behind the buttons */
+      .container {
+          background-color:#E6E6E6; 
+          position: relative;
+          height: 100%;
+          width: 100%;
+          left: 0;
+          -webkit-transition:  left 0.4s ease-in-out;
+          -moz-transition:  left 0.4s ease-in-out;
+          -ms-transition:  left 0.4s ease-in-out;
+          -o-transition:  left 0.4s ease-in-out;
+          transition:  left 0.4s ease-in-out;
+      }
+      .container.open-sidebar {
+          left: 200px;
+      }
+      
+      /* The bar you can swipe */
+      .swipe-area {
+          position: absolute;
+          width: 100%;
+          height: 8%;
+          left: 0;
+          top: 0;
+          background: orange;
+          z-index: 0;
+      }
+      /*The Sidebar*/
+      #sidebar {
+          background: #585858;
+          position: absolute;
+          width: 200px;
+          height: 100%;
+          left: -200px;
+          border-width: 5px;
+          border-style: solid;
+          border color: black;
+          box-sizing: border-box;
+          -moz-box-sizing: border-box;
+      }
+      #sidebar ul {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+      }
+      #sidebar ul li {
+          margin: 0;
+      }
+
+
+
+
+        /* Heres the dime4nsions of all the sidebar pictures.  */
+      #userProfilePicture {
+        width: 180px; 
+        height: 115px;
+      }
+      #friendsPic{
+        width: 180px; 
+        height: 115px;
+      }
+      #settingsPic{
+        width: 180px; 
+        height: 115px;
+      }
+      #notificationsPic{
+        width: 180px; 
+        height: 115px;
+      }
+
+
+
+
+      /* Text Boxes*/
+      #sidebar ul li a  {
+          padding: 5px 5px;
+          font-size: 16px;
+          font-weight: bold;
+          text-align: center;
+          color: #151515;
+          text-decoration: none;
+          display: block;
+          border-bottom: 5px solid black;
+          -webkit-transition:  background 0.3s ease-in-out;
+          -moz-transition:  background 0.3s ease-in-out;
+          -ms-transition:  background 0.3s ease-in-out;
+          -o-transition:  background 0.3s ease-in-out;
+          transition:  background 0.3s ease-in-out;
+      }
+      /* The Colour of the hover for then menus */
+      #sidebar ul li:hover a {
+          background: #848484;
+      }
+      .main-content {
+          width: 100%;
+          height: 100%;
+          padding: 10px;
+          top: 0px;
+          box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          position: absolute;
+      }
+      .main-content .content{
+          box-sizing: border-box;
+          -moz-box-sizing: border-box;
+      padding-left: 60px;
+      width: 100%;
+      }
+      .main-content .content h1{
+          font-weight: 100;
+      }
+      .main-content .content p{
+          width: 100%;
+          line-height: 160%;
+      }
+      /*Hamburger Button Bar*/
+      .main-content #sidebar-toggle {
+          background:orange;
+          border-radius: 3px;
+          display: block;
+          position: relative;
+          padding: 1px 1px;
+          float: left;
+      }
+      .main-content #sidebar-toggle .bar{
+          display: block;
+          width: 34px;
+          margin-bottom: 3px;
+          height: 8px;
+          background-color: white;
+          border-radius: 3px;   
+          
+      }
+      .main-content #sidebar-toggle .bar:last-child{
+           margin-bottom: 0;   
+      }

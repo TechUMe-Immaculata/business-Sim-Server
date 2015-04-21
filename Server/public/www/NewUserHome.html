@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.4.min.js"></script>
+  
+    <title>Home Screen</title>
+
+    <!--does not work with internet explorer 6 and 7 for jquery 2.1-->
+    <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+      <!--Link to the css file Home.css -->
+    <link rel="stylesheet" type="text/css" href="css/NewUserHome.css"/>
+
+
+
+  </head>
+  <body id="mainBody">
+    <div class="container">
+            
+      <div class="main-content">
+          <div class="swipe-area">
+            <p id="screenDescription">Home Screen</p>
+          </div>
+          
+
+          <div class="content">
+                <button type="button"  class="btn btn-info btn-block" id="guestPlayButton" > Play as Guest </button>
+             
+
+                <button type="button" class="btn btn-info"  id="serverLoginButton" ><span class="glyphicon glyphicon-lock"></span>Sign In (Full Game Only) </button>
+              
+                <button type="button" class="btn btn-info"  id="registerButton" ><span class="glyphicon glyphicon-lock"></span>Register (Full Game Only) </button>
+
+               <!--    UN COMMENT THIS WHEN WE'RE GOING TO ADD FACEBOOK LOGIN!
+               <button type="button" id="facebookLoginButton">Log In With Facebook</button>  
+                -->
+
+          </div>
+      </div>
+    </div>
+
+
+  </body>
+
+  <head>
+    <script type="text/javascript" src="js/NewUserHome.js"></script>
+  </head>
+  
+</html>
