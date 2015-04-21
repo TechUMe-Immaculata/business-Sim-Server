@@ -1,0 +1,55 @@
+body, html {
+background:#BDBDBD;
+}
+#backButton{
+font-size: 25px;
+background-color: gray; 
+color: black;
+border-color: black;
+margin-left:47.5%;
+}
+
+#banner {
+position: absolute;
+width: 100%;
+height: 8%;
+left: 0;
+top: 0;
+background: orange;
+z-index: 0;
+      }
+#screenDescription{
+ top: -10px;
+  position: absolute;
+  left: 35%;
+  color: white;
+  font-size: 22.5px;
+  font-weight: bold;
+
+}
+#gearButton{
+    padding: 8px 8px 8px 32px;
+    font-family: Arial, Verdana;   
+    background: #f0f0f0;
+    background-position: 8px 8px;
+    background-repeat: no-repeat;
+}
+#bottomWords
+{
+  bottom: -10px;
+  position: absolute;
+  left: 35%;
+  color: white;
+  font-size: 22.5px;
+  font-weight: bold;
+
+}
+#bottomBanner {
+position: absolute;
+width: 100%;
+height: 8%;
+left: 0;
+bottom: 0;
+background: orange;
+z-index: 0;
+}

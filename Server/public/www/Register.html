@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	
+    <title>Register</title>
+
+    <!--does not work with internet explorer 6 and 7 for jquery 2.1-->
+    <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.4.min.js"></script>
+      <!--Link to the css file Home.css -->
+    <link rel="stylesheet" type="text/css" href="css/register.css"/>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+
+  </head>
+  <body id="mainBody">
+    <div class="container">
+            
+      <div class="main-content">
+          <div class="swipe-area">
+            <p id="screenDescription">Register</p>
+          </div>
+          
+
+      </div>
+
+  
+   <div id="main">
+    <section class="loginform cf">  
+<form id="inputFields" name="login" action="index_submit" method="get" accept-charset="utf-8">  
+    <ul>  
+        <li><label for="userName">Username</label>  
+		<input type="text" id="userName" name="username" placeholder=" E.g. SquriellFoxx" required></li> 
+		<li><label for="myemail">Email</label>
+        <input type="email" id="myemail" name="email" placeholder="yourname@email.com" required></li>  
+        <li><label for="password">Password</label>  
+        <input type="password" id="myPass" name="password" placeholder="password" required></li>  
+         
+        </li>  
+
+    </ul>  
+</form>  
+<button id="enterButton" onclick="Register" type="button" >Sign Up</button>
+</section>  
+  </div>
+	
+	
+  
+ <!--
+<form id="inputFields">
+UserName:<br>
+<input type="text" name="UserName">
+<br>
+Email:<br>
+<input type="text" name="Email">
+<br>
+Password:<br>
+<input type="text" name="Password">
+</form>-->
+
+    </div>
+
+  </body>
+
+  <head>
+    <script>
+    function Register()
+{ 
+Parse.initialize("Z8KSlQyzuWQKn449idqkqNYbiH7HWy09US0ws0Ci", "zDzVGtrgvtFN0Sxs6YjkuOq9leznJ4UguavX6bdt");
+    
+
+  var username = this.$("#userName").val();
+  var password = this.$("#myPass").val();
+  var email = this.$("#myemail").val();
+  
+  
+    
+    
+  var user = new Parse.User();
+  user.set("name" , username);
+  user.set("username", username);
+  user.set("password", password);
+  user.set("email", email);
+  
+  user.signUp(null, {
+  success: function(user) {
+    // Hooray! Let them use the app now.
+  //alert("asfdasdfsadf");
+  //make call to create match
+  window.location="company.html";
+  },
+  error: function(user, error) {
+    // Show the error message somewhere and let the user try again.
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+  
+}; 
+    </script>
+    <script type="text/javascript" src="js/Register.js"></script>
+  </head>
+  
+</html>

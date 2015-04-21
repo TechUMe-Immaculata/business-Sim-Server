@@ -1,0 +1,341 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	
+  <!-- The css for the info cards -->
+  <link rel="stylesheet" type="text/css" href="css/jquery.qtip.min.css">
+
+  <!-- The jquery main file -->
+	<script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+
+	<!-- <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>-->
+
+
+
+  <!-- The js for the swiping -->
+    <script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+  <!-- The js for the info cards -->
+  <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
+	
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.4.min.js"></script>
+
+  		<script src="js/Chart.js"></script>
+
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/GuestSinglePlayerGamePage.css">
+
+  <script src="js/jquery-2.1.3.min.js"></script>
+</head>
+
+
+<body>
+	<!--
+	<button type="button" class="btn btn-success" id ="PreviousButton">Back</button>
+	<button type="button" class="btn btn-info" id ="NextButton">Next</button>
+    -->
+	<button type="button" class="btn btn-success" id="pauseGear">
+                  <span class="glyphicon glyphicon-cog"></span>
+              </button>
+
+  <!-- PAUSE SCREEN -->
+  <div id="PauseScreen">
+    <button type="button" class="btn btn-primary" id="resumeButton" > Resume</button>
+     <button type="button" id="mainMenuButton" class="btn btn-primary" > Main Menu</button>
+  </div>
+
+
+    <!-- Page One, the In-Game Home Page -->
+    <div id="GamePageOne">
+		  <img id="YourBuisness" src="img/Factory.svg"/>
+		  <div>
+			<p id="pageOneQuater"></p>
+		  </div>
+	  </div>
+
+
+		 <!-- Page Two, the In-Game Newspaper -->
+    <div id="GamePageTwo" style="background-color: #EFEFEF;">
+
+	 <div style="margin-left:10px;margin-right:10px;">
+     <label id="New and Noteworthy" for="newspaper">News and Noteworthy</label> 
+	 <br></br>
+	 <p id="newspaper"></p>
+	 <br>
+			  <table  style="width:75%;border-width:3px;background-color: #EFEFEF; border-style:dotted;border-color:black;border-radius:1.5px;">
+		  <tr>
+			<th colspan="2">Top Grossing Companies!</th>
+		  </tr>
+		  <tr>
+			<th colspan="2"><hr style="width:100%;border-width:1px; border-style:dashed;border-color:#3D3D29;"></hr></th>
+		  </tr>
+		  <tr>
+			<td>1. </td>
+			<td id="company_first"><p> Company 1 (Player Name 1)</p></td>
+		  </tr>
+		   <tr>
+			<td>2. </td>
+			<td><p id="company_second"> Company 2 (Player Name 2)</p></td>
+		  </tr>
+		   <tr>
+			<td>3. </td>
+			<td><p id="company_third"> Company 3 (Player Name 3)</p></td>
+		  </tr>
+		   <tr>
+			<td>4. </td>
+			<td><p id="company_fourth"> Company 4 (Player Name 4)</p></td>
+		  </tr>
+		   <tr>
+			<td>5. </td>
+			<td><p id="company_fifth"> Company 5 (Player Name 5)</p></td>
+		  </tr>
+		   <tr>
+			<td>6. </td>
+			<td><p id="company_sixth"> Company 6 (Player Name 6)</p></td>
+		  </tr>
+		 </table>
+	 </div>
+     
+    	</div>
+
+	 <!-- Page Three, the In-Game Graphs Page -->
+	<div id="GamePageThree">
+	<table  style="width:100%;border-width:1px; border-style:solid;border-color:grey;border-radius:1px;">
+	  <tr>
+		<th colspan="2">Financial Performance Estimate </th>
+	  </tr>
+	  <tr>
+		<th colspan="2"><hr style="width:100%;border-width:1px; border-style:solid;border-color:grey;"></hr></th>
+	  </tr>
+	  <tr>
+		<td>Available Cash</td>
+		<td><p id="table_1_input_1">50,000</p></td>
+	  </tr>
+	  <tr>
+		<td>Credit Line</td>
+		<td><p id="table_1_input_2">50,000</p></td>
+	  </tr>
+	  	<tr>
+		<td>Resources</td>
+		<td><p id="table_1_input_3">100,000</p></td>
+		</tr>
+	  <tr>
+		<th colspan="2"><hr style="width:100%;border-width:1px; border-style:solid;border-color:grey;"></hr></th>
+	  </tr>
+	  </tr>
+	  	<tr>
+		<td>Production</td>
+		<td><p id="table_1_input_4">50,000</p></td>
+	  </tr>
+	  <tr>
+		<td>Marketing</td>
+		<td><p id="table_1_input_5">50,000</p></td>
+	  </tr>
+	  	<tr>
+		<td>Capital</td>
+		<td><p id="table_1_input_6">100,000</p></td>
+	  </tr>
+	  	<tr>
+		<td>R and D</td>
+		<td><p id="table_1_input_7">50,000</p></td>
+	  </tr>
+	  	<tr>
+		<td>Charity</td>
+		<td><p id="table_1_input_14">50,000</p></td>
+	  </tr>
+	  	<tr>
+		<td>Expenses</td>
+		<td><p id="table_1_input_8">250,000</p></td>
+	  </tr>
+	  <tr>
+		<th colspan="2"><hr style="width:100%;border-width:1px; border-style:solid;border-color:grey;"></hr></th>
+	  </tr>
+	  <td>Cash</td>
+		<td><p id="table_1_input_9">100,000</p></td>
+	  </tr>
+	  	<tr>
+		<td>Credit</td>
+		<td><p id="table_1_input_10">250,000</p></td>
+	  </tr>
+	  	<tr>
+		<td>Result</td>
+		<td><p id="table_1_input_11">-150,000</p></td>
+	  </tr>
+	  <tr>
+		<th colspan="2"><hr style="width:100%;border-width:1px; border-style:solid;border-color:grey;"></hr></th>
+	  </tr>
+	  </tr>
+	  	<tr>
+		<td>Cost / Unit</td>
+		<td><p id="table_1_input_12">7</p></td>
+	  </tr>
+	  	<tr>
+		<td>Utilization</td>
+		<td><p id="table_1_input_13">25%</p></td>
+	  </tr>
+	</table>
+	<br/>
+	<table id="table_2_"style="width:100%;border-width:1px; border-style:solid;border-color:grey;border-radius:1px;">
+	<tr><td>Net Worth</td></tr>
+	<tr><td>
+		<div id="canvas-holder">
+			<canvas id="chart-area_1"style="text-align:center;" />
+		</div>
+	<br/>
+		<tr>
+			<th colspan="2"><hr style="width:100%;border-width:1px; border-style:solid;border-color:grey;"></hr></th>
+		</tr>
+	</td></tr>
+	<tr><td>Investment Amount</td></tr>
+	<tr><td>
+		<div id="canvas-holder">
+			<canvas id="chart-area_2"style="text-align:center;" />
+		</div>
+	<br/>
+		<tr>
+			<th colspan="2"><hr style="width:100%;border-width:1px; border-style:solid;border-color:grey;"></hr></th>
+		</tr>
+	</td></tr>
+	<tr><td>Market Share</td></tr>
+	<tr><td>
+		<div id="canvas-holder">
+			<canvas id="chart-area_3" style="text-align:center;"/>
+		</div>
+	<br/>
+	</td></tr>
+		<tr>
+			<th colspan="2"><hr style="width:100%;border-width:1px; border-style:solid;border-color:grey;"></hr></th>
+		</tr>
+	</table>
+</div>
+		
+
+
+		 <!-- Page Four, the In-Game Submit Page-->
+	<div id="GamePageFour">
+			<!-- Capital Slider -->
+    <div class="center">
+    <p id="priceCharacters">Capital($): 
+    <div class="input-group">
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="quant[6]">
+                <span class="glyphicon glyphicon-minus"></span> 1
+              </button>
+          </span>
+          <input type="text" name="quant[6]" class="form-control input-number" value="10" min="1" max="100" id="capitalRangeInput">
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[6]">
+                  <span class="glyphicon glyphicon-plus"></span> 1
+              </button>
+          </span>
+          </div>    
+  </p>
+	
+
+			<!-- New code in the house
+		<p id="priceCharacters">Capital: 
+              <form id="capitalSlider" oninput="amount.value=capitalRangeInput.value">
+                <input type="number" id="capitalRangeInput" name="rangeInput" min="0" max="any">                                                       
+                
+                -->
+		<!-- Price Slider -->
+		<p id="priceCharacters">Price($): <!--<a id="myTooltip" title="Adjusting your price will change the price of your product." class="Price CustomInfoClass">?</a>-->
+
+              <div class="input-group">
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="quant[1]">
+                <span class="glyphicon glyphicon-minus"></span> 1
+              </button>
+          </span>
+          <input type="text" name="quant[1]" class="form-control input-number" value="10" min="1" max="100" id="priceRangeInput">
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[1]">
+                  <span class="glyphicon glyphicon-plus"></span> 1
+              </button>
+          </span>
+      </div>                                                   
+                <output name="amount" for="priceRangeInput"></output> </form> </p>
+        <!-- Production Slider -->
+		<p id="productionCharacters">Production(units): 
+             <div class="input-group">
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="quant[2]">
+                <span class="glyphicon glyphicon-minus"></span> 1
+              </button>
+          </span>
+          <input type="text" name="quant[2]" class="form-control input-number" value="10" min="1" max="100" id="productionRangeInput">
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[2]">
+                  <span class="glyphicon glyphicon-plus"></span> 1
+              </button>
+          </span>
+      </div>
+                <output name="amount" for="productionRangeInput"onchange="edit()"></output> </form> </p>
+        <!-- Marketing Slider -->
+		<p id="marketCharacters">Marketing($): 
+              <div class="input-group">
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="quant[3]">
+                <span class="glyphicon glyphicon-minus"></span> 1
+              </button>
+          </span>
+          <input type="text" name="quant[3]" class="form-control input-number" value="10" min="1" max="100" id="marketRangeInput">
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[3]">
+                  <span class="glyphicon glyphicon-plus"></span> 1
+              </button>
+          </span>
+      </div>                                                    
+                <output name="amount" for="marketRangeInput"></output> </form> </p>
+        <!-- R & D Slider -->
+		<p id="RAndDCharacters">Research($): 
+              <div class="input-group">
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="quant[4]">
+                <span class="glyphicon glyphicon-minus"></span> 1
+              </button>
+          </span>
+          <input type="text" name="quant[4]" class="form-control input-number" value="10" min="1" max="100" id="RAndDRangeInput">
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[4]">
+                  <span class="glyphicon glyphicon-plus"></span> 1
+              </button>
+          </span>
+      </div>                                                      
+                <output name="amount" for="RAndDRangeInput"></output> </form> </p>
+        <!-- Charity Slider -->
+        <p id="charityCharacters">Charity($): 
+             <div class="input-group">
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="quant[5]">
+                <span class="glyphicon glyphicon-minus"></span> 1
+              </button>
+          </span>
+          <input type="text" name="quant[5]" class="form-control input-number" value="10" min="1" max="100">
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[5]" id="charityRangeInput">
+                  <span class="glyphicon glyphicon-plus"></span> 1
+              </button>
+          </span>
+      </div>                                                      
+                <output name="amount" for="charityRangeInput"></output> </form> </p>
+
+                <!-- The Submit to server button, to end and submit your turn -->
+                <button type="button" class="btn btn-primary" id="submitToServerButton" > Submit Turn </button>
+	</div>
+	</div>
+	</div>
+	<script src="js/GuestSinglePlayerGamePage.js"></script> 
+  <script type="text/javascript" src="js/GameLogic.js"></script>
+</body>
+
+</html>
