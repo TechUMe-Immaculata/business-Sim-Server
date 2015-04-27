@@ -397,6 +397,19 @@ queryComp.descending("marketing");
 
 return queryComp.find();
 }).then(function(compMatch){
+
+for ( var i = 0;  i < compMatch.length; i++){
+	if(compMatch[i].get("isBankrupt") == true)
+	{
+		compMatch[i].set("capital",0) 
+		compMatch[i].set("charity",0) 
+		compMatch[i].set("marketing",0)
+		compMatch[i].set("researchDevelopment",0)
+		compMatch[i].set("production",0)
+		compMatch[i].set("price",0)
+		compMatch[i].set("isSubbed",true)
+	}
+}
 //how many decimals to round to
 const NUMBER_OF_DECIMALS = 1000;
 
