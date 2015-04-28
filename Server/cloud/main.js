@@ -162,7 +162,7 @@ var rank = 0;
   match.set("name",request.params.matchName);
   match.set("gameTime",request.params.matchTime);
   match.set("turn",0);
-  match.set("population",100000);
+  match.set("population",2000);
   match.set("multiplayer",isMultiplayer);
   match.save().then(function(afterSave)
   {
@@ -193,10 +193,10 @@ queryUser.equalTo("userId", currentUser);
     compMatch.set("isSubbed",false);
     compMatch.set("isBot",false);
 	compMatch.set("capitalTotal",0);
-	compMatch.set("maxProduction",1000);
-	compMatch.set("cashAvailable",50000);
-	compMatch.set("creditLine",50000);
-	compMatch.set("networth",100000);
+	compMatch.set("maxProduction",500);
+	compMatch.set("cashAvailable",25000);
+	compMatch.set("creditLine",25000);
+	compMatch.set("networth",500000);
 	compMatch.set("isBankrupt",false);
 	compMatch.set("unitCost",7);
 	rank++;
@@ -238,16 +238,16 @@ return queryComp.find();
     compMatch.set("capital", Math.floor((Math.random() * 10000) + 1));
     compMatch.set("charity",Math.floor((Math.random() * 10000) + 1));
     compMatch.set("price",Math.floor((Math.random() * 100) + 1));
-    compMatch.set("production", Math.floor((Math.random() * 1000) + 1));
+    compMatch.set("production", Math.floor((Math.random() * 500) + 1));
     compMatch.set("researchDevelopment", Math.floor((Math.random() * 10000) + 1));
     compMatch.set("marketing", Math.floor((Math.random() * 10000) + 1));
     compMatch.set("isSubbed",true);
     compMatch.set("isBot",true);
 	compMatch.set("capitalTotal",0);
-	compMatch.set("maxProduction",1000);
-	compMatch.set("cashAvailable",50000);
-	compMatch.set("creditLine",50000);
-	compMatch.set("networth",100000);
+	compMatch.set("maxProduction",500);
+	compMatch.set("cashAvailable",25000);
+	compMatch.set("creditLine",25000);
+	compMatch.set("networth",500000);
 	compMatch.set("isBankrupt",false);
 	compMatch.set("unitCost",7);
 	rank++;
@@ -369,7 +369,7 @@ queryMatch.equalTo("objectId",matchId);
 queryMatch.find().then(function(objectMatch){
   
   //population natural birth rate
-  var percent = 1.05;
+  var percent = 1.00;
   
   //get current match data
   match = objectMatch[0];
@@ -454,14 +454,14 @@ for ( var i = 0;  i < compMatch.length; i++)
 	//calculate R&D MS (R&D / R&D sum)
 	objectMS.researchAndDevelopmentMS = Math.round((compMatch[i].get("researchDevelopment")/totalResearchAndDevelopment)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
 	
-	//calaculate marketing MS 9(marketing / marketing sum)
+	//calculate marketing MS 9(marketing / marketing sum)
 	objectMS.marketingMS = Math.round((compMatch[i].get("marketing")/totalMarketing)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
 
-	//calaculate charity MS ( charity / charity sum)
+	//calculate charity MS ( charity / charity sum)
 	objectMS.charityMS = Math.round((compMatch[i].get("charity")/totalCharity)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
 
 	//calculate total MS by adding up all market based on their individual worth       
-	objectMS.totalMS = Math.round(((objectMS.priceMS * 0.30) + (objectMS.researchAndDevelopmentMS * 0.20) + (objectMS.marketingMS * 0.40) + (objectMS.charityMS * 0.10))*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	objectMS.totalMS = Math.round(((objectMS.priceMS * 0.45) + (objectMS.researchAndDevelopmentMS * 0.25) + (objectMS.marketingMS * 0.20) + (objectMS.charityMS * 0.10))*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
 	
 
 	//get the demand for your product
@@ -527,7 +527,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	
 	//define variables
 	var maxProduction = 0;
-	const PRICE_INCREMENT_PER_PRODUCT = 50 , INITIAL_PRODUCTION = 1000;
+	const PRICE_INCREMENT_PER_PRODUCT = 50 , INITIAL_PRODUCTION = 500;
 	
 	//every 50$ invested 1 product can be made
 	maxProduction = Math.round((compMatch[i].get("capitalTotal")/PRICE_INCREMENT_PER_PRODUCT) + INITIAL_PRODUCTION);
