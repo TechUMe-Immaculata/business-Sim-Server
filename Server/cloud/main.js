@@ -162,7 +162,7 @@ var rank = 0;
   match.set("name",request.params.matchName);
   match.set("gameTime",request.params.matchTime);
   match.set("turn",0);
-  match.set("population",2000);
+  match.set("population",1200);
   match.set("multiplayer",isMultiplayer);
   match.save().then(function(afterSave)
   {
@@ -193,7 +193,7 @@ queryUser.equalTo("userId", currentUser);
     compMatch.set("isSubbed",false);
     compMatch.set("isBot",false);
 	compMatch.set("capitalTotal",0);
-	compMatch.set("maxProduction",500);
+	compMatch.set("maxProduction",150);
 	compMatch.set("cashAvailable",25000);
 	compMatch.set("creditLine",25000);
 	compMatch.set("networth",500000);
@@ -238,13 +238,13 @@ return queryComp.find();
     compMatch.set("capital", Math.floor((Math.random() * 3000) + 1));
     compMatch.set("charity",Math.floor((Math.random() * 3000) + 1));
     compMatch.set("price",Math.floor((Math.random() * 50) + 15));
-    compMatch.set("production", Math.floor((Math.random() * 200) + 150));
+    compMatch.set("production",150);
     compMatch.set("researchDevelopment", Math.floor((Math.random() * 3000) + 1));
     compMatch.set("marketing", Math.floor((Math.random() * 3000) + 1));
     compMatch.set("isSubbed",true);
     compMatch.set("isBot",true);
 	compMatch.set("capitalTotal",0);
-	compMatch.set("maxProduction",500);
+	compMatch.set("maxProduction",150);
 	compMatch.set("cashAvailable",25000);
 	compMatch.set("creditLine",25000);
 	compMatch.set("networth",500000);
@@ -461,7 +461,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	objectMS.charityMS = Math.round((compMatch[i].get("charity")/totalCharity)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
 
 	//calculate total MS by adding up all market based on their individual worth       
-	objectMS.totalMS = Math.round(((objectMS.priceMS * 0.40) + (objectMS.researchAndDevelopmentMS * 0.20) + (objectMS.marketingMS * 0.30) + (objectMS.charityMS * 0.10))*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	objectMS.totalMS = Math.round(((objectMS.priceMS * 0.45) + (objectMS.researchAndDevelopmentMS * 0.25) + (objectMS.marketingMS * 0.20) + (objectMS.charityMS * 0.10))*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
 	
 
 	//get the demand for your product
@@ -527,7 +527,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	
 	//define variables
 	var maxProduction = 0;
-	const PRICE_INCREMENT_PER_PRODUCT = 50 , INITIAL_PRODUCTION = 500;
+	const PRICE_INCREMENT_PER_PRODUCT = 50 , INITIAL_PRODUCTION = 150;
 	
 	//every 50$ invested 1 product can be made
 	maxProduction = Math.round((compMatch[i].get("capitalTotal")/PRICE_INCREMENT_PER_PRODUCT) + INITIAL_PRODUCTION);
@@ -594,12 +594,19 @@ for ( var i = 0;  i < compMatch.length; i++)
 	//if company is a bot then calculate the next turn moves and submit
 	if (compMatch[i].get("isBot") == true)
 	{
-    compMatch[i].set("capital", Math.floor((Math.random() * 3000) + 1));
-    compMatch[i].set("charity",Math.floor((Math.random() * 3000) + 1));
-    compMatch[i].set("price",Math.floor((Math.random() * 50) + 15));
-    compMatch[i].set("production", Math.floor(Math.random() * (maxProduction*(0.5)) + (maxProduction*(0.5))));
-    compMatch[i].set("researchDevelopment", Math.floor((Math.random() * 3000) + 1));
-    compMatch[i].set("marketing", Math.floor((Math.random() * 3000) + 1));
+		if(objectStats.profit <= 0)
+		{
+			compMatch[i].set("capital", Math.floor((Math.random() * 3000) + 1));
+			compMatch[i].set("charity",Math.floor((Math.random() * 3000) + 1));
+			compMatch[i].set("price",Math.floor((Math.random() * 50) + 15));
+			compMatch[i].set("production", Math.floor(Math.random() * (maxProduction*(0.3)) + (maxProduction*(0.7))));
+			compMatch[i].set("researchDevelopment", Math.floor((Math.random() * 3000) + 1));
+			compMatch[i].set("marketing", Math.floor((Math.random() * 3000) + 1));
+		}
+		else
+		{
+			//states are positive so don't do anything
+		}
     compMatch[i].set("isSubbed",true);
 	}
 	//else the company is not a bot 
