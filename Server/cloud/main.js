@@ -642,7 +642,7 @@ return Parse.Object.saveAll(compMatch);
   return Parse.Object.saveAll(match);
 
 }).then(function(saveMatch){
-
+/*
   if ( match.get("turn") > 3){
 // MARCO work
 
@@ -675,6 +675,7 @@ console.log("you were supposed to deleted it");
 else if (match.get("turn")  <= 3){
 
 }
+*/
 
     return response.success("turn:"+ match.get("turn"));
   })
