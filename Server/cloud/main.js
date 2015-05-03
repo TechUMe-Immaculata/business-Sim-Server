@@ -596,10 +596,11 @@ for ( var i = 0;  i < compMatch.length; i++)
 	{
 		if(objectStats.profit <= 0)
 		{
+			compMatch[i].set("production", Math.floor(Math.random() * (compMatch[i].get("maxProduction")*(0.3)) + (compMatch[i].get("maxProduction")*(0.7))));
+			
 			compMatch[i].set("capital", Math.floor((Math.random() * 3000) + 1));
 			compMatch[i].set("charity",Math.floor((Math.random() * 3000) + 1));
 			compMatch[i].set("price",Math.floor((Math.random() * 50) + 15));
-			compMatch[i].set("production", Math.floor(Math.random() * (maxProduction*(0.3)) + (maxProduction*(0.7))));
 			compMatch[i].set("researchDevelopment", Math.floor((Math.random() * 3000) + 1));
 			compMatch[i].set("marketing", Math.floor((Math.random() * 3000) + 1));
 		}
@@ -607,6 +608,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 		{
 			//states are positive so don't do anything
 		}
+		
     compMatch[i].set("isSubbed",true);
 	}
 	//else the company is not a bot 
@@ -618,8 +620,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	
 }
 
-compMatch.sort(function(a, b){
-  return b.get("networth")-a.get("networth")});
+compMatch.sort(function(a, b){return b.get("networth")-a.get("networth")});
 
 for ( var i = 0;  i < compMatch.length; i++)
 {
@@ -627,7 +628,81 @@ compMatch[i].set("rank",(i+1));
 //companyMatchDataArray[i].rank = compMatch[i].get("rank");
 //compMatch[i].save();
 console.log(compMatch[i].get("rank") + "_______"+compMatch[i].get("networth"));
+
+if (compMatch[i].get("isBot") == true && compMatch[i].get("rank") == 6)
+{
+	compMatch[i].set("production", Math.floor(Math.random() * (compMatch[i].get("maxProduction")*(0.3)) + (compMatch[i].get("maxProduction")*(0.7))));
+	
+	compMatch[i].set("capital",compMatch[0].get("capital"));
+	compMatch[i].set("charity",compMatch[0].get("charity"));
+	compMatch[i].set("price",compMatch[0].get("price"));
+	compMatch[i].set("researchDevelopment",compMatch[0].get("researchDevelopment"));
+	compMatch[i].set("marketing",compMatch[0].get("marketing"));
+	
+	var maxRevenue = compMatch[i].get("production") * compMatch[i].get("unitCost");
+	
+	var maxExpense = compMatch[i].get("capital")+compMatch[i].get("charity")+compMatch[i].get("researchDevelopment")+compMatch[i].get("marketing");
+	
+	var delta = maxRevenue - maxExpense;
+	
+	console.log("before delta " + delta);
+	if (delta <= 0)
+	{
+		console.log("after delta ");
+		compMatch[i].set("capital",1);
+		maxExpense = compMatch[i].get("capital")+compMatch[i].get("charity")+compMatch[i].get("researchDevelopment")+compMatch[i].get("marketing");
+		delta = maxRevenue - maxExpense;
+		
+		if(delta <= 0)
+		{
+			var da=1,db=1,dc=1;
+			
+			while (delta <= 0)
+			{
+				var divider = da + db + dc;
+				var subtractor = (delta - 100) / divider;
+				console.log("divider " + divider);
+				if (compMatch[i].get("charity")+subtractor < 0)
+				{
+					compMatch[i].set(0);
+					da = 0;
+				}
+				else
+				{
+					compMatch[i].set("charity",compMatch[i].get("charity")+subtractor);
+				}
+				if (compMatch[i].get("researchDevelopment")+subtractor < 0)
+				{
+					compMatch[i].set(0);
+					db = 0;
+				}
+				else
+				{
+					compMatch[i].set("researchDevelopment",compMatch[i].get("researchDevelopment")+subtractor);
+				}
+				if (compMatch[i].get("marketing")+subtractor < 0)
+				{
+					compMatch[i].set(0);
+					dc = 0;
+				}
+				else
+				{
+					compMatch[i].set("marketing",compMatch[i].get("marketing")+subtractor);
+				}
+				
+				maxExpense = compMatch[i].get("capital")+compMatch[i].get("charity")+compMatch[i].get("researchDevelopment")+compMatch[i].get("marketing");
+				delta = maxRevenue - maxExpense;
+				console.log(maxRevenue);
+				console.log("== expense ==" + maxExpense);
+				console.log("iteration with a delta of " + delta);
+			}
+			console.log(delta);
+		}
+	}
+	
 }
+}
+
 
 return Parse.Object.saveAll(compMatch);
 
