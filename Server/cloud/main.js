@@ -387,6 +387,7 @@ queryMatch.find().then(function(objectMatch){
   //set turn to data going out
   //companyMatchData.turn = match.get("turn");
   
+  match.set("ActiveTurn" ,0);
   //save
   match.save();
 
@@ -1047,6 +1048,7 @@ Parse.Cloud.define("createMatch_Multi", function(request, response) {
 	match.set("population",1200);
 	match.set("multiplayer",isMultiplayer);
 	match.set("password",password);
+	match.set("ActiveTurn" ,0);
 	match.save().then(function(afterSave)
     {
  
@@ -1067,21 +1069,8 @@ Parse.Cloud.define("createMatch_Multi", function(request, response) {
     var compMatch = new Parse.Object("CompMatch");
     compMatch.set("companyId",company[0].id);
     compMatch.set("matchId", match.id);
-    compMatch.set("capital", 500);
-    compMatch.set("charity",10);
-    compMatch.set("price",5);
-    compMatch.set("production", 50);
-    compMatch.set("researchDevelopment", 10);
-    compMatch.set("marketing", 10);
-    compMatch.set("isSubbed",false);
+    compMatch.set("isSubbed",true);
     compMatch.set("isBot",false);
-	compMatch.set("capitalTotal",0);
-	compMatch.set("maxProduction",150);
-	compMatch.set("cashAvailable",25000);
-	compMatch.set("creditLine",25000);
-	compMatch.set("networth",500000);
-	compMatch.set("isBankrupt",false);
-	compMatch.set("unitCost",7);
 	//rank++;
 	//compMatch.set("rank",rank);
 	compMatch.set("companyName",company[0].get("company"));
@@ -1173,21 +1162,8 @@ Parse.Cloud.define("createMatch_Multi_Join", function(request, response) {
 	
     compMatch.set("companyId",company[0].id);
     compMatch.set("matchId", match.id);
-    compMatch.set("capital", 500);
-    compMatch.set("charity",10);
-    compMatch.set("price",5);
-    compMatch.set("production", 50);
-    compMatch.set("researchDevelopment", 10);
-    compMatch.set("marketing", 10);
-    compMatch.set("isSubbed",false);
+    compMatch.set("isSubbed",true);
     compMatch.set("isBot",false);
-	compMatch.set("capitalTotal",0);
-	compMatch.set("maxProduction",150);
-	compMatch.set("cashAvailable",25000);
-	compMatch.set("creditLine",25000);
-	compMatch.set("networth",500000);
-	compMatch.set("isBankrupt",false);
-	compMatch.set("unitCost",7);
 	//rank++;
 	//compMatch.set("rank",rank);
 	compMatch.set("companyName",company[0].get("company"));
@@ -1229,6 +1205,59 @@ match.save();
   },function(error){
   console.log("error with bot");  
 });
+});
+
+Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
+ 
+	//define variables
+	var matchId = request.params.matchId;
+	
+	var queryUser_match = new Parse.Query("CompMatch");
+	queryUser.equalTo("matchId", matchId);
+
+	queryUser_match.find().then(function(aCompany)
+    {
+		var numberOfPlayers = aCompany.length;
+		var aCompany = compMatch;
+		
+		for(i=0;i < aCompany.length;i++)
+		{
+				compMatch[i].set("capital", 500);
+				compMatch[i].set("charity",10);
+				compMatch[i].set("price",5);
+				compMatch[i].set("production", 50);
+				compMatch[i].set("researchDevelopment", 10);
+				compMatch[i].set("marketing", 10);
+				compMatch[i].set("isSubbed",false);
+				compMatch[i].set("capitalTotal",0);
+				compMatch[i].set("maxProduction",150);
+				compMatch[i].set("cashAvailable",25000);
+				compMatch[i].set("creditLine",25000);
+				compMatch[i].set("networth",500000);
+				compMatch[i].set("isBankrupt",false);
+				compMatch[i].set("unitCost",7);
+				
+				var marketShare = {};
+				marketShare.charityMS =  Math.round(1 / numberOfPlayers *100)/100;
+				marketShare.marketingMS =   Math.round(1 / numberOfPlayers*100)/100;
+				marketShare.priceMS =   Math.round(1 / numberOfPlayers*100)/100;
+				marketShare.researchAndDevelopmentMS = Math.round(1 / numberOfPlayers*100)/100;
+				marketShare.totalMS =  Math.round(1 / numberOfPlayers*100)/100;
+				
+				compMatch[i].set("marketShare",marketShare);
+				
+				
+				
+		}
+	
+	return compMatch.save();
+	}).then(function(bot) {
+	
+	  response.success("Ready");
+	   
+	  },function(error){
+	  console.log("error with bot");  
+	});
 });
 
 
