@@ -1212,31 +1212,34 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
  
 	//define variables
 	var matchId = request.params.matchId;
+	var numberOfPlayers = 0;
 	
 	var queryUser_match = new Parse.Query("CompMatch");
 	queryUser_match.equalTo("matchId", matchId);
+	
 
 	queryUser_match.find().then(function(aCompany)
     {
-		var numberOfPlayers = aCompany.length;
-		var aCompany = compMatch;
+		numberOfPlayers = aCompany.length;
+		//var aCompany = compMatch;
 		
 		for(i=0;i < aCompany.length;i++)
 		{
-				compMatch[i].set("capital", 500);
-				compMatch[i].set("charity",10);
-				compMatch[i].set("price",5);
-				compMatch[i].set("production", 50);
-				compMatch[i].set("researchDevelopment", 10);
-				compMatch[i].set("marketing", 10);
-				compMatch[i].set("isSubbed",false);
-				compMatch[i].set("capitalTotal",0);
-				compMatch[i].set("maxProduction",150);
-				compMatch[i].set("cashAvailable",25000);
-				compMatch[i].set("creditLine",25000);
-				compMatch[i].set("networth",500000);
-				compMatch[i].set("isBankrupt",false);
-				compMatch[i].set("unitCost",7);
+				aCompany[i].set("capital", 500);
+				aCompany[i].set("charity",10);
+				aCompany[i].set("price",5);
+				aCompany[i].set("production", 50);
+				aCompany[i].set("researchDevelopment", 10);
+				aCompany[i].set("marketing", 10);
+				aCompany[i].set("isSubbed",false);
+				aCompany[i].set("capitalTotal",0);
+				aCompany[i].set("maxProduction",150);
+				aCompany[i].set("cashAvailable",25000);
+				aCompany[i].set("creditLine",25000);
+				aCompany[i].set("networth",500000);
+				aCompany[i].set("isBankrupt",false);
+				aCompany[i].set("unitCost",7);
+				aCompany[i].set("rank",i+1);
 				
 				var marketShare = {};
 				marketShare.charityMS =  Math.round(1 / numberOfPlayers *100)/100;
@@ -1245,18 +1248,21 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 				marketShare.researchAndDevelopmentMS = Math.round(1 / numberOfPlayers*100)/100;
 				marketShare.totalMS =  Math.round(1 / numberOfPlayers*100)/100;
 				
-				compMatch[i].set("marketShare",marketShare);	
+				aCompany[i].set("marketShare",marketShare);
+
+				aCompany[i].save();
 		}
-		compMatch.save();
+		//aCompany.saveAll();
 		
-		var query_match = new Parse.Query("CompMatch");
-		query_match.equalTo("matchId", matchId);
+		var query_match = new Parse.Query("Match");
+		query_match.equalTo("objectId", matchId);
 	
 		return query_match.find();
 	
 	}).then(function(aMatch) {
-	
-		return aMatch.set("isReady", true);
+		aMatch[0].set("population",(numberOfPlayers * 200));
+		aMatch[0].set("isReady", true);
+		return aMatch[0].save();
 	
 	return aMatch.save();
 	}).then(function(bot) {
