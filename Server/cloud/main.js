@@ -1049,6 +1049,7 @@ Parse.Cloud.define("createMatch_Multi", function(request, response) {
 	match.set("multiplayer",isMultiplayer);
 	match.set("password",password);
 	match.set("ActiveTurn" ,0);
+	match.set("isReady",false);
 	match.save().then(function(afterSave)
     {
  
@@ -1125,7 +1126,7 @@ Parse.Cloud.define("createMatch_Multi_Join", function(request, response) {
 	var match = new Match();
 	
 	var queryUser_match = new Parse.Query("Match");
-	queryUser.equalTo("password", password);
+	queryUser_match.equalTo("password", password);
 
 	queryUser_match.find().then(function(aMatch)
     {
@@ -1133,7 +1134,7 @@ Parse.Cloud.define("createMatch_Multi_Join", function(request, response) {
 	if(aMatch.length > 0)
 	{
 		
-		match = aMatch;
+		match = aMatch[0];
 		
 		companyIdArray = match.get("companyIds");
 		
@@ -1213,7 +1214,7 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 	var matchId = request.params.matchId;
 	
 	var queryUser_match = new Parse.Query("CompMatch");
-	queryUser.equalTo("matchId", matchId);
+	queryUser_match.equalTo("matchId", matchId);
 
 	queryUser_match.find().then(function(aCompany)
     {
@@ -1244,13 +1245,20 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 				marketShare.researchAndDevelopmentMS = Math.round(1 / numberOfPlayers*100)/100;
 				marketShare.totalMS =  Math.round(1 / numberOfPlayers*100)/100;
 				
-				compMatch[i].set("marketShare",marketShare);
-				
-				
-				
+				compMatch[i].set("marketShare",marketShare);	
 		}
+		compMatch.save();
+		
+		var query_match = new Parse.Query("CompMatch");
+		query_match.equalTo("matchId", matchId);
 	
-	return compMatch.save();
+		return query_match.find();
+	
+	}).then(function(aMatch) {
+	
+		return aMatch.set("isReady", true);
+	
+	return aMatch.save();
 	}).then(function(bot) {
 	
 	  response.success("Ready");
