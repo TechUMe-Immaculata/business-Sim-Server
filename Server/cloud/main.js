@@ -1274,5 +1274,84 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 	});
 });
 
+Parse.Cloud.define("submitMulti", function(request, response) {
+console.log("super error pls stop");
+//variables to find the user in match
+var companyId = request.params.companyId; 
+var matchId = request.params.matchId; 
+
+console.log(companyId);
+console.log(matchId);
+
+
+//set up a query to find the company in Match
+var CompMatch = Parse.Object.extend("CompMatch");
+var query = new Parse.Query(CompMatch);
+
+query.equalTo("matchId",matchId);
+query.equalTo("companyId",companyId);
+
+//find frist result
+query.first().then(function(company){
+
+//check if user has submitted before
+console.log(request.params.clientPrice);
+if (company.get("isSubbed") == false)
+{
+//update the online data base
+company.set("capital", Number(request.params.clientCapital));
+company.set("researchDevelopment",Number(request.params.clientResearchDevelopment));
+company.set("production", Number(request.params.clientProduction));
+company.set("marketing",Number(request.params.clientMarketing));
+company.set("price",Number(request.params.clientPrice));
+company.set("charity",Number(request.params.clientCharity));
+
+company.set("isSubbed",true);
+}
+else
+{
+//the user has already submitted
+}
+
+//save to server
+return company.save();
+}).then(function (doneSave)
+{
+
+//set up a query to find the company in Match
+var CompMatch = Parse.Object.extend("CompMatch");
+var queryCompanies = new Parse.Query(CompMatch);
+
+queryCompanies.equalTo("matchId",matchId);
+
+return queryCompanies.find();
+
+}).then(function(aCompMatch){
+var isAllSubbed = true;
+for (i=0;i<aCompMatch.length;i++)
+{
+	if(aCompMatch[i].get("isSubbed") == false)
+	{
+		isAllSubbed = false;
+	}
+}
+if (isAllSubbed == true)
+{
+	var dataOut = {};
+	
+	dataOut.companyId = companyId;
+	dataOut.matchId = matchId;
+	
+	return Parse.Cloud.run("turn",dataOut);
+}
+else
+{
+	return null;
+}
+}).then(function(haha){
+response.success(true);
+})
+});
+
 
 
