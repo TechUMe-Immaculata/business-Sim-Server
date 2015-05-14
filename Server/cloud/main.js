@@ -1213,25 +1213,45 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 	//define variables
 	var matchId = request.params.matchId;
 	var numberOfPlayers = 0;
+	var bot = new Parse.Object("Company");
 	
-	var queryUser_match = new Parse.Query("CompMatch");
-	queryUser_match.equalTo("matchId", matchId);
-	
-
-	queryUser_match.find().then(function(aCompany)
+	var queryComp = new Parse.Query("Company");
+	queryComp.equalTo("isBot", true);
+ 
+	queryComp.find().then(function(aCompany){
+		
+		bot = aCompany;
+		
+		var queryUser_match = new Parse.Query("CompMatch");
+		queryUser_match.equalTo("matchId", matchId);
+		
+		return queryUser_match.find();
+	}).then(function(aCompany)
     {
 		numberOfPlayers = aCompany.length;
 		//var aCompany = compMatch;
 		
+		if (aCompany.length < 6)
+		{
+			var delta = 6 - aCompany.length;
+			
+			for (i=0;(i+1)<=delta;i++)
+			{
+			var compMatch = new Parse.Object("CompMatch");
+			compMatch.set("companyId",bot[i].id);
+			compMatch.set("companyName",bot[i].get("company"));
+			compMatch.set("matchId", matchId);
+			compMatch.set("isBot",true);
+			
+			aCompany.push(compMatch);
+			
+			console.log(bot[i]);
+			}
+		}
+		
 		for(i=0;i < aCompany.length;i++)
 		{
-				aCompany[i].set("capital", 500);
-				aCompany[i].set("charity",10);
-				aCompany[i].set("price",5);
-				aCompany[i].set("production", 50);
-				aCompany[i].set("researchDevelopment", 10);
-				aCompany[i].set("marketing", 10);
-				aCompany[i].set("isSubbed",false);
+
 				aCompany[i].set("capitalTotal",0);
 				aCompany[i].set("maxProduction",150);
 				aCompany[i].set("cashAvailable",25000);
@@ -1240,6 +1260,32 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 				aCompany[i].set("isBankrupt",false);
 				aCompany[i].set("unitCost",7);
 				aCompany[i].set("rank",i+1);
+				
+				console.log("before");
+				
+				if(aCompany[i].get("isBot") == true)
+				{
+				console.log("bot");
+					aCompany[i].set("capital", Math.floor((Math.random() * 3000) + 1));
+					aCompany[i].set("charity",Math.floor((Math.random() * 3000) + 1));
+					aCompany[i].set("price",Math.floor((Math.random() * 50) + 15));
+					aCompany[i].set("production",150);
+					aCompany[i].set("researchDevelopment", Math.floor((Math.random() * 3000) + 1));
+					aCompany[i].set("marketing", Math.floor((Math.random() * 3000) + 1));
+					compMatch.set("isSubbed",true);
+				}
+				else
+				{
+				console.log("human");
+					aCompany[i].set("capital", 500);
+					aCompany[i].set("charity",10);
+					aCompany[i].set("price",5);
+					aCompany[i].set("production", 50);
+					aCompany[i].set("researchDevelopment", 10);
+					aCompany[i].set("marketing", 10);
+					aCompany[i].set("isSubbed",false);
+				}
+				console.log("after");
 				
 				var marketShare = {};
 				marketShare.charityMS =  Math.round(1 / numberOfPlayers *100)/100;
@@ -1253,6 +1299,9 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 				aCompany[i].save();
 		}
 		//aCompany.saveAll();
+		
+			//compMatch.set("companyId",bot[i].id);
+			//compMatch.set("companyName",bot[i].get("company"));
 		
 		var query_match = new Parse.Query("Match");
 		query_match.equalTo("objectId", matchId);
