@@ -1138,6 +1138,12 @@ Parse.Cloud.define("createMatch_Multi_Join", function(request, response) {
 		
 		companyIdArray = match.get("companyIds");
 		
+		if(aMatch[0].get("isReady") == true)
+		{
+			console.log("ATE WAY TOO MUCH");
+			response.success(false);
+		}
+		
 		//create a query to find the user creating the match
 		var queryUser = new Parse.Query("Company");
 		queryUser.equalTo("userId", currentUser);
@@ -1151,7 +1157,6 @@ Parse.Cloud.define("createMatch_Multi_Join", function(request, response) {
 	}
 
     }).then(function(company) {
- 
  
   //add the company id to the list
   companyIdArray.push(company[0].id);
