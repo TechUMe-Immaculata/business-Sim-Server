@@ -402,13 +402,14 @@ return queryComp.find();
 for ( var i = 0;  i < compMatch.length; i++){
 	if(compMatch[i].get("isBankrupt") == true)
 	{
-		compMatch[i].set("capital",0) 
-		compMatch[i].set("charity",0) 
-		compMatch[i].set("marketing",0)
-		compMatch[i].set("researchDevelopment",0)
-		compMatch[i].set("production",0)
-		compMatch[i].set("price",0)
-		compMatch[i].set("isSubbed",true)
+		compMatch[i].set("capital",0);
+		compMatch[i].set("charity",0);
+		compMatch[i].set("marketing",0);
+		compMatch[i].set("researchDevelopment",0);
+		compMatch[i].set("production",0);
+		compMatch[i].set("price",0);
+		compMatch[i].set("isSubbed",true);
+		alert("THIS PERSON IS BANKRUPT = " + compMatch[i].get("price"));
 	}
 }
 //how many decimals to round to
@@ -417,7 +418,7 @@ const NUMBER_OF_DECIMALS = 1000;
 //calculate totals
 for ( var i = 0; i < compMatch.length; i++)
 {
-	//get the total amount of population that they carter to on their own as a seprate business
+	//get the total amount of population that they carter to on their own as a septate business
 	totalPopulationSum = totalPopulationSum + (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
 	
 	//get the total investment of marketing in turn
@@ -446,11 +447,18 @@ for ( var i = 0;  i < compMatch.length; i++)
   //companyMatchData.networth = null;
  // companyMatchData.companyId = null;
  // companyMatchData.maxCarterAmount = null;
-	
-	//find the single population for the company
-	var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
-	//calculate how much MS based on price ( pop / sum pop) 
-	objectMS.priceMS = Math.round((singlePopulation/totalPopulationSum)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	if (compMatch[i].get("price")==0)
+	{
+		objectMS.priceMS = 0;
+	}
+	else
+	{
+		//find the single population for the company
+		var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
+		//calculate how much MS based on price ( pop / sum pop) 
+		objectMS.priceMS = Math.round((singlePopulation/totalPopulationSum)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
+	}
+
 
 	//calculate R&D MS (R&D / R&D sum)
 	objectMS.researchAndDevelopmentMS = Math.round((compMatch[i].get("researchDevelopment")/totalResearchAndDevelopment)*NUMBER_OF_DECIMALS)/NUMBER_OF_DECIMALS;
@@ -630,7 +638,7 @@ compMatch[i].set("rank",(i+1));
 //compMatch[i].save();
 console.log(compMatch[i].get("rank") + "_______"+compMatch[i].get("networth"));
 
-if (compMatch[i].get("isBot") == true && compMatch[i].get("rank") == 6)
+if (compMatch[i].get("isBot") == true && compMatch[i].get("rank") == compMatch.length && compMatch[i].isBankrupt == false)
 {
 	compMatch[i].set("production", Math.floor(Math.random() * (compMatch[i].get("maxProduction")*(0.3)) + (compMatch[i].get("maxProduction")*(0.7))));
 	
