@@ -430,7 +430,18 @@ for ( var i = 0; i < compMatch.length; i++)
 	//get total investment of charity in game
 	totalCharity = totalCharity + compMatch[i].get("charity");
 }
-
+if (totalCharity == 0)
+{
+	totalCharity++;
+}
+if(totalResearchAndDevelopment == 0)
+{
+	totalResearchAndDevelopment++;
+}
+if(totalMarketing == 0)
+{
+	totalMarketing++;
+}
 //calculate all that will happen in one turn
 for ( var i = 0;  i < compMatch.length; i++)
 {
@@ -557,7 +568,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	{
 		//no cash and subtracting what credit you have left
 		compMatch[i].set("cashAvailable",0);
-		compMatch[i].set("creditLine",MAX_CREDIT-networth);
+		compMatch[i].set("creditLine",networth);
 		
 		//check if player is bankrupt or not then declares bankruptcy
 		if (networth < 0 )
@@ -1241,7 +1252,7 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 		return queryUser_match.find();
 	}).then(function(aCompany)
     {
-		numberOfPlayers = aCompany.length;
+		
 		//var aCompany = compMatch;
 		
 		if (aCompany.length < 6)
@@ -1250,16 +1261,17 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 			
 			for (i=0;(i+1)<=delta;i++)
 			{
-			var compMatch = new Parse.Object("CompMatch");
-			compMatch.set("companyId",bot[i].id);
-			compMatch.set("companyName",bot[i].get("company"));
-			compMatch.set("matchId", matchId);
-			compMatch.set("isBot",true);
-			
-			aCompany.push(compMatch);
-			
-			console.log(bot[i]);
+				var compMatch = new Parse.Object("CompMatch");
+				compMatch.set("companyId",bot[i].id);
+				compMatch.set("companyName",bot[i].get("company"));
+				compMatch.set("matchId", matchId);
+				compMatch.set("isBot",true);
+				
+				aCompany.push(compMatch);
+				
+				console.log(bot[i]);
 			}
+			numberOfPlayers = aCompany.length;
 		}
 		
 		for(i=0;i < aCompany.length;i++)
