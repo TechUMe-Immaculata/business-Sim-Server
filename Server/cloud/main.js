@@ -1122,6 +1122,13 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response)
 				aCompany[i].set("isSubbed", false);
 			}
 			console.log("after");
+			
+			var stats = {};
+			stats.expense = aCompany[i].get("capital") + aCompany[i].get("charity") + aCompany[i].get("researchDevelopment") + aCompany[i].get("marketing") + (aCompany[i].get("production") * 7);
+			stats.profit = 0;
+			stats.revenue = 0;
+			aCompany[i].set("stats", stats);
+			
 			var marketShare = {};
 			marketShare.charityMS = Math.round(1 / numberOfPlayers * 100) / 100;
 			marketShare.marketingMS = Math.round(1 / numberOfPlayers * 100) / 100;
