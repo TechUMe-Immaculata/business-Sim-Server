@@ -336,17 +336,31 @@ queryUser.find({
 
 
 Parse.Cloud.define("turn", function(request, response) {
-
-//define variables
 var turn = 0;
 var population = 0;
-//match id
 var matchId = request.params.matchId;
 var totalPopulationSum = 0, totalMarketing = 0, totalResearchAndDevelopment = 0, totalCharity = 0;
 
-//create a object class of match
 var Match = Parse.Object.extend("Match");
 var match = new Match();
+//var numberOfTurns;
+
+
+
+
+
+//var companyMatchDataArray = new Array();
+//var companyMatchData = {};
+//companyMatchData.turn = null;
+//companyMatchData.totalMS = null;
+//companyMatchData.totalProduction = null;
+//companyMatchData.totalInvestment = null;
+//companyMatchData.rank = null;
+//companyMatchData.companyName = null;
+//companyMatchData.production = null;
+//companyMatchData.networth = null;
+//companyMatchData.companyId = null;
+//companyMatchData.maxCarterAmount = null;
 
 //query to find the match
 var queryMatch = new  Parse.Query("Match");
@@ -385,9 +399,8 @@ queryComp.descending("marketing");
 return queryComp.find();
 }).then(function(compMatch){
 
-//set companies that are bankrupt to be able to do nothing thus reset stats
 for ( var i = 0;  i < compMatch.length; i++){
-	if(compMatch[i].get("isBankrupt") === true)
+	if(compMatch[i].get("isBankrupt") == true)
 	{
 		compMatch[i].set("capital",0) 
 		compMatch[i].set("charity",0) 
@@ -423,6 +436,16 @@ for ( var i = 0;  i < compMatch.length; i++)
 	//objects that save the calculations
 	var objectMS = {};
 	var objectStats = {};
+
+ // companyMatchData.totalMS = null;
+ // companyMatchData.totalProduction = null;
+ // companyMatchData.totalInvestment = null;
+ // companyMatchData.rank = null;
+ // companyMatchData.companyName = null;
+ // companyMatchData.production = null;
+  //companyMatchData.networth = null;
+ // companyMatchData.companyId = null;
+ // companyMatchData.maxCarterAmount = null;
 	
 	//find the single population for the company
 	var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
@@ -492,13 +515,12 @@ for ( var i = 0;  i < compMatch.length; i++)
 		pricePerProduct = 1;
 	}
 	else{}
-	//set unit cost rounded
+	
 	compMatch[i].set("unitCost",Math.round(pricePerProduct*100)/100);
 	//calculate the total expenses of the turn for the company
 	objectStats.expense = Math.round((pricePerProduct * compMatch[i].get("production")) +compMatch[i].get("capital") + compMatch[i].get("researchDevelopment") + compMatch[i].get("marketing") + compMatch[i].get("charity"));
 	//find the profit obtained for the turn
 	objectStats.profit = Math.round(objectStats.revenue - objectStats.expense);
-	
 	console.log("revenue = " + objectStats.revenue + " expense = " + objectStats.expense );
 	console.log("profit = " +objectStats.profit);
 	
@@ -535,6 +557,11 @@ for ( var i = 0;  i < compMatch.length; i++)
 			compMatch[i].set("isBankrupt", true);
 			compMatch[i].set("cashAvailable",0);
 			compMatch[i].set("creditLine",networth);
+			//console.log("----BANKRUPT----");
+			//console.log(MAX_CREDIT +"CREDIT");
+			//console.log(networth+"NETWORTH");
+			//console.log(objectStats.profit+"profit")
+			//console.log(MAX_CREDIT-networth);
 		}
 	}
 
@@ -542,6 +569,28 @@ for ( var i = 0;  i < compMatch.length; i++)
   compMatch[i].set("maxProduction",maxProduction);
   compMatch[i].set("stats",objectStats);
   compMatch[i].set("marketShare",objectMS);
+
+ // companyMatchData.totalMS = objectMS.totalMS;
+  //companyMatchData.totalProduction = maxProduction;
+ // companyMatchData.totalInvestment = compMatch[i].get("capitalTotal");
+  //.companyName = compMatch[i].get("companyName");
+  //companyMatchData.production = compMatch[i].get("production");
+  //companyMatchData.networth = compMatch[i].get("networth");
+  //companyMatchData.companyId = compMatch[i].get("companyId");
+ // companyMatchData.maxCarterAmount = maxCarterAmount;
+
+ // var object = companyMatchData;
+  //companyMatchDataArray.push(object);
+ // console.log("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+ // console.log(companyMatchData);
+  //console.log(companyMatchDataArray[i]);
+  //if ( i == 0)
+ // {}
+ // else{
+ // console.log(companyMatchDataArray[i-1]);
+  //}
+
+
 
 	//if company is a bot then calculate the next turn moves and submit
 	if (compMatch[i].get("isBot") == true)
@@ -571,33 +620,30 @@ for ( var i = 0;  i < compMatch.length; i++)
 	}
 	
 }
-//sorts the net-worth from greatest to lowest
+
 compMatch.sort(function(a, b){return b.get("networth")-a.get("networth")});
 
 for ( var i = 0;  i < compMatch.length; i++)
 {
-//sets rank of company
 compMatch[i].set("rank",(i+1));
+//companyMatchDataArray[i].rank = compMatch[i].get("rank");
+//compMatch[i].save();
 console.log(compMatch[i].get("rank") + "_______"+compMatch[i].get("networth"));
 
-//if there is a bot in last place it will copy the person in first only to a degree where the bot is making profit
 if (compMatch[i].get("isBot") == true && compMatch[i].get("rank") == 6)
 {
-	//set a reasonable production between 30% and 70% utilization
 	compMatch[i].set("production", Math.floor(Math.random() * (compMatch[i].get("maxProduction")*(0.3)) + (compMatch[i].get("maxProduction")*(0.7))));
 	
-	//set other capital, charity, RnD and marketing 
 	compMatch[i].set("capital",compMatch[0].get("capital"));
 	compMatch[i].set("charity",compMatch[0].get("charity"));
+	
 	compMatch[i].set("researchDevelopment",compMatch[0].get("researchDevelopment"));
 	compMatch[i].set("marketing",compMatch[0].get("marketing"));
 	
-	//if unit cost is lees that P1 then add additional price
 	if (compMatch[i].get("unitCost") < compMatch[i].get("unitCost"))
 	{
 		compMatch[i].set("price",compMatch[0].get("price")+5);
 	}
-	//same price
 	else
 	{
 		compMatch[i].set("price",compMatch[0].get("price"));
@@ -605,43 +651,29 @@ if (compMatch[i].get("isBot") == true && compMatch[i].get("rank") == 6)
 	
 	console.log("The Price Is ++++++++++ "+compMatch[i].get("price"));
 	
-	//get max revenue and max expense ans get the delta between them
 	var maxRevenue = compMatch[i].get("production") * compMatch[i].get("unitCost");
+	
 	var maxExpense = compMatch[i].get("capital")+compMatch[i].get("charity")+compMatch[i].get("researchDevelopment")+compMatch[i].get("marketing");
+	
 	var delta = maxRevenue - maxExpense;
 	
 	console.log("before delta " + delta);
-	
-	//if one is losing a profit it goes into this loop until it makes a positive profit
 	if (delta <= 0)
 	{
 		console.log("after delta ");
-		
-		//set the capital to 1 to not lose money
 		compMatch[i].set("capital",1);
-		
-		//get a current Expense
 		maxExpense = compMatch[i].get("capital")+compMatch[i].get("charity")+compMatch[i].get("researchDevelopment")+compMatch[i].get("marketing");
-		
-		//Cal new delta
 		delta = maxRevenue - maxExpense;
 		
-		//if still zero 
 		if(delta <= 0)
 		{
 			var da=1,db=1,dc=1;
 			
-			// loop that makes delta positive
 			while (delta <= 0)
 			{
-				//three divider variables
 				var divider = da + db + dc;
-				
-				//how much to subtract from each object
 				var subtractor = (delta - 100) / divider;
 				console.log("divider " + divider);
-				
-				//if these combined is less than zero then make it zero else subtract
 				if (compMatch[i].get("charity")+subtractor < 0)
 				{
 					compMatch[i].set("charity",0);
@@ -651,7 +683,6 @@ if (compMatch[i].get("isBot") == true && compMatch[i].get("rank") == 6)
 				{
 					compMatch[i].set("charity",compMatch[i].get("charity")+subtractor);
 				}
-				//if these combined is less than zero then make it zero else subtract
 				if (compMatch[i].get("researchDevelopment")+subtractor < 0)
 				{
 					compMatch[i].set("researchDevelopment",0);
@@ -661,7 +692,6 @@ if (compMatch[i].get("isBot") == true && compMatch[i].get("rank") == 6)
 				{
 					compMatch[i].set("researchDevelopment",compMatch[i].get("researchDevelopment")+subtractor);
 				}
-				//if these combined is less than zero then make it zero else subtract
 				if (compMatch[i].get("marketing")+subtractor < 0)
 				{
 					compMatch[i].set("marketing",0);
@@ -672,7 +702,6 @@ if (compMatch[i].get("isBot") == true && compMatch[i].get("rank") == 6)
 					compMatch[i].set("marketing",compMatch[i].get("marketing")+subtractor);
 				}
 				
-				//cal new expense and new delta
 				maxExpense = compMatch[i].get("capital")+compMatch[i].get("charity")+compMatch[i].get("researchDevelopment")+compMatch[i].get("marketing");
 				delta = maxRevenue - maxExpense;
 				console.log(maxRevenue);
@@ -686,7 +715,7 @@ if (compMatch[i].get("isBot") == true && compMatch[i].get("rank") == 6)
 }
 }
 
-//save all the compMatch
+
 return Parse.Object.saveAll(compMatch);
 
 }).then(function (afteSave){
@@ -732,10 +761,9 @@ console.log("you were supposed to deleted it");
 }
 else if (match.get("turn")  <= 3){
 
-} 
+}
 */
 
-	//end turn
     return response.success("turn:"+ match.get("turn"));
   })
 
