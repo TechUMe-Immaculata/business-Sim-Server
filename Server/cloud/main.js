@@ -621,6 +621,7 @@ for ( var i = 0;  i < compMatch.length; i++)
 	
 }
 
+//sorts players net-worth from highest to lowest
 compMatch.sort(function(a, b){return b.get("networth")-a.get("networth")});
 
 for ( var i = 0;  i < compMatch.length; i++)
@@ -630,18 +631,22 @@ compMatch[i].set("rank",(i+1));
 //compMatch[i].save();
 console.log(compMatch[i].get("rank") + "_______"+compMatch[i].get("networth"));
 
+//Code for the bot underdog bot
 if (compMatch[i].get("isBot") == true && compMatch[i].get("rank") == 6)
 {
+	//get the amount of production in a range an set
 	compMatch[i].set("production", Math.floor(Math.random() * (compMatch[i].get("maxProduction")*(0.3)) + (compMatch[i].get("maxProduction")*(0.7))));
 	
+	//set capital, charity, rnd and marketing to the person in first
 	compMatch[i].set("capital",compMatch[0].get("capital"));
 	compMatch[i].set("charity",compMatch[0].get("charity"));
-	
 	compMatch[i].set("researchDevelopment",compMatch[0].get("researchDevelopment"));
 	compMatch[i].set("marketing",compMatch[0].get("marketing"));
 	
+	//if their unit cost is less then increase by 5 else do nothing
 	if (compMatch[i].get("unitCost") < compMatch[i].get("unitCost"))
 	{
+		
 		compMatch[i].set("price",compMatch[0].get("price")+5);
 	}
 	else
@@ -650,58 +655,72 @@ if (compMatch[i].get("isBot") == true && compMatch[i].get("rank") == 6)
 	}
 	
 	console.log("The Price Is ++++++++++ "+compMatch[i].get("price"));
-	
+	//find players current position
 	var maxRevenue = compMatch[i].get("production") * compMatch[i].get("unitCost");
 	
 	var maxExpense = compMatch[i].get("capital")+compMatch[i].get("charity")+compMatch[i].get("researchDevelopment")+compMatch[i].get("marketing");
 	
+	//find the delta between them
 	var delta = maxRevenue - maxExpense;
 	
 	console.log("before delta " + delta);
+	//if not making any money
 	if (delta <= 0)
 	{
+		//get rid of capital
 		console.log("after delta ");
 		compMatch[i].set("capital",1);
 		maxExpense = compMatch[i].get("capital")+compMatch[i].get("charity")+compMatch[i].get("researchDevelopment")+compMatch[i].get("marketing");
 		delta = maxRevenue - maxExpense;
 		
+		//still not making money continue until one does
 		if(delta <= 0)
 		{
+			//three dividers
 			var da=1,db=1,dc=1;
 			
+			//continue until one makes money
 			while (delta <= 0)
 			{
+				//all of dividers combined
 				var divider = da + db + dc;
+				//divides by the amount to take out each
 				var subtractor = (delta - 100) / divider;
 				console.log("divider " + divider);
+				//if not enough then make zero and get rid of a divider
 				if (compMatch[i].get("charity")+subtractor < 0)
 				{
 					compMatch[i].set("charity",0);
 					da = 0;
 				}
+				//subtract
 				else
 				{
 					compMatch[i].set("charity",compMatch[i].get("charity")+subtractor);
 				}
+				//if not enough then make zero and get rid of a divider
 				if (compMatch[i].get("researchDevelopment")+subtractor < 0)
 				{
 					compMatch[i].set("researchDevelopment",0);
 					db = 0;
 				}
+				//subtract
 				else
 				{
 					compMatch[i].set("researchDevelopment",compMatch[i].get("researchDevelopment")+subtractor);
 				}
+				//if not enough then make zero and get rid of a divider
 				if (compMatch[i].get("marketing")+subtractor < 0)
 				{
 					compMatch[i].set("marketing",0);
 					dc = 0;
 				}
+				//subtract
 				else
 				{
 					compMatch[i].set("marketing",compMatch[i].get("marketing")+subtractor);
 				}
-				
+				//calculate position to find delta
 				maxExpense = compMatch[i].get("capital")+compMatch[i].get("charity")+compMatch[i].get("researchDevelopment")+compMatch[i].get("marketing");
 				delta = maxRevenue - maxExpense;
 				console.log(maxRevenue);
@@ -763,7 +782,7 @@ else if (match.get("turn")  <= 3){
 
 }
 */
-
+	//finish turn
     return response.success("turn:"+ match.get("turn"));
   })
 
