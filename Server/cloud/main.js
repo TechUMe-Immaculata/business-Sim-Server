@@ -1,5 +1,5 @@
 // Use Parse.Cloud.define to define as many cloud functions as you want.
-
+//========================================= anything below these two lines are experimental =============================================//
 Parse.Cloud.define("sendCompanyInfo", function(request, response) {
   
     console.log(request.params);
@@ -143,7 +143,7 @@ query.find({
 
 
 
-//--------------------------------------------------------------------------------
+//========================================= anything above these two lines are experimental =============================================//
 
 //this function creates a single player match with 5 bots and one user
 Parse.Cloud.define("createMatch", function(request, response) {
@@ -336,6 +336,7 @@ queryUser.find({
 
 
 Parse.Cloud.define("turn", function(request, response) {
+//define variables
 var turn = 0;
 var population = 0;
 var matchId = request.params.matchId;
@@ -345,22 +346,6 @@ var Match = Parse.Object.extend("Match");
 var match = new Match();
 //var numberOfTurns;
 
-
-
-
-
-//var companyMatchDataArray = new Array();
-//var companyMatchData = {};
-//companyMatchData.turn = null;
-//companyMatchData.totalMS = null;
-//companyMatchData.totalProduction = null;
-//companyMatchData.totalInvestment = null;
-//companyMatchData.rank = null;
-//companyMatchData.companyName = null;
-//companyMatchData.production = null;
-//companyMatchData.networth = null;
-//companyMatchData.companyId = null;
-//companyMatchData.maxCarterAmount = null;
 
 //query to find the match
 var queryMatch = new  Parse.Query("Match");
@@ -398,7 +383,7 @@ queryComp.descending("marketing");
 
 return queryComp.find();
 }).then(function(compMatch){
-
+//make it so that the bankrupt unaffect the market before calculations
 for ( var i = 0;  i < compMatch.length; i++){
 	if(compMatch[i].get("isBankrupt") == true)
 	{
@@ -417,7 +402,7 @@ const NUMBER_OF_DECIMALS = 1000;
 //calculate totals
 for ( var i = 0; i < compMatch.length; i++)
 {
-	//get the total amount of population that they carter to on their own as a seprate business
+	//get the total amount of population that they carter to on their own as a septate business
 	totalPopulationSum = totalPopulationSum + (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
 	
 	//get the total investment of marketing in turn
@@ -436,16 +421,6 @@ for ( var i = 0;  i < compMatch.length; i++)
 	//objects that save the calculations
 	var objectMS = {};
 	var objectStats = {};
-
- // companyMatchData.totalMS = null;
- // companyMatchData.totalProduction = null;
- // companyMatchData.totalInvestment = null;
- // companyMatchData.rank = null;
- // companyMatchData.companyName = null;
- // companyMatchData.production = null;
-  //companyMatchData.networth = null;
- // companyMatchData.companyId = null;
- // companyMatchData.maxCarterAmount = null;
 	
 	//find the single population for the company
 	var singlePopulation = (match.get("population")/2)*(Math.cos(compMatch[i].get("price")*Math.PI/100))+(match.get("population")/2);
@@ -569,29 +544,7 @@ for ( var i = 0;  i < compMatch.length; i++)
   compMatch[i].set("maxProduction",maxProduction);
   compMatch[i].set("stats",objectStats);
   compMatch[i].set("marketShare",objectMS);
-
- // companyMatchData.totalMS = objectMS.totalMS;
-  //companyMatchData.totalProduction = maxProduction;
- // companyMatchData.totalInvestment = compMatch[i].get("capitalTotal");
-  //.companyName = compMatch[i].get("companyName");
-  //companyMatchData.production = compMatch[i].get("production");
-  //companyMatchData.networth = compMatch[i].get("networth");
-  //companyMatchData.companyId = compMatch[i].get("companyId");
- // companyMatchData.maxCarterAmount = maxCarterAmount;
-
- // var object = companyMatchData;
-  //companyMatchDataArray.push(object);
- // console.log("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
- // console.log(companyMatchData);
-  //console.log(companyMatchDataArray[i]);
-  //if ( i == 0)
- // {}
- // else{
- // console.log(companyMatchDataArray[i-1]);
-  //}
-
-
-
+  
 	//if company is a bot then calculate the next turn moves and submit
 	if (compMatch[i].get("isBot") == true)
 	{
@@ -802,7 +755,7 @@ console.log(matchId);
 //set up a query to find the company in Match
 var CompMatch = Parse.Object.extend("CompMatch");
 var query = new Parse.Query(CompMatch);
-
+//search parameters
 query.equalTo("matchId",matchId);
 query.equalTo("companyId",companyId);
 
@@ -1050,17 +1003,22 @@ Parse.Cloud.define("createMatch_Multi", function(request, response) {
 	//var numberOfPlayers = 6;
 	var rank = 0;
 	//isMultiplayer = request.params.clientMultiplayer;
-
+	
+	//how to find match 
 	var password = "";
-	var possible = "0123456789";
-
+	var possible = "0123456789";//can add more characters later 
+	
+	//randomly generate the number
 	for( var i=0; i < 8; i++ )
 	{
 		password += possible.charAt(Math.floor(Math.random() * possible.length));
 	}
 
+	//create Match class
 	var Match = Parse.Object.extend("Match");
 	var match = new Match();
+	
+	//define the match
 	match.set("name",request.params.matchName);
 	match.set("gameTime",request.params.matchTime);
 	match.set("turn",0);
@@ -1091,19 +1049,8 @@ Parse.Cloud.define("createMatch_Multi", function(request, response) {
     compMatch.set("matchId", match.id);
     compMatch.set("isSubbed",true);
     compMatch.set("isBot",false);
-	//rank++;
-	//compMatch.set("rank",rank);
-	compMatch.set("companyName",company[0].get("company"));
 	
-	/*
-	var marketShare = {};
-	marketShare.charityMS =  Math.round(1 / numberOfPlayers *100)/100;
-	marketShare.marketingMS =   Math.round(1 / numberOfPlayers*100)/100;
-	marketShare.priceMS =   Math.round(1 / numberOfPlayers*100)/100;
-	marketShare.researchAndDevelopmentMS =   Math.round(1 / numberOfPlayers*100)/100;
-	marketShare.totalMS =  Math.round(1 / numberOfPlayers*100)/100;
-	compMatch.set("marketShare",marketShare);
-	*/
+	compMatch.set("companyName",company[0].get("company"));
 	
 	var stats = {}
 	stats.expense = compMatch.get("capital")+compMatch.get("charity")+compMatch.get("researchDevelopment")+compMatch.get("marketing")+(compMatch.get("production")*7);
@@ -1115,19 +1062,20 @@ Parse.Cloud.define("createMatch_Multi", function(request, response) {
 return compMatch.save();
 }).then(function(bot) {
 
- 
+//add to match company
 match.set("companyIds",companyIdArray);
  
- 
+//save match
 match.save();
  
+ //data to send back to client
   var returnData = {};
   returnData.password = password;
   returnData.clientMatchId = match.id;
   returnData.clientGameresult = true;
   console.log("+++++++++"+match.id);
    
-   
+   //send back a response
   response.success(returnData);
    
   },function(error){
@@ -1144,21 +1092,25 @@ Parse.Cloud.define("createMatch_Multi_Join", function(request, response) {
 	var Match = Parse.Object.extend("Match");
 	var match = new Match();
 	
+	//find the match with the password given 
 	var queryUser_match = new Parse.Query("Match");
 	queryUser_match.equalTo("password", password);
 
 	queryUser_match.find().then(function(aMatch)
     {
-	
+	//if thee is a match
 	if(aMatch.length > 0)
 	{
-		
+		//make  aMatch local global var
 		match = aMatch[0];
 		
+		//get company ist
 		companyIdArray = match.get("companyIds");
 		
+		//if the match is not in progress
 		if(aMatch[0].get("isReady") == true)
 		{
+			// don't join
 			console.log("ATE WAY TOO MUCH");
 			response.success(false);
 		}
@@ -1166,7 +1118,7 @@ Parse.Cloud.define("createMatch_Multi_Join", function(request, response) {
 		//create a query to find the user creating the match
 		var queryUser = new Parse.Query("Company");
 		queryUser.equalTo("userId", currentUser);
-	 
+		
 		return queryUser.find();
 		
 	}
@@ -1193,15 +1145,6 @@ Parse.Cloud.define("createMatch_Multi_Join", function(request, response) {
 	//compMatch.set("rank",rank);
 	compMatch.set("companyName",company[0].get("company"));
 	
-	/*
-	var marketShare = {};
-	marketShare.charityMS =  Math.round(1 / numberOfPlayers *100)/100;
-	marketShare.marketingMS =   Math.round(1 / numberOfPlayers*100)/100;
-	marketShare.priceMS =   Math.round(1 / numberOfPlayers*100)/100;
-	marketShare.researchAndDevelopmentMS =   Math.round(1 / numberOfPlayers*100)/100;
-	marketShare.totalMS =  Math.round(1 / numberOfPlayers*100)/100;
-	compMatch.set("marketShare",marketShare);
-	*/
 	
 	var stats = {}
 	stats.expense = compMatch.get("capital")+compMatch.get("charity")+compMatch.get("researchDevelopment")+compMatch.get("marketing")+(compMatch.get("production")*7);
@@ -1213,18 +1156,19 @@ Parse.Cloud.define("createMatch_Multi_Join", function(request, response) {
 return compMatch.save();
 }).then(function(bot) {
 
- 
+//set the match list of people 
 match.set("companyIds",companyIdArray);
  
- 
+ //save match
 match.save();
  
+  //data to be sent back to user for later
   var returnData = {};
   returnData.clientMatchId = match.id;
   returnData.clientGameresult = true;
   console.log("+++++++++"+match.id);
    
-   
+   //data sent back
   response.success(match.id);
    
   },function(error){
@@ -1239,11 +1183,12 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 	var numberOfPlayers = 0;
 	var bot = new Parse.Object("Company");
 	
+	//find all the companies in the match
 	var queryComp = new Parse.Query("Company");
 	queryComp.equalTo("isBot", true);
  
 	queryComp.find().then(function(aCompany){
-		
+		//set bot to aCompany
 		bot = aCompany;
 		
 		var queryUser_match = new Parse.Query("CompMatch");
@@ -1252,15 +1197,20 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 		return queryUser_match.find();
 	}).then(function(aCompany)
     {
+		// get number of players
 		numberOfPlayers = aCompany.length;
 		//var aCompany = compMatch;
 		
+		//checks to see if more people are needed to play the match yes adds bots
 		if (aCompany.length < 6)
 		{
+			//find how many bots are needed
 			var delta = 6 - aCompany.length;
 			
+			//add bots according to how many it take to fill the match
 			for (i=0;(i+1)<=delta;i++)
 			{
+			//initialize variables and add to list
 			var compMatch = new Parse.Object("CompMatch");
 			compMatch.set("companyId",bot[i].id);
 			compMatch.set("companyName",bot[i].get("company"));
@@ -1273,9 +1223,10 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 			}
 		}
 		
+		//set up the values for the comp match
 		for(i=0;i < aCompany.length;i++)
 		{
-
+				//set default values
 				aCompany[i].set("capitalTotal",0);
 				aCompany[i].set("maxProduction",150);
 				aCompany[i].set("cashAvailable",25000);
@@ -1286,7 +1237,7 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 				aCompany[i].set("rank",i+1);
 				
 				console.log("before");
-				
+				//set bot values
 				if(aCompany[i].get("isBot") == true)
 				{
 				console.log("bot");
@@ -1298,6 +1249,7 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 					aCompany[i].set("marketing", Math.floor((Math.random() * 3000) + 1));
 					compMatch.set("isSubbed",true);
 				}
+				//set human values
 				else
 				{
 				console.log("human");
@@ -1311,6 +1263,7 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 				}
 				console.log("after");
 				
+				//calculate market share
 				var marketShare = {};
 				marketShare.charityMS =  Math.round(1 / numberOfPlayers *100)/100;
 				marketShare.marketingMS =   Math.round(1 / numberOfPlayers*100)/100;
@@ -1322,17 +1275,14 @@ Parse.Cloud.define("createMatch_Multi_Ready", function(request, response) {
 
 				aCompany[i].save();
 		}
-		//aCompany.saveAll();
-		
-			//compMatch.set("companyId",bot[i].id);
-			//compMatch.set("companyName",bot[i].get("company"));
-		
+		//find the match
 		var query_match = new Parse.Query("Match");
 		query_match.equalTo("objectId", matchId);
 	
 		return query_match.find();
 	
 	}).then(function(aMatch) {
+		//set population of match depending on # of player
 		aMatch[0].set("population",(numberOfPlayers * 200));
 		aMatch[0].set("isReady", true);
 		return aMatch[0].save();
@@ -1400,16 +1350,21 @@ queryCompanies.equalTo("matchId",matchId);
 return queryCompanies.find();
 
 }).then(function(aCompMatch){
+
+//if all user have submitted
 var isAllSubbed = true;
 for (i=0;i<aCompMatch.length;i++)
 {
+	//if one is not subbed then no turn
 	if(aCompMatch[i].get("isSubbed") == false)
 	{
 		isAllSubbed = false;
 	}
 }
+//if all have submmited
 if (isAllSubbed == true)
 {
+	//run turn
 	var dataOut = {};
 	
 	dataOut.companyId = companyId;
@@ -1422,6 +1377,7 @@ else
 	return null;
 }
 }).then(function(haha){
+//respond to client
 response.success(true);
 })
 });
